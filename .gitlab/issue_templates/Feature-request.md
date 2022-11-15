@@ -14,8 +14,6 @@
 
 
 
-## Which platform/language
-
 
 /label ~"type::feature"
 /cc @npz16
