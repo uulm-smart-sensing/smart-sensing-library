@@ -33,3 +33,6 @@
 
 ## Additional context
 <!--- Add any other context or graphics (drag-and-drop an image) about the feature request here.-->
+
+/label ~"type::bug"
+/cc @npz16
