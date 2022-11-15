@@ -12,7 +12,7 @@
 <!--- A clear and concise description of any alternative solutions or features you've considered -->
 
 
-## Additional context
+## Further Information
 <!--- Add any other context or graphics (drag-and-drop an image) about the feature request here.-->
 
 
