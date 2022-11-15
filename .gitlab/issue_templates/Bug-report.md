@@ -23,5 +23,5 @@
 <!--- If there is a link, u should always write it down -->
 
 
-/label ~"type::feature"
+/label ~"type::bug"
 /cc @npz16
