@@ -21,3 +21,7 @@
 * _What risks does your proposed change entail?_
 * _How will you mitigate them?_
 * _How could this system fail, and what would be the impact if it did?_
+
+/label ~"type::proposal"
+/cc @npz16
+/assign_reviewer @kjy97

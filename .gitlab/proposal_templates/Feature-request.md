@@ -15,6 +15,6 @@
 
 
 
-/label ~"type::feature"
+/label ~"type::proposal"
 /cc @npz16
 /assign_reviewer @kjy97
