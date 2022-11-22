@@ -18,4 +18,3 @@
 
 /label ~"type::enhancement"
 /cc @npz16
-/assign_reviewer @kjy97

@@ -24,7 +24,6 @@
 
 
 /label ~"stage::in review"
-/assign_reviewer @kjy97
 
 
 
