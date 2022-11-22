@@ -17,6 +17,11 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 ## 🛠️ Installation
 
+## 💻 Developement setup
+We use an `.editorconfig` file to define coding styles in this repo.
+In order to apply to these coding style, following IDEs/editors need to be configured:
+- VSCode: The plugin [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) needs to be installed
+- Android Studio: Enable EditorConfig support by navigating to `Settings` -> `Editor` -> `Code Style` and check `Enable EditorConfig support`
 
 ## 🎊 Future Updates
 
