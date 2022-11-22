@@ -18,3 +18,7 @@
 
 ## Links / references
 <!--- If there is a link, u should always write it down -->
+
+/label ~"type::feature"
+/cc @npz16
+/assign_reviewer @kjy97
