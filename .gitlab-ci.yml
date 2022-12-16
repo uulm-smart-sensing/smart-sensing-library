@@ -4,17 +4,37 @@ stages:
   - analysis
   - test
 
-lint:
+flutter-analyze:
   stage: analysis
+  needs: [ ]
   script:
     - flutter analyze --fatal-infos
 
-format:
-  stage: analysis
-  script:
-    - flutter format -o show --set-exit-if-changed
+#flutter-format:
+#  stage: analysis
+#  script:
+#    - flutter format -o show --set-exit-if-changed
 
-test:
+#flutter-format:apply:
+#  stage: analysis
+#  needs: [ ]
+#  when: manual
+#  only:
+#    - merge_requests
+#  before_script:
+#    # FLUTTER_FORMAT_TOKEN is a project access token which is then added as a CI variable
+#    - git remote add ci https://oauth2:${FLUTTER_FORMAT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+#    - git config user.name "flutter-format bot"
+#    - git config user.email "noreply+flutter-format-bot@${CI_SERVER_HOST}"
+#  script:
+#    - flutter format -o none --fix
+#    - git commit -am "apply flutter-format"
+#    - git push ci HEAD:$CI_COMMIT_REF_NAME
+#  after_script:
+#    - git remote rm ci
+
+flutter-test:
   stage: test
+  needs: [ ]
   script:
     - flutter test
