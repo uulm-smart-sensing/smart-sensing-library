@@ -55,18 +55,12 @@ This library will be able to track sensors from the smartphone and some wearable
 Additionally, it will be possible to either get live data or store and process the data. 
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ### Built With
 
 * [![Dart][Dart]][Dart]
 * [![Java][Java]][Java]
 * [![Swift][Swift]][Swift]
-
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -80,8 +74,6 @@ TBA
 ### Installation
 TBA
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- USAGE EXAMPLES -->
@@ -91,7 +83,7 @@ TBA
 
 _For more examples, please refer to the [Documentation](https://gitlab.uni-ulm.de/se-anwendungsprojekt-22-23/documentation)_
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 <!-- Developement setup-->
 ## Developement setup
@@ -101,14 +93,10 @@ In order to apply to these coding style, following IDEs/editors need to be confi
 - VSCode: The plugin [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) needs to be installed
 - Android Studio: Enable EditorConfig support by navigating to `Settings` -> `Editor` -> `Code Style` and check `Enable EditorConfig support`
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- LICENSE -->
 ## License
 TBA
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Authors -->
 ## Authors
@@ -118,9 +106,6 @@ TBA
 - [Florian Martin Gebhardt](@nck73)
 - [Mukhtar Muse](@tca87)
 - [Leonhard Alkewitz](@kjy97)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
