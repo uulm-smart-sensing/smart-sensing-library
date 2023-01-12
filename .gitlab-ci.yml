@@ -13,14 +13,16 @@ flutter-analyze:
 flutter-format:
   stage: analysis
   script:
-    - flutter format . -o write --set-exit-if-changed --fix || git diff && exit 1
+    - flutter format . -o write --set-exit-if-changed --fix
+  after_script:
+    - git diff
 
 flutter-format:apply:
   stage: analysis
   needs: [ ]
   when: manual
-  only:
-    - merge_requests
+#  only:
+#    - merge_requests
   before_script:
     # FLUTTER_FORMAT_TOKEN is a group access token which is available as a CI variable
     - |
