@@ -43,7 +43,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
- [![Product Name Screen Shot][product-screenshot]](Product-screenshot)
+
 
 Study apps can be helpful for the successful conduct of medical and psychological studies. 
 Especially the use of sensors, for example from smartphones or wearables, can provide useful data to support the study. 
