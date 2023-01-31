@@ -96,7 +96,7 @@ In order to apply to these coding style, following IDEs/editors need to be confi
 
 <!-- LICENSE -->
 ## License
-TBA
+[License](./LICENSE)
 
 <!-- Authors -->
 ## Authors
