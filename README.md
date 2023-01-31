@@ -6,12 +6,12 @@
     <img src="https://cdn-images-1.medium.com/max/1200/1*5-aoK8IBmXve5whBQM90GA.png" alt="Logo" width="80" height="80">
   </a>
 <h3 align="center">Smart Sensing Libary</h3>
-<a href="https://gitlab.uni-ulm.de/groups/se-anwendungsprojekt-22-23/-/wikis/home"><strong>Explore the docs »</strong></a> 
+<a href="https://gitlab.uni-ulm.de/groups/se-anwendungsprojekt-22-23/-/wikis/home"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a>View Demo</a>
-    
-  
+    [View Demo](./example/)
+
+
 </div>
 
 <!-- TABLE OF CONTENTS -->
@@ -45,21 +45,21 @@
 
 
 
-Study apps can be helpful for the successful conduct of medical and psychological studies. 
-Especially the use of sensors, for example from smartphones or wearables, can provide useful data to support the study. 
+Study apps can be helpful for the successful conduct of medical and psychological studies.
+Especially the use of sensors, for example from smartphones or wearables, can provide useful data to support the study.
 
-Therefore, the development of such apps should be as simple as possible in order to be able to use them without great effort. 
-That's why we develop a smart sensing library, which can be used to easily implement cross-platform apps with Flutter. 
+Therefore, the development of such apps should be as simple as possible in order to be able to use them without great effort.
+That's why we develop a smart sensing library, which can be used to easily implement cross-platform apps with Flutter.
 
-This library will be able to track sensors from the smartphone and some wearables, collect the sensor data and save it. 
-Additionally, it will be possible to either get live data or store and process the data. 
+This library will be able to track sensors from the smartphone and some wearables, collect the sensor data and save it.
+Additionally, it will be possible to either get live data or store and process the data.
 
 
 
 ### Built With
 
 * [![Dart][Dart]][Dart]
-* [![Java][Java]][Java]
+* [![Kotlin][Kotlin]][Kotlin]
 * [![Swift][Swift]][Swift]
 
 
@@ -110,9 +110,8 @@ TBA
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[product-screenshot]: https://developer.android.com/static/studio/images/run/device-le-example.png?hl=fr
 [Dart]: https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white
-[Java]: https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white
+[Kotlin]: https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white
 [Swift]: https://img.shields.io/badge/swift-F54A2A?style=for-the-badge&logo=swift&logoColor=white
 
 
