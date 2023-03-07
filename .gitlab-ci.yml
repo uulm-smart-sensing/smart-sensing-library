@@ -8,14 +8,15 @@ flutter-analyze:
   stage: analysis
   needs: [ ]
   script:
+    - bash setup.sh
     - flutter analyze --fatal-infos
 
 flutter-format:
   stage: analysis
   script:
-    - flutter format . -o write --set-exit-if-changed --fix
-  after_script:
-    - git diff
+    - bash setup.sh
+    - flutter format . -o write --fix
+    - git diff --exit-code
 
 flutter-format:apply:
   stage: analysis
@@ -31,6 +32,7 @@ flutter-format:apply:
       git config user.email "noreply+flutter-format-bot@${CI_SERVER_HOST}"
   script:
     - |
+      bash setup.sh
       flutter format . -o write --fix
       git commit -am "style: apply flutter-format"
       git push ci HEAD:$CI_COMMIT_REF_NAME
@@ -41,4 +43,5 @@ flutter-test:
   stage: test
   needs: [ ]
   script:
+    - bash setup.sh
     - flutter test
