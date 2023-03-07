@@ -12,18 +12,26 @@ class BufferManager {
 
   ///Adds a Buffer to the Manager
   void addBuffer(int id) {
-    _buffer[id] = <SensorData>[];
+    if (_buffer[id] == null) {
+      _buffer[id] = <SensorData>[];
+    } else {
+      throw Exception("Buffer already added.");
+    }
   }
 
   ///Removes the Buffer with [id] from the Manager
   void removeBuffer(int id) {
-    _buffer[id] = null;
+    _buffer.remove(id);
   }
 
   ///Returns the sorted buffer list with [id] from the Manager
   List<SensorData> getBuffer(int id) {
-    _sortBuffer(id);
-    return _buffer[id] as List<SensorData>;
+    if (_buffer[id] != null) {
+      _sortBuffer(id);
+      return _buffer[id] as List<SensorData>;
+    } else {
+      throw Exception("No such buffer.");
+    }
   }
 
   ///Sorts the buffer with [id]

@@ -1,6 +1,5 @@
 ///Data Class for Sensor Data
 class SensorData {
-
   ///Id for Objectbox generation
   int id;
 
