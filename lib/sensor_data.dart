@@ -1,3 +1,5 @@
+import 'package:sensing_plugin/sensing_plugin.dart';
+
 ///Data Class for Sensor Data
 class SensorData {
   ///Id for Objectbox generation
@@ -10,7 +12,7 @@ class SensorData {
   late int maxPrecision;
 
   ///Id of the sensor.
-  late int sensorID;
+  late SensorId sensorID;
 
   ///Time the data got saved.
   late DateTime dateTime;
@@ -32,7 +34,7 @@ class SensorData {
   int getMaxPrecision() => maxPrecision;
 
   ///Returns SensorID
-  int getSensorID() => sensorID;
+  SensorId getSensorID() => sensorID;
 
   ///Returns DateStamp of Sensor Data
   DateTime getDateTime() => dateTime;
