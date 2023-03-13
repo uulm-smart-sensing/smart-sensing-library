@@ -1,4 +1,4 @@
 [submodule "sensing-plugin"]
 	path = sensing-plugin
-	url = https://gitlab.uni-ulm.de/se-anwendungsprojekt-22-23/sensing-plugin.git
+	url = ../sensing-plugin.git
 	branch = main
