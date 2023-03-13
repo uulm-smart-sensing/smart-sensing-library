@@ -1,11 +1,14 @@
 import 'dart:collection';
+// ignore: depend_on_referenced_packages
+import 'package:sensing_plugin/sensing_plugin.dart';
 import 'sensor_data.dart';
+
 
 ///Base class of BufferManager
 class BufferManager {
   BufferManager._constructor();
   static final _instance = BufferManager._constructor();
-  final HashMap _buffer = HashMap<int, List<SensorData>>();
+  final HashMap _buffer = HashMap<SensorId, List<SensorData>>();
 
   ///Return instance of BufferManager
   factory BufferManager() => _instance;
