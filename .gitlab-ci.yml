@@ -4,6 +4,9 @@ stages:
   - analysis
   - test
 
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
 before_script:
   - flutter --version
   - flutter clean
