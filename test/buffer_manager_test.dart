@@ -27,7 +27,7 @@ void main() {
     test("Add buffer twice", () {
       bufferManager.addBuffer(SensorId.barometer);
       expect(
-          () => bufferManager.addBuffer(SensorId.barometer), throwsException);
+          () => bufferManager.addBuffer(SensorId.barometer), throwsException,);
     });
 
     test("Add Data to Buffer", () {
@@ -47,16 +47,16 @@ void main() {
         ..addBuffer(SensorId.linearAcceleration)
         ..removeBuffer(SensorId.linearAcceleration);
       expect(() => bufferManager.getBuffer(SensorId.linearAcceleration),
-          throwsException);
+          throwsException,);
     });
     test("Test buffer sorting algorithm.", () {
       bufferManager
         ..addBuffer(SensorId.magnetometer)
         ..getBuffer(SensorId.magnetometer).addAll(testList);
       expect(bufferManager.getBuffer(SensorId.magnetometer).last.dateTime.year,
-          2023);
+          2023,);
       expect(bufferManager.getBuffer(SensorId.magnetometer).first.dateTime.year,
-          2020);
+          2020,);
     });
   });
 }
