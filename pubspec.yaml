@@ -2,6 +2,7 @@ name: smart_sensing_library
 description: A smart sensing library for study apps
 version: 0.0.0
 homepage:
+publish_to: none
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
