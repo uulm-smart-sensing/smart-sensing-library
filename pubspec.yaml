@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  sensing_plugin:
+    path: ./sensing-plugin
 
 
 dev_dependencies:
@@ -19,6 +21,5 @@ dev_dependencies:
   test_cov_console: ^0.2.2
   junitreport: ^2.0.2
   cobertura: ^1.0.3
-  sensing_plugin:
-    path: ./sensing-plugin
+
 flutter:

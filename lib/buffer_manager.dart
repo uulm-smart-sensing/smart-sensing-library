@@ -1,5 +1,4 @@
 import 'dart:collection';
-// ignore: depend_on_referenced_packages
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'sensor_data.dart';
 
