@@ -106,4 +106,29 @@ class FilterTools {
     }
     _flattenBuffer();
   }
+
+  ///Gets sum of [_buffer] in given [intervall].
+  void getSum({Duration intervall = Duration.zero}) {
+    _splitBuffer(intervall);
+    var axisAmount = _buffer[0][0].data.length;
+    for (var i = 0; i < _buffer.length; i++) {
+      var avgData = List<double>.generate(axisAmount, (index) => 0);
+      for (var j = 0; j < _buffer[i].length; j++) {
+        for (var r = 0; r < axisAmount; r++) {
+          avgData[r] += _buffer[i][j].data[r];
+        }
+      }
+      var lastEntry = _buffer[i].last;
+      var avgEntry = SensorData(
+        data: avgData,
+        maxPrecision: lastEntry.maxPrecision,
+        sensorID: lastEntry.sensorID,
+        setTime: lastEntry.dateTime,
+      );
+      _buffer[i]
+        ..clear()
+        ..add(avgEntry);
+    }
+    _flattenBuffer();
+  }
 }
