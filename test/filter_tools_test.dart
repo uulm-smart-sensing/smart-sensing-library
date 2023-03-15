@@ -106,19 +106,100 @@ void main() {
     "each filter with predetermined inputs",
     () {
       test(
-        "Test getMax in single intervall with predetermined data",
+        "Test getMax in single intervall with predetermined data axis 0",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMax();
 
           expect(filter.result()[0].data, contains(29.1));
         },
       );
+
       test(
-        "Test getMin in single intervall with predetermined data",
+        "Test getMax in single intervall with predetermined data axis 1",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getMax(axis: 1);
+
+          expect(filter.result()[0].data, contains(39.2));
+        },
+      );
+      test(
+        "Test getMin in single intervall with predetermined data axis 0",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMin();
 
           expect(filter.result()[0].data, contains(0.1));
+        },
+      );
+
+      test(
+        "Test getMin in single intervall with predetermined data axis 1",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getMin(axis: 1);
+
+          expect(filter.result()[0].data, contains(10.2));
+        },
+      );
+
+      test(
+        "Test getAvg in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getAvg();
+
+          expect(filter.result()[0].data, contains(14.6));
+        },
+      );
+
+      test(
+        "Test getMedian in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getMedian();
+
+          expect(filter.result()[0].data, contains(14.6));
+        },
+      );
+
+      test(
+        "Test getSum in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getSum();
+
+          expect(filter.result()[0].data, contains(438));
+        },
+      );
+
+      test(
+        "Test getSum in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet);
+
+          expect(filter.getCount(), contains(30));
+        },
+      );
+
+      test(
+        "Test getSum in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getMode();
+
+          // expect(filter.result()[0].data, contains(438));
+        },
+      );
+
+      test(
+        "Test getSum in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getRange();
+
+          expect(filter.result()[0].data, contains(29));
+        },
+      );
+
+      test(
+        "Test getSum in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getSD();
+
+          expect(filter.result()[0].data, contains(8.7));
         },
       );
     },
