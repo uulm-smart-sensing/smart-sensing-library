@@ -175,4 +175,41 @@ class FilterTools {
     }
     _flattenBuffer();
   }
+
+  ///Gets the difference between the highest and lowest value in [_buffer]
+  ///with given [intervall].
+  void getRange({Duration intervall = Duration.zero}) {
+    _splitBuffer(intervall);
+    var axisAmount = _buffer[0][0].data.length;
+    for (var i = 0; i < _buffer.length; i++) {
+      var maxData = List<double>.generate(axisAmount, (index) => 0);
+      var minData = List<double>.generate(axisAmount, (index) => 0);
+      for (var j = 0; j < _buffer[i].length; j++) {
+        for (var r = 0; r < axisAmount; r++) {
+          if (maxData[r] < _buffer[i][j].data[r]) {
+            maxData[r] = _buffer[i][j].data[r];
+          }
+          if (minData[r] > _buffer[i][j].data[r]) {
+            minData[r] = _buffer[i][j].data[r];
+          }
+        }
+      }
+      var rangeData = List<double>.generate(axisAmount, (index) => 0);
+      for (var j = 0; j < axisAmount; j++) {
+        rangeData[j] = (maxData[j] - minData[j]).abs();
+      }
+      var lastEntry = _buffer[i].last;
+      var rangeEntry = SensorData(
+        data: rangeData,
+        maxPrecision: lastEntry.maxPrecision,
+        sensorID: lastEntry.sensorID,
+        setTime: lastEntry.dateTime,
+      );
+      _buffer[i]
+        ..clear()
+        ..add(rangeEntry);
+    }
+    _flattenBuffer();
+  }
+
 }
