@@ -50,6 +50,18 @@ class FilterTools {
       ..add(tmpList);
   }
 
+  double _calculateMedian(List<double> list) {
+    double median;
+    var middle = list.length ~/ 2;
+
+    if (list.length.isOdd) {
+      median = list[middle];
+    } else {
+      median = (list[middle - 1] + list[middle]) / 2.0;
+    }
+    return median;
+  }
+
   ///Gets maximum of [_buffer] in given [intervall] from [axis].
   void getMax({Duration intervall = Duration.zero, int axis = 0}) {
     _splitBuffer(intervall);
@@ -208,6 +220,34 @@ class FilterTools {
       _buffer[i]
         ..clear()
         ..add(rangeEntry);
+    }
+    _flattenBuffer();
+  }
+
+  ///Gets median of [_buffer] with given [intervall].
+  void getMedian({Duration intervall = Duration.zero}) {
+    _splitBuffer(intervall);
+    var axisAmount = _buffer[0][0].data.length;
+    for (var i = 0; i < _buffer.length; i++) {
+      var medianData = <double>[];
+      var tmpList = _buffer[i];
+      for (var j = 0; j < axisAmount; j++) {
+        var tmpAxisData = <double>[];
+        for (var r = 0; r < tmpList.length; r++) {
+          tmpAxisData.add(tmpList[r].data[j]);
+        }
+        medianData.add(_calculateMedian(tmpAxisData));
+      }
+      var lastEntry = _buffer[i].last;
+      var medianEntry = SensorData(
+        data: medianData,
+        maxPrecision: lastEntry.maxPrecision,
+        sensorID: lastEntry.sensorID,
+        setTime: lastEntry.dateTime,
+      );
+      _buffer[i]
+        ..clear()
+        ..add(medianEntry);
     }
     _flattenBuffer();
   }
