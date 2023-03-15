@@ -49,4 +49,21 @@ class FilterTools {
       ..clear()
       ..add(tmpList);
   }
+
+ ///Gets maximum of [_buffer] in given [intervall] from [axis].
+  void getMax({Duration intervall = Duration.zero, int axis = 0}) {
+    _splitBuffer(intervall);
+    for (var i = 0; i < _buffer.length; i++) {
+      _buffer[i] = <SensorData>[
+        _buffer[i].reduce(
+          (current, next) =>
+              (current.getData()[axis] > next.getData()[axis]) ? current : next,
+        ),
+      ];
+    }
+    _flattenBuffer();
+  }
+
+
+
 }
