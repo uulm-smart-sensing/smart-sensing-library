@@ -138,6 +138,9 @@ class FilterTools {
           sumData[r] += _buffer[i][j].data[r];
         }
       }
+      for (var r = 0; r < axisAmount; r++) {
+        sumData[r] = double.parse(sumData[r].toStringAsFixed(_precision));
+      }
       var lastEntry = _buffer[i].last;
       var avgEntry = SensorData(
         data: sumData,
@@ -203,7 +206,8 @@ class FilterTools {
     var axisAmount = _buffer[0][0].data.length;
     for (var i = 0; i < _buffer.length; i++) {
       var maxData = List<double>.generate(axisAmount, (index) => 0);
-      var minData = List<double>.generate(axisAmount, (index) => 0);
+      var minData =
+          List<double>.generate(axisAmount, (index) => double.infinity);
       for (var j = 0; j < _buffer[i].length; j++) {
         for (var r = 0; r < axisAmount; r++) {
           if (maxData[r] < _buffer[i][j].data[r]) {
@@ -277,9 +281,11 @@ class FilterTools {
               pow(averageData[r] - _buffer[i][j].data[r], 2);
         }
       }
-      var sdData = varianceList.map((e) => double.parse(
-            sqrt(e).toStringAsFixed(_precision),
-          ),);
+      var sdData = varianceList.map(
+        (e) => double.parse(
+          sqrt(e).toStringAsFixed(_precision),
+        ),
+      );
       var lastEntry = _buffer[i].last;
       var sdEntry = SensorData(
         data: sdData.toList(),
