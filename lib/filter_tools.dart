@@ -142,4 +142,37 @@ class FilterTools {
     _flattenBuffer();
     return countList;
   }
+
+  ///Gets the entry that happend the most at
+  ///[axis] from [_buffer] in given [intervall].
+  void getMode({Duration intervall = Duration.zero, int axis = 0}) {
+    _splitBuffer(intervall);
+    var maxCount = 0;
+    var maxData = <double>[];
+    for (var i = 0; i < _buffer.length; i++) {
+      var count = 0;
+      for (var j = 0; j < _buffer[i].length; j++) {
+        for (var r = 0; r < _buffer[i].length; r++) {
+          if (_buffer[i][j].data[axis] == _buffer[i][r].data[axis]) {
+            count++;
+          }
+        }
+        if (count > maxCount) {
+          maxCount = count;
+          maxData = _buffer[i][j].data;
+        }
+      }
+      var lastEntry = _buffer[i].last;
+      var modeEntry = SensorData(
+        data: maxData,
+        maxPrecision: lastEntry.maxPrecision,
+        sensorID: lastEntry.sensorID,
+        setTime: lastEntry.dateTime,
+      );
+      _buffer[i]
+        ..clear()
+        ..add(modeEntry);
+    }
+    _flattenBuffer();
+  }
 }
