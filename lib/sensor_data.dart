@@ -17,14 +17,19 @@ class SensorData {
   ///Time the data got saved.
   late DateTime dateTime;
 
-  ///Constructor for SensorData
+ ///Constructor for SensorData
   SensorData({
     required this.data,
     required this.maxPrecision,
     required this.sensorID,
+    DateTime? setTime,
     this.id = 0,
   }) {
-    dateTime = DateTime.now();
+    if (setTime == null) {
+      dateTime = DateTime.now();
+    } else {
+      dateTime = setTime;
+    }
   }
 
   ///Returns SensorData
