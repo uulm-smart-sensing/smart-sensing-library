@@ -17,7 +17,7 @@ class SensorData {
   ///Time the data got saved.
   late DateTime dateTime;
 
- ///Constructor for SensorData
+  ///Constructor for SensorData
   SensorData({
     required this.data,
     required this.maxPrecision,

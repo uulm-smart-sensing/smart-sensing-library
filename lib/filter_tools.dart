@@ -50,7 +50,7 @@ class FilterTools {
       ..add(tmpList);
   }
 
- ///Gets maximum of [_buffer] in given [intervall] from [axis].
+  ///Gets maximum of [_buffer] in given [intervall] from [axis].
   void getMax({Duration intervall = Duration.zero, int axis = 0}) {
     _splitBuffer(intervall);
     for (var i = 0; i < _buffer.length; i++) {
@@ -64,7 +64,7 @@ class FilterTools {
     _flattenBuffer();
   }
 
- ///Gets minimum of [_buffer] in given [intervall] from [axis].
+  ///Gets minimum of [_buffer] in given [intervall] from [axis].
   void getMin({Duration intervall = Duration.zero, int axis = 0}) {
     _splitBuffer(intervall);
     for (var i = 0; i < _buffer.length; i++) {
@@ -78,7 +78,7 @@ class FilterTools {
     _flattenBuffer();
   }
 
-///Gets average of [_buffer] in given [intervall].
+  ///Gets average of [_buffer] in given [intervall].
   void getAvg({Duration intervall = Duration.zero}) {
     _splitBuffer(intervall);
     var axisAmount = _buffer[0][0].data.length;
