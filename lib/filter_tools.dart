@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'sensor_data.dart';
 
 ///Base class of filter tools.
@@ -251,5 +252,38 @@ class FilterTools {
     }
     _flattenBuffer();
   }
+
+    ///Returns the standard deviation of [_buffer] in given [intervall].
+  void getSD({Duration intervall = Duration.zero}) {
+    var filter = FilterTools(_buffer[0])..getAvg(intervall: intervall);
+    var averageList = filter.result();
+    var axisAmount = _buffer[0][0].data.length;
+    _splitBuffer(intervall);
+    for (var i = 0; i < _buffer.length; i++) {
+      var averageData = averageList[i].data;
+      var varianceList = List<double>.generate(axisAmount, (index) => 0);
+      for (var j = 0; j < _buffer[i].length; j++) {
+        for (var r = 0; r < axisAmount; r++) {
+          varianceList[r] += (1 / _buffer[i].length) *
+              pow(averageData[r] - _buffer[i][j].data[r], 2);
+        }
+      }
+      var sdData = varianceList.map(sqrt);
+      var lastEntry = _buffer[i].last;
+      var sdEntry = SensorData(
+        data: sdData.toList(),
+        maxPrecision: lastEntry.maxPrecision,
+        sensorID: lastEntry.sensorID,
+        setTime: lastEntry.dateTime,
+      );
+      _buffer[i]
+        ..clear()
+        ..add(sdEntry);
+    }
+    _flattenBuffer();
+  }
+
+  ///Returns result of querry.
+  List<SensorData> result() => _buffer[0];
 
 }
