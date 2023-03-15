@@ -56,6 +56,7 @@ class FilterTools {
   double _calculateMedian(List<double> list) {
     double median;
     var middle = list.length ~/ 2;
+    list.sort((a, b) => a.compareTo(b));
 
     if (list.length.isOdd) {
       median = list[middle];
