@@ -6,31 +6,35 @@ import 'package:smart_sensing_library/sensor_data.dart';
 void main() {
   var bufferManager = BufferManager();
   var testData = SensorData(
-    data: [1.1, 1.2, 1.3],
+    data: const [1.1, 1.2, 1.3],
     maxPrecision: 1,
     sensorID: SensorId.accelerometer,
   );
   var testList = [
     SensorData(
-      data: [1.2, 1.2, 1.3],
+      data: const [1.2, 1.2, 1.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
-    )..dateTime = DateTime(2023),
+      setTime: DateTime(2023),
+    ),
     SensorData(
-      data: [2.2, 2.2, 3.3],
+      data: const [2.2, 2.2, 3.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
-    )..dateTime = DateTime(2022),
+      setTime:  DateTime(2022),
+    ),
     SensorData(
-      data: [3.2, 3.2, 3.3],
+      data: const [3.2, 3.2, 3.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
-    )..dateTime = DateTime(2021),
+      setTime:  DateTime(2021),
+    ),
     SensorData(
-      data: [4.2, 4.2, 4.3],
+      data: const [4.2, 4.2, 4.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
-    )..dateTime = DateTime(2020)
+      setTime: DateTime(2020),
+    )
   ];
 
   group("Basic testing of BufferManager", () {

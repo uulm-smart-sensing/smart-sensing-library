@@ -70,7 +70,7 @@ class FilterTools {
       _buffer[i] = <SensorData>[
         _buffer[i].reduce(
           (current, next) =>
-              (current.getData()[axis] > next.getData()[axis]) ? current : next,
+              (current.data[axis] > next.data[axis]) ? current : next,
         ),
       ];
     }
@@ -84,7 +84,7 @@ class FilterTools {
       _buffer[i] = <SensorData>[
         _buffer[i].reduce(
           (current, next) =>
-              (current.getData()[axis] < next.getData()[axis]) ? current : next,
+              (current.data[axis] < next.data[axis]) ? current : next,
         ),
       ];
     }

@@ -1,21 +1,24 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 ///Data Class for Sensor Data
+@immutable
 class SensorData {
   ///Id for Objectbox generation
-  int id;
+  final int id;
 
   ///Datapoints that are saved.
-  late List<double> data;
+  late final List<double> data;
 
   ///Max precision of the values.
-  late int maxPrecision;
+  late final int maxPrecision;
 
   ///Id of the sensor.
-  late SensorId sensorID;
+  late final SensorId sensorID;
 
   ///Time the data got saved.
-  late DateTime dateTime;
+  late final DateTime dateTime;
 
   ///Constructor for SensorData
   SensorData({
@@ -32,15 +35,20 @@ class SensorData {
     }
   }
 
-  ///Returns SensorData
-  List<double> getData() => data;
+@override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SensorData &&
+          (other.dateTime == dateTime &&
+              other.maxPrecision == maxPrecision &&
+              other.sensorID == sensorID &&
+              const ListEquality().equals(other.data, data));
 
-  ///Returns MaxPrecision
-  int getMaxPrecision() => maxPrecision;
+  @override
+  int get hashCode =>
+      data.hashCode +
+      dateTime.hashCode +
+      sensorID.hashCode +
+      maxPrecision.hashCode;
 
-  ///Returns SensorID
-  SensorId getSensorID() => sensorID;
-
-  ///Returns DateStamp of Sensor Data
-  DateTime getDateTime() => dateTime;
 }
