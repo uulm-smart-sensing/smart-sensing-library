@@ -131,4 +131,15 @@ class FilterTools {
     }
     _flattenBuffer();
   }
+
+  ///Gets amount of entries in [_buffer] in given [intervall].
+  List<int> getCount({Duration intervall = Duration.zero}) {
+    _splitBuffer(intervall);
+    var countList = <int>[];
+    for (var i = 0; i < _buffer.length; i++) {
+      countList.add(_buffer[i].length);
+    }
+    _flattenBuffer();
+    return countList;
+  }
 }
