@@ -253,7 +253,7 @@ class FilterTools {
     _flattenBuffer();
   }
 
-    ///Returns the standard deviation of [_buffer] in given [intervall].
+  ///Returns the standard deviation of [_buffer] in given [intervall].
   void getSD({Duration intervall = Duration.zero}) {
     var filter = FilterTools(_buffer[0])..getAvg(intervall: intervall);
     var averageList = filter.result();
@@ -285,5 +285,4 @@ class FilterTools {
 
   ///Returns result of querry.
   List<SensorData> result() => _buffer[0];
-
 }

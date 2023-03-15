@@ -4,12 +4,9 @@ import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/filter_tools.dart';
 import 'package:smart_sensing_library/sensor_data.dart';
 
-
 void main() {
-
   var randomTestDataset = createRandomTestData();
   var determinedTestDataSet = createDeterminedTestData();
-
 
   group("This groups Test that only test if the filters are deterministic.",
       () {
@@ -104,8 +101,28 @@ void main() {
     });
   });
 
+  group(
+    "This group tests the functionality of "
+    "each filter with predetermined inputs",
+    () {
+      test(
+        "Test getMax in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getMax();
 
+          expect(filter.result()[0].data, contains(29.1));
+        },
+      );
+      test(
+        "Test getMin in single intervall with predetermined data",
+        () {
+          var filter = FilterTools(determinedTestDataSet)..getMin();
 
+          expect(filter.result()[0].data, contains(0.1));
+        },
+      );
+    },
+  );
 }
 
 List<SensorData> createRandomTestData() {

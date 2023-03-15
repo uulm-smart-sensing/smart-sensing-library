@@ -21,13 +21,13 @@ void main() {
       data: const [2.2, 2.2, 3.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
-      setTime:  DateTime(2022),
+      setTime: DateTime(2022),
     ),
     SensorData(
       data: const [3.2, 3.2, 3.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
-      setTime:  DateTime(2021),
+      setTime: DateTime(2021),
     ),
     SensorData(
       data: const [4.2, 4.2, 4.3],
