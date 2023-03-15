@@ -64,6 +64,18 @@ class FilterTools {
     _flattenBuffer();
   }
 
-
+ ///Gets minimum of [_buffer] in given [intervall] from [axis].
+  void getMin({Duration intervall = Duration.zero, int axis = 0}) {
+    _splitBuffer(intervall);
+    for (var i = 0; i < _buffer.length; i++) {
+      _buffer[i] = <SensorData>[
+        _buffer[i].reduce(
+          (current, next) =>
+              (current.getData()[axis] < next.getData()[axis]) ? current : next,
+        ),
+      ];
+    }
+    _flattenBuffer();
+  }
 
 }
