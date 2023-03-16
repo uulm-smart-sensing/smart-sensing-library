@@ -146,7 +146,7 @@ void main() {
         () {
           var filter = FilterTools(determinedTestDataSet)..getAvg();
 
-          expect(filter.result()[0].data, contains(14.6));
+          expect(filter.result()[0].data, contains(14.1));
         },
       );
 
@@ -155,7 +155,7 @@ void main() {
         () {
           var filter = FilterTools(determinedTestDataSet)..getMedian();
 
-          expect(filter.result()[0].data, contains(14.6));
+          expect(filter.result()[0].data, contains(14.1));
         },
       );
 
@@ -164,7 +164,7 @@ void main() {
         () {
           var filter = FilterTools(determinedTestDataSet)..getSum();
 
-          expect(filter.result()[0].data, contains(438));
+          expect(filter.result()[0].data, contains(438.1));
         },
       );
 
@@ -173,18 +173,18 @@ void main() {
         () {
           var filter = FilterTools(determinedTestDataSet);
 
-          expect(filter.getCount(), contains(30));
+          expect(filter.getCount(), contains(31));
         },
       );
 
-      /*test(
-        "Test getSum in single interval with predetermined data",
+      test(
+        "Test getMode in single interval with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMode();
 
-          // expect(filter.result()[0].data, contains(438));
+          expect(filter.result()[0].data, contains(0.1));
         },
-      );*/
+      );
 
       test(
         "Test getRange in single interval with predetermined data",
@@ -200,7 +200,7 @@ void main() {
         () {
           var filter = FilterTools(determinedTestDataSet)..getSD();
 
-          expect(filter.result()[0].data, contains(8.7));
+          expect(filter.result()[0].data, contains(8.9));
         },
       );
     },
@@ -297,7 +297,23 @@ List<SensorData> createDeterminedTestData() {
       ),
     );
   }
-  testData.sort(
+  testData..add(SensorData(
+        data: const [
+          0.1,
+          10.2,
+          100.3,
+        ],
+        maxPrecision: 1,
+        sensorID: SensorId.accelerometer,
+        setTime: DateTime(
+          2023,
+          Random().nextInt(12) + 1,
+          Random().nextInt(30) + 1,
+          Random().nextInt(60),
+        ),
+      ),
+      )
+  ..sort(
     (a, b) => a.dateTime.compareTo(b.dateTime),
   );
   return testData;
