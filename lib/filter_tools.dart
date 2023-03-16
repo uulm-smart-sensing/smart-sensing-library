@@ -171,7 +171,7 @@ class FilterTools {
         sumData[r] = double.parse(sumData[r].toStringAsFixed(_precision));
       }
       var lastEntry = _buffer[i].last;
-      var avgEntry = SensorData(
+      var sumEntry = SensorData(
         data: sumData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
@@ -179,7 +179,7 @@ class FilterTools {
       );
       _buffer[i]
         ..clear()
-        ..add(avgEntry);
+        ..add(sumEntry);
     }
     _flattenBuffer();
   }
