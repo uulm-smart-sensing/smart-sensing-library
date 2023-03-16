@@ -203,10 +203,10 @@ class FilterTools {
     var maxCount = 0;
     var modeData = <double>[];
     for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
-      var count = 0;
       for (var currEntry = 0;
           currEntry < _buffer[currinterval].length;
           currEntry++) {
+            var count = 0;
         for (var nextEntry = 0;
             nextEntry < _buffer[currinterval].length;
             nextEntry++) {
