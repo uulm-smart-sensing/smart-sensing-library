@@ -206,7 +206,7 @@ class FilterTools {
       for (var currEntry = 0;
           currEntry < _buffer[currinterval].length;
           currEntry++) {
-            var count = 0;
+        var count = 0;
         for (var nextEntry = 0;
             nextEntry < _buffer[currinterval].length;
             nextEntry++) {

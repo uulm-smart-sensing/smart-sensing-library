@@ -297,7 +297,9 @@ List<SensorData> createDeterminedTestData() {
       ),
     );
   }
-  testData..add(SensorData(
+  testData
+    ..add(
+      SensorData(
         data: const [
           0.1,
           10.2,
@@ -312,10 +314,10 @@ List<SensorData> createDeterminedTestData() {
           Random().nextInt(60),
         ),
       ),
-      )
-  ..sort(
-    (a, b) => a.dateTime.compareTo(b.dateTime),
-  );
+    )
+    ..sort(
+      (a, b) => a.dateTime.compareTo(b.dateTime),
+    );
   return testData;
 }
 
