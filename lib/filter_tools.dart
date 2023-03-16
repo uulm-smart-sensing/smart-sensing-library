@@ -71,9 +71,7 @@ class FilterTools {
   ///Gets maximum of [_buffer] in given [interval] from [axis].
   void getMax({Duration interval = Duration.zero, int axis = 0}) {
     _splitBuffer(interval);
-    for (var currinterval = 0;
-        currinterval < _buffer.length;
-        currinterval++) {
+    for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       _buffer[currinterval] = <SensorData>[
         _buffer[currinterval].reduce(
           (current, next) =>
@@ -87,9 +85,7 @@ class FilterTools {
   ///Gets minimum of [_buffer] in given [interval] from [axis].
   void getMin({Duration interval = Duration.zero, int axis = 0}) {
     _splitBuffer(interval);
-    for (var currinterval = 0;
-        currinterval < _buffer.length;
-        currinterval++) {
+    for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       _buffer[currinterval] = <SensorData>[
         _buffer[currinterval].reduce(
           (current, next) =>
@@ -104,9 +100,7 @@ class FilterTools {
   void getAvg({Duration interval = Duration.zero}) {
     _splitBuffer(interval);
     var axisAmount = _buffer[0][0].data.length;
-    for (var currinterval = 0;
-        currinterval < _buffer.length;
-        currinterval++) {
+    for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       var avgData = List<double>.generate(axisAmount, (index) => 0);
       var intervalLength = _buffer[currinterval].length;
       for (var currEntry = 0;
@@ -167,9 +161,7 @@ class FilterTools {
   List<int> getCount({Duration interval = Duration.zero}) {
     _splitBuffer(interval);
     var countList = <int>[];
-    for (var currinterval = 0;
-        currinterval < _buffer.length;
-        currinterval++) {
+    for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       countList.add(_buffer[currinterval].length);
     }
     _flattenBuffer();
@@ -182,9 +174,7 @@ class FilterTools {
     _splitBuffer(interval);
     var maxCount = 0;
     var modeData = <double>[];
-    for (var currinterval = 0;
-        currinterval < _buffer.length;
-        currinterval++) {
+    for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       var count = 0;
       for (var currEntry = 0;
           currEntry < _buffer[currinterval].length;
@@ -221,9 +211,7 @@ class FilterTools {
   void getRange({Duration interval = Duration.zero}) {
     _splitBuffer(interval);
     var axisAmount = _buffer[0][0].data.length;
-    for (var currinterval = 0;
-        currinterval < _buffer.length;
-        currinterval++) {
+    for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       var maxData =
           List<double>.generate(axisAmount, (index) => double.negativeInfinity);
       var minData =
@@ -234,13 +222,11 @@ class FilterTools {
         for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
           if (maxData[currAxis] <
               _buffer[currinterval][currEntry].data[currAxis]) {
-            maxData[currAxis] =
-                _buffer[currinterval][currEntry].data[currAxis];
+            maxData[currAxis] = _buffer[currinterval][currEntry].data[currAxis];
           }
           if (minData[currAxis] >
               _buffer[currinterval][currEntry].data[currAxis]) {
-            minData[currAxis] =
-                _buffer[currinterval][currEntry].data[currAxis];
+            minData[currAxis] = _buffer[currinterval][currEntry].data[currAxis];
           }
         }
       }
@@ -268,9 +254,7 @@ class FilterTools {
   void getMedian({Duration interval = Duration.zero}) {
     _splitBuffer(interval);
     var axisAmount = _buffer[0][0].data.length;
-    for (var currinterval = 0;
-        currinterval < _buffer.length;
-        currinterval++) {
+    for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       var medianData = <double>[];
       var tmpList = _buffer[currinterval];
       for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
@@ -300,9 +284,7 @@ class FilterTools {
     var averageList = filter.result();
     var axisAmount = _buffer[0][0].data.length;
     _splitBuffer(interval);
-    for (var currinterval = 0;
-        currinterval < _buffer.length;
-        currinterval++) {
+    for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       var averageData = averageList[currinterval].data;
       var varianceList = List<double>.generate(axisAmount, (index) => 0);
       for (var currEntry = 0;
@@ -311,9 +293,10 @@ class FilterTools {
         for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
           varianceList[currAxis] += (1 / _buffer[currinterval].length) *
               pow(
-                  averageData[currAxis] -
-                      _buffer[currinterval][currEntry].data[currAxis],
-                  2,);
+                averageData[currAxis] -
+                    _buffer[currinterval][currEntry].data[currAxis],
+                2,
+              );
         }
       }
       var sdData = varianceList.map(
