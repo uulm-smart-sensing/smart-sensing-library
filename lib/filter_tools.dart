@@ -15,6 +15,7 @@ class FilterTools {
     _buffer.add(List.of(buffer));
     _precision = _buffer[0][0].maxPrecision;
   }
+
   ///Internal buffer that is used for every filter.
   ///
   ///At the end of each function, the buffer's
