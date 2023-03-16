@@ -11,12 +11,12 @@ class FilterTools {
   final List<List<SensorData>> _buffer = List.empty(growable: true);
   late final int _precision;
 
-  ///Splits the [_buffer] into equal [intervall]s
+  ///Splits the [_buffer] into equal [interval]s
   ///
   ///The startingpoint is for the calculation is the first entry in
   ///the [_buffer].
-  void _splitBuffer(Duration intervall) {
-    if (intervall.compareTo(Duration.zero) == 0) {
+  void _splitBuffer(Duration interval) {
+    if (interval.compareTo(Duration.zero) == 0) {
       return;
     }
     var tmpList = List<SensorData>.from(_buffer[0]);
@@ -24,20 +24,20 @@ class FilterTools {
       ..clear()
       ..add([]);
     var tmpDuration = Duration.zero;
-    var intervallCount = intervall;
+    var intervalCount = interval;
     var bufferCounter = 0;
     for (var i = 0; i < tmpList.length - 1; i++) {
-      if (tmpDuration < intervallCount) {
+      if (tmpDuration < intervalCount) {
         _buffer[bufferCounter].add(tmpList[i]);
       } else {
         bufferCounter++;
         _buffer.add([]);
         _buffer[bufferCounter].add(tmpList[i]);
-        intervallCount += intervall;
+        intervalCount += interval;
       }
       tmpDuration += tmpList[i + 1].dateTime.difference(tmpList[i].dateTime);
     }
-    if (tmpDuration < intervallCount) {
+    if (tmpDuration < intervalCount) {
       _buffer[bufferCounter].add(tmpList.last);
     } else {
       _buffer
@@ -68,14 +68,14 @@ class FilterTools {
     return median;
   }
 
-  ///Gets maximum of [_buffer] in given [intervall] from [axis].
-  void getMax({Duration intervall = Duration.zero, int axis = 0}) {
-    _splitBuffer(intervall);
-    for (var currIntervall = 0;
-        currIntervall < _buffer.length;
-        currIntervall++) {
-      _buffer[currIntervall] = <SensorData>[
-        _buffer[currIntervall].reduce(
+  ///Gets maximum of [_buffer] in given [interval] from [axis].
+  void getMax({Duration interval = Duration.zero, int axis = 0}) {
+    _splitBuffer(interval);
+    for (var currinterval = 0;
+        currinterval < _buffer.length;
+        currinterval++) {
+      _buffer[currinterval] = <SensorData>[
+        _buffer[currinterval].reduce(
           (current, next) =>
               (current.data[axis] > next.data[axis]) ? current : next,
         ),
@@ -84,14 +84,14 @@ class FilterTools {
     _flattenBuffer();
   }
 
-  ///Gets minimum of [_buffer] in given [intervall] from [axis].
-  void getMin({Duration intervall = Duration.zero, int axis = 0}) {
-    _splitBuffer(intervall);
-    for (var currIntervall = 0;
-        currIntervall < _buffer.length;
-        currIntervall++) {
-      _buffer[currIntervall] = <SensorData>[
-        _buffer[currIntervall].reduce(
+  ///Gets minimum of [_buffer] in given [interval] from [axis].
+  void getMin({Duration interval = Duration.zero, int axis = 0}) {
+    _splitBuffer(interval);
+    for (var currinterval = 0;
+        currinterval < _buffer.length;
+        currinterval++) {
+      _buffer[currinterval] = <SensorData>[
+        _buffer[currinterval].reduce(
           (current, next) =>
               (current.data[axis] < next.data[axis]) ? current : next,
         ),
@@ -100,44 +100,44 @@ class FilterTools {
     _flattenBuffer();
   }
 
-  ///Gets average of [_buffer] in given [intervall].
-  void getAvg({Duration intervall = Duration.zero}) {
-    _splitBuffer(intervall);
+  ///Gets average of [_buffer] in given [interval].
+  void getAvg({Duration interval = Duration.zero}) {
+    _splitBuffer(interval);
     var axisAmount = _buffer[0][0].data.length;
-    for (var currIntervall = 0;
-        currIntervall < _buffer.length;
-        currIntervall++) {
+    for (var currinterval = 0;
+        currinterval < _buffer.length;
+        currinterval++) {
       var avgData = List<double>.generate(axisAmount, (index) => 0);
-      var intervallLength = _buffer[currIntervall].length;
+      var intervalLength = _buffer[currinterval].length;
       for (var currEntry = 0;
-          currEntry < _buffer[currIntervall].length;
+          currEntry < _buffer[currinterval].length;
           currEntry++) {
         for (var r = 0; r < axisAmount; r++) {
-          avgData[r] += _buffer[currIntervall][currEntry].data[r];
+          avgData[r] += _buffer[currinterval][currEntry].data[r];
         }
       }
       for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
         avgData[currAxis] = double.parse(
-          (avgData[currAxis] / intervallLength).toStringAsFixed(_precision),
+          (avgData[currAxis] / intervalLength).toStringAsFixed(_precision),
         );
       }
-      var lastEntry = _buffer[currIntervall].last;
+      var lastEntry = _buffer[currinterval].last;
       var avgEntry = SensorData(
         data: avgData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
         setTime: lastEntry.dateTime,
       );
-      _buffer[currIntervall]
+      _buffer[currinterval]
         ..clear()
         ..add(avgEntry);
     }
     _flattenBuffer();
   }
 
-  ///Gets sum of [_buffer] in given [intervall].
-  void getSum({Duration intervall = Duration.zero}) {
-    _splitBuffer(intervall);
+  ///Gets sum of [_buffer] in given [interval].
+  void getSum({Duration interval = Duration.zero}) {
+    _splitBuffer(interval);
     var axisAmount = _buffer[0][0].data.length;
     for (var i = 0; i < _buffer.length; i++) {
       var sumData = List<double>.generate(axisAmount, (index) => 0);
@@ -163,53 +163,53 @@ class FilterTools {
     _flattenBuffer();
   }
 
-  ///Gets amount of entries in [_buffer] in given [intervall].
-  List<int> getCount({Duration intervall = Duration.zero}) {
-    _splitBuffer(intervall);
+  ///Gets amount of entries in [_buffer] in given [interval].
+  List<int> getCount({Duration interval = Duration.zero}) {
+    _splitBuffer(interval);
     var countList = <int>[];
-    for (var currIntervall = 0;
-        currIntervall < _buffer.length;
-        currIntervall++) {
-      countList.add(_buffer[currIntervall].length);
+    for (var currinterval = 0;
+        currinterval < _buffer.length;
+        currinterval++) {
+      countList.add(_buffer[currinterval].length);
     }
     _flattenBuffer();
     return countList;
   }
 
   ///Gets the entry appears most often at
-  ///[axis] from [_buffer] in given [intervall].
-  void getMode({Duration intervall = Duration.zero, int axis = 0}) {
-    _splitBuffer(intervall);
+  ///[axis] from [_buffer] in given [interval].
+  void getMode({Duration interval = Duration.zero, int axis = 0}) {
+    _splitBuffer(interval);
     var maxCount = 0;
     var modeData = <double>[];
-    for (var currIntervall = 0;
-        currIntervall < _buffer.length;
-        currIntervall++) {
+    for (var currinterval = 0;
+        currinterval < _buffer.length;
+        currinterval++) {
       var count = 0;
       for (var currEntry = 0;
-          currEntry < _buffer[currIntervall].length;
+          currEntry < _buffer[currinterval].length;
           currEntry++) {
         for (var nextEntry = 0;
-            nextEntry < _buffer[currIntervall].length;
+            nextEntry < _buffer[currinterval].length;
             nextEntry++) {
-          if (_buffer[currIntervall][currEntry].data[axis] ==
-              _buffer[currIntervall][nextEntry].data[axis]) {
+          if (_buffer[currinterval][currEntry].data[axis] ==
+              _buffer[currinterval][nextEntry].data[axis]) {
             count++;
           }
         }
         if (count > maxCount) {
           maxCount = count;
-          modeData = _buffer[currIntervall][currEntry].data;
+          modeData = _buffer[currinterval][currEntry].data;
         }
       }
-      var lastEntry = _buffer[currIntervall].last;
+      var lastEntry = _buffer[currinterval].last;
       var modeEntry = SensorData(
         data: modeData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
         setTime: lastEntry.dateTime,
       );
-      _buffer[currIntervall]
+      _buffer[currinterval]
         ..clear()
         ..add(modeEntry);
     }
@@ -217,30 +217,30 @@ class FilterTools {
   }
 
   ///Gets the difference between the highest and lowest value in [_buffer]
-  ///in given [intervall].
-  void getRange({Duration intervall = Duration.zero}) {
-    _splitBuffer(intervall);
+  ///in given [interval].
+  void getRange({Duration interval = Duration.zero}) {
+    _splitBuffer(interval);
     var axisAmount = _buffer[0][0].data.length;
-    for (var currIntervall = 0;
-        currIntervall < _buffer.length;
-        currIntervall++) {
+    for (var currinterval = 0;
+        currinterval < _buffer.length;
+        currinterval++) {
       var maxData =
           List<double>.generate(axisAmount, (index) => double.negativeInfinity);
       var minData =
           List<double>.generate(axisAmount, (index) => double.infinity);
       for (var currEntry = 0;
-          currEntry < _buffer[currIntervall].length;
+          currEntry < _buffer[currinterval].length;
           currEntry++) {
         for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
           if (maxData[currAxis] <
-              _buffer[currIntervall][currEntry].data[currAxis]) {
+              _buffer[currinterval][currEntry].data[currAxis]) {
             maxData[currAxis] =
-                _buffer[currIntervall][currEntry].data[currAxis];
+                _buffer[currinterval][currEntry].data[currAxis];
           }
           if (minData[currAxis] >
-              _buffer[currIntervall][currEntry].data[currAxis]) {
+              _buffer[currinterval][currEntry].data[currAxis]) {
             minData[currAxis] =
-                _buffer[currIntervall][currEntry].data[currAxis];
+                _buffer[currinterval][currEntry].data[currAxis];
           }
         }
       }
@@ -250,29 +250,29 @@ class FilterTools {
           (maxData[j] - minData[j]).abs().toStringAsFixed(_precision),
         );
       }
-      var lastEntry = _buffer[currIntervall].last;
+      var lastEntry = _buffer[currinterval].last;
       var rangeEntry = SensorData(
         data: rangeData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
         setTime: lastEntry.dateTime,
       );
-      _buffer[currIntervall]
+      _buffer[currinterval]
         ..clear()
         ..add(rangeEntry);
     }
     _flattenBuffer();
   }
 
-  ///Gets median of [_buffer] in given [intervall].
-  void getMedian({Duration intervall = Duration.zero}) {
-    _splitBuffer(intervall);
+  ///Gets median of [_buffer] in given [interval].
+  void getMedian({Duration interval = Duration.zero}) {
+    _splitBuffer(interval);
     var axisAmount = _buffer[0][0].data.length;
-    for (var currIntervall = 0;
-        currIntervall < _buffer.length;
-        currIntervall++) {
+    for (var currinterval = 0;
+        currinterval < _buffer.length;
+        currinterval++) {
       var medianData = <double>[];
-      var tmpList = _buffer[currIntervall];
+      var tmpList = _buffer[currinterval];
       for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
         var tmpAxisData = <double>[];
         for (var currEntry = 0; currEntry < tmpList.length; currEntry++) {
@@ -280,39 +280,39 @@ class FilterTools {
         }
         medianData.add(_calculateMedian(tmpAxisData));
       }
-      var lastEntry = _buffer[currIntervall].last;
+      var lastEntry = _buffer[currinterval].last;
       var medianEntry = SensorData(
         data: medianData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
         setTime: lastEntry.dateTime,
       );
-      _buffer[currIntervall]
+      _buffer[currinterval]
         ..clear()
         ..add(medianEntry);
     }
     _flattenBuffer();
   }
 
-  ///Returns the standard deviation of [_buffer] in given [intervall].
-  void getSD({Duration intervall = Duration.zero}) {
-    var filter = FilterTools(_buffer[0])..getAvg(intervall: intervall);
+  ///Returns the standard deviation of [_buffer] in given [interval].
+  void getSD({Duration interval = Duration.zero}) {
+    var filter = FilterTools(_buffer[0])..getAvg(interval: interval);
     var averageList = filter.result();
     var axisAmount = _buffer[0][0].data.length;
-    _splitBuffer(intervall);
-    for (var currIntervall = 0;
-        currIntervall < _buffer.length;
-        currIntervall++) {
-      var averageData = averageList[currIntervall].data;
+    _splitBuffer(interval);
+    for (var currinterval = 0;
+        currinterval < _buffer.length;
+        currinterval++) {
+      var averageData = averageList[currinterval].data;
       var varianceList = List<double>.generate(axisAmount, (index) => 0);
       for (var currEntry = 0;
-          currEntry < _buffer[currIntervall].length;
+          currEntry < _buffer[currinterval].length;
           currEntry++) {
         for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
-          varianceList[currAxis] += (1 / _buffer[currIntervall].length) *
+          varianceList[currAxis] += (1 / _buffer[currinterval].length) *
               pow(
                   averageData[currAxis] -
-                      _buffer[currIntervall][currEntry].data[currAxis],
+                      _buffer[currinterval][currEntry].data[currAxis],
                   2,);
         }
       }
@@ -321,14 +321,14 @@ class FilterTools {
           sqrt(e).toStringAsFixed(_precision),
         ),
       );
-      var lastEntry = _buffer[currIntervall].last;
+      var lastEntry = _buffer[currinterval].last;
       var sdEntry = SensorData(
         data: sdData.toList(),
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
         setTime: lastEntry.dateTime,
       );
-      _buffer[currIntervall]
+      _buffer[currinterval]
         ..clear()
         ..add(sdEntry);
     }

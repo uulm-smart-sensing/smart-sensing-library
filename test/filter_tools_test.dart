@@ -9,94 +9,94 @@ void main() {
   var determinedTestDataSet = createDeterminedTestData();
   var splittingTestDataSet = createDataForSplitting();
 
-  group("This groups Test that only test if the filters are deterministic.",
+  group("This group tests, that all filter (functions) work deterministic.",
       () {
-    test("Test getMax in intervall with Random Data", () {
+    test("Test getMax in interval with random data", () {
       var filter = FilterTools(randomTestDataset)
-        ..getMax(intervall: const Duration(days: 30));
+        ..getMax(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset)
-        ..getMax(intervall: const Duration(days: 30));
+        ..getMax(interval: const Duration(days: 30));
 
       expect(filter.result(), containsAllInOrder(filterTest.result()));
     });
 
-    test("Test getMin in intervall with Random Data", () {
+    test("Test getMin in interval with random data", () {
       var filter = FilterTools(randomTestDataset)
-        ..getMin(intervall: const Duration(days: 30));
+        ..getMin(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset)
-        ..getMin(intervall: const Duration(days: 30));
+        ..getMin(interval: const Duration(days: 30));
 
       expect(filter.result(), containsAllInOrder(filterTest.result()));
     });
 
-    test("Test getAvg in intervall with Random Data", () {
+    test("Test getAvg in interval with random data", () {
       var filter = FilterTools(randomTestDataset)
-        ..getAvg(intervall: const Duration(days: 30));
+        ..getAvg(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset)
-        ..getAvg(intervall: const Duration(days: 30));
+        ..getAvg(interval: const Duration(days: 30));
 
       expect(filter.result(), containsAllInOrder(filterTest.result()));
     });
 
-    test("Test getCount in intervall with Random Data", () {
+    test("Test getCount in interval with random data", () {
       var filter = FilterTools(randomTestDataset);
-      var count = filter.getCount(intervall: const Duration(days: 30));
+      var count = filter.getCount(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset);
-      var testCount = filterTest.getCount(intervall: const Duration(days: 30));
+      var testCount = filterTest.getCount(interval: const Duration(days: 30));
 
       expect(count, containsAllInOrder(testCount));
     });
 
-    test("Test getMedian in intervall with Random Data", () {
+    test("Test getMedian in interval with random data", () {
       var filter = FilterTools(randomTestDataset)
-        ..getMedian(intervall: const Duration(days: 30));
+        ..getMedian(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset)
-        ..getMedian(intervall: const Duration(days: 30));
+        ..getMedian(interval: const Duration(days: 30));
 
       expect(filter.result(), containsAllInOrder(filterTest.result()));
     });
 
-    test("Test getMode in intervall with Random Data", () {
+    test("Test getMode in interval with random data", () {
       var filter = FilterTools(randomTestDataset)
-        ..getMode(intervall: const Duration(days: 30));
+        ..getMode(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset)
-        ..getMode(intervall: const Duration(days: 30));
+        ..getMode(interval: const Duration(days: 30));
 
       expect(filter.result(), containsAllInOrder(filterTest.result()));
     });
 
-    test("Test getRange in intervall with Random Data", () {
+    test("Test getRange in interval with random data", () {
       var filter = FilterTools(randomTestDataset)
-        ..getRange(intervall: const Duration(days: 30));
+        ..getRange(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset)
-        ..getRange(intervall: const Duration(days: 30));
+        ..getRange(interval: const Duration(days: 30));
 
       expect(filter.result(), containsAllInOrder(filterTest.result()));
     });
 
-    test("Test getSum in intervall with Random Data", () {
+    test("Test getSum in interval with random data", () {
       var filter = FilterTools(randomTestDataset)
-        ..getSum(intervall: const Duration(days: 30));
+        ..getSum(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset)
-        ..getSum(intervall: const Duration(days: 30));
+        ..getSum(interval: const Duration(days: 30));
 
       expect(filter.result(), containsAllInOrder(filterTest.result()));
     });
 
-    test("Test getSD in intervall with Random Data", () {
+    test("Test getSD in interval with random data", () {
       var filter = FilterTools(randomTestDataset)
-        ..getSD(intervall: const Duration(days: 30));
+        ..getSD(interval: const Duration(days: 30));
 
       var filterTest = FilterTools(randomTestDataset)
-        ..getSD(intervall: const Duration(days: 30));
+        ..getSD(interval: const Duration(days: 30));
 
       expect(filter.result(), containsAllInOrder(filterTest.result()));
     });
@@ -107,7 +107,7 @@ void main() {
     "each filter with predetermined inputs",
     () {
       test(
-        "Test getMax in single intervall with predetermined data axis 0",
+        "Test getMax in single interval with predetermined data axis 0",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMax();
 
@@ -116,7 +116,7 @@ void main() {
       );
 
       test(
-        "Test getMax in single intervall with predetermined data axis 1",
+        "Test getMax in single interval with predetermined data axis 1",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMax(axis: 1);
 
@@ -124,7 +124,7 @@ void main() {
         },
       );
       test(
-        "Test getMin in single intervall with predetermined data axis 0",
+        "Test getMin in single interval with predetermined data axis 0",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMin();
 
@@ -133,7 +133,7 @@ void main() {
       );
 
       test(
-        "Test getMin in single intervall with predetermined data axis 1",
+        "Test getMin in single interval with predetermined data axis 1",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMin(axis: 1);
 
@@ -142,7 +142,7 @@ void main() {
       );
 
       test(
-        "Test getAvg in single intervall with predetermined data",
+        "Test getAvg in single interval with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet)..getAvg();
 
@@ -151,7 +151,7 @@ void main() {
       );
 
       test(
-        "Test getMedian in single intervall with predetermined data",
+        "Test getMedian in single interval with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMedian();
 
@@ -160,7 +160,7 @@ void main() {
       );
 
       test(
-        "Test getSum in single intervall with predetermined data",
+        "Test getSum in single interval with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet)..getSum();
 
@@ -169,7 +169,7 @@ void main() {
       );
 
       test(
-        "Test getSum in single intervall with predetermined data",
+        "Test getCount in single interval with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet);
 
@@ -178,7 +178,7 @@ void main() {
       );
 
       /*test(
-        "Test getSum in single intervall with predetermined data",
+        "Test getSum in single interval with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMode();
 
@@ -187,7 +187,7 @@ void main() {
       );*/
 
       test(
-        "Test getSum in single intervall with predetermined data",
+        "Test getRange in single interval with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet)..getRange();
 
@@ -196,7 +196,7 @@ void main() {
       );
 
       test(
-        "Test getSum in single intervall with predetermined data",
+        "Test getSD in single interval with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet)..getSD();
 
@@ -206,12 +206,14 @@ void main() {
     },
   );
 
-  group("Test for splitting algorithm", () {
+  group(
+      "This group tests the splitting algorithm"
+      "(depending on the time intervals)", () {
     test(
       "Test for splitting in months",
       () {
         var filter = FilterTools(splittingTestDataSet)
-          ..getMax(intervall: const Duration(days: 31));
+          ..getMax(interval: const Duration(days: 31));
 
         expect(filter.result().length, 12);
       },
@@ -221,7 +223,7 @@ void main() {
       "Test for splitting in days",
       () {
         var filter = FilterTools(splittingTestDataSet)
-          ..getMax(intervall: const Duration(days: 1));
+          ..getMax(interval: const Duration(days: 1));
 
         expect(filter.result().length, 365);
       },
@@ -231,7 +233,7 @@ void main() {
       "Test for splitting in hours",
       () {
         var filter = FilterTools(splittingTestDataSet)
-          ..getMax(intervall: const Duration(hours: 1));
+          ..getMax(interval: const Duration(hours: 1));
         expect(filter.result().length, 8760);
       },
     );
@@ -240,7 +242,7 @@ void main() {
       "Test for splitting in minutes",
       () {
         var filter = FilterTools(splittingTestDataSet)
-          ..getMax(intervall: const Duration(minutes: 1));
+          ..getMax(interval: const Duration(minutes: 1));
         expect(filter.result().length, 525600);
       },
     );
