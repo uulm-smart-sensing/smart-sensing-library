@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 ///Data Class for Sensor Data
+///
+///This class represents a data object given from the corresponding
+///[sensorID]. It also represents the datamodel for the database.
 @immutable
 class SensorData {
   ///Id for Objectbox generation

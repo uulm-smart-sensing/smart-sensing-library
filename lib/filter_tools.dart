@@ -2,19 +2,42 @@ import 'dart:math';
 import 'sensor_data.dart';
 
 ///Base class of filter tools.
+///
+///This class is used for filtering Sensor data lists.
+///It uses cascading functions to manipulate it's internal [_buffer].
 class FilterTools {
   ///Constructor for Filter Tools.
+  ///
+  ///The [buffer] gets shallow copied into the internal [_buffer].
+  ///The [_buffer] is used to do all filter options.
   FilterTools(List<SensorData> buffer) {
+    //Asumes that we have a valid buffer with valid enties.
     _buffer.add(List.of(buffer));
     _precision = _buffer[0][0].maxPrecision;
   }
+  ///Internal buffer that is used for every filter.
+  ///
+  ///At the end of each function, the buffer's
+  ///first entry should always contain the full list,
+  ///while all other entries should be empty.
+  ///The reason why it's a list of lists is
+  ///to split it into different intervals within each function.
   final List<List<SensorData>> _buffer = List.empty(growable: true);
   late final int _precision;
 
-  ///Splits the [_buffer] into equal [interval]s
+  ///Splits the fist entry of [_buffer] into equal [interval]s
   ///
-  ///The startingpoint is for the calculation is the first entry in
-  ///the [_buffer].
+  ///The startingpoint for the calculation is the first entry in
+  ///the [_buffer]. After that, the fist entry of [_buffer] gets split
+  ///into equal [interval]s, so each [interval] gets its own list.
+  ///
+  ///Example:
+  ///
+  ///If the number in the list would represent the a day, the split
+  ///could look like this:
+  ///[[1,2,3,4],] -> interval: 1 Day [[1,][2,][3,][4,],]
+  ///
+  ///This is still a very abstract example, but illustrates the functionality.
   void _splitBuffer(Duration interval) {
     if (interval.compareTo(Duration.zero) == 0) {
       return;
@@ -27,6 +50,7 @@ class FilterTools {
     var intervalCount = interval;
     var bufferCounter = 0;
     for (var i = 0; i < tmpList.length - 1; i++) {
+      //Checks if the current entry should be in an new list/interval
       if (tmpDuration < intervalCount) {
         _buffer[bufferCounter].add(tmpList[i]);
       } else {
@@ -37,6 +61,7 @@ class FilterTools {
       }
       tmpDuration += tmpList[i + 1].dateTime.difference(tmpList[i].dateTime);
     }
+    //Is used for the last entry in the list.
     if (tmpDuration < intervalCount) {
       _buffer[bufferCounter].add(tmpList.last);
     } else {
@@ -46,6 +71,8 @@ class FilterTools {
     }
   }
 
+  ///Flattens the [_buffer] again, that only the fist element of the list
+  ///contains all data.
   void _flattenBuffer() {
     var tmpList = _buffer.expand((element) => element).toList();
     _buffer
