@@ -7,6 +7,7 @@ import 'package:smart_sensing_library/sensor_data.dart';
 void main() {
   var randomTestDataset = createRandomTestData();
   var determinedTestDataSet = createDeterminedTestData();
+  var splittingTestDataSet = createDataForSplitting();
 
   group("This groups Test that only test if the filters are deterministic.",
       () {
@@ -176,14 +177,14 @@ void main() {
         },
       );
 
-      test(
+      /*test(
         "Test getSum in single intervall with predetermined data",
         () {
           var filter = FilterTools(determinedTestDataSet)..getMode();
 
           // expect(filter.result()[0].data, contains(438));
         },
-      );
+      );*/
 
       test(
         "Test getSum in single intervall with predetermined data",
@@ -204,6 +205,46 @@ void main() {
       );
     },
   );
+
+  group("Test for splitting algorithm", () {
+    test(
+      "Test for splitting in months",
+      () {
+        var filter = FilterTools(splittingTestDataSet)
+          ..getMax(intervall: const Duration(days: 31));
+
+        expect(filter.result().length, 12);
+      },
+    );
+
+    test(
+      "Test for splitting in days",
+      () {
+        var filter = FilterTools(splittingTestDataSet)
+          ..getMax(intervall: const Duration(days: 1));
+
+        expect(filter.result().length, 365);
+      },
+    );
+
+    test(
+      "Test for splitting in hours",
+      () {
+        var filter = FilterTools(splittingTestDataSet)
+          ..getMax(intervall: const Duration(hours: 1));
+        expect(filter.result().length, 8760);
+      },
+    );
+
+    test(
+      "Test for splitting in minutes",
+      () {
+        var filter = FilterTools(splittingTestDataSet)
+          ..getMax(intervall: const Duration(minutes: 1));
+        expect(filter.result().length, 525600);
+      },
+    );
+  });
 }
 
 List<SensorData> createRandomTestData() {
@@ -257,5 +298,46 @@ List<SensorData> createDeterminedTestData() {
   testData.sort(
     (a, b) => a.dateTime.compareTo(b.dateTime),
   );
+  return testData;
+}
+
+List<SensorData> createDataForSplitting() {
+  var testData = <SensorData>[];
+  for (var month = 1; month < 13; month++) {
+    for (var day = 1; day < 32; day++) {
+      for (var hour = 0; hour < 24; hour++) {
+        for (var minute = 0; minute < 60; minute++) {
+          if (month == 2 && day > 28) {
+            continue;
+          }
+          if ([4, 6, 9, 11].contains(month) && day > 30) {
+            continue;
+          }
+          testData.add(
+            SensorData(
+              data: [
+                month.toDouble(),
+                day.toDouble(),
+                hour.toDouble(),
+              ],
+              maxPrecision: 1,
+              sensorID: SensorId.accelerometer,
+              setTime: DateTime.utc(
+                2023,
+                month,
+                day,
+                hour,
+                minute,
+              ),
+            ),
+          );
+        }
+      }
+    }
+  }
+  testData.sort(
+    (a, b) => a.dateTime.compareTo(b.dateTime),
+  );
+
   return testData;
 }
