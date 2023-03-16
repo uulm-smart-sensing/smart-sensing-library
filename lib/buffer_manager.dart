@@ -42,5 +42,5 @@ class BufferManager {
 
   ///Comparision method that compares Sensordata timestap [a] with [b]
   int _sortComparision(SensorData a, SensorData b) =>
-      a.getDateTime().compareTo(b.getDateTime());
+      a.dateTime.compareTo(b.dateTime);
 }
