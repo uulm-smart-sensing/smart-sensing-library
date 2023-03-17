@@ -14,6 +14,8 @@ dependencies:
   sensing_plugin:
     path: ./sensing-plugin
   collection: any
+  objectbox: ^1.7.2
+  objectbox_flutter_libs: any
 
 
 dev_dependencies:
@@ -23,5 +25,7 @@ dev_dependencies:
   test_cov_console: ^0.2.2
   junitreport: ^2.0.2
   cobertura: ^1.0.3
+  build_runner: ^2.3.3
+  objectbox_generator: any
 
 flutter:
