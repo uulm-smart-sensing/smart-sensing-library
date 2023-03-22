@@ -30,6 +30,7 @@ migrate_working_dir/
 /.flutter-plugins
 /.flutter-plugins-dependencies
 build/
+/lib/objectbox.g.dart
 
 # CI coverage reports
 report_outputs/
