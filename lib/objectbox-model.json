@@ -1,0 +1,52 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:8535867667416333508",
+      "lastPropertyId": "5:3690037958534207006",
+      "name": "SensorDataDTO",
+      "properties": [
+        {
+          "id": "1:2450582042614414816",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5343080129153607107",
+          "name": "data",
+          "type": 9
+        },
+        {
+          "id": "3:8591180089714213675",
+          "name": "maxPrecision",
+          "type": 6
+        },
+        {
+          "id": "4:7589220457615061092",
+          "name": "sensorID",
+          "type": 6
+        },
+        {
+          "id": "5:3690037958534207006",
+          "name": "dateTime",
+          "type": 10
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:8535867667416333508",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
