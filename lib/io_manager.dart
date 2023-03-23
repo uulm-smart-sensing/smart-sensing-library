@@ -42,29 +42,29 @@ class IOManager {
 
   ///Gets Data from Database
   Future<List<SensorData>> getFromDatabase(DateTime from, DateTime to) async {
-    if(_objectStore != null){
-    var query = (_objectStore!.box<SensorDataDTO>().query(
-              SensorDataDTO_.id.equals(1).and(
-                    SensorDataDTO_.dateTime.between(
-                      from.millisecondsSinceEpoch,
-                      to.millisecondsSinceEpoch - 1,
+    if (_objectStore != null) {
+      var query = (_objectStore!.box<SensorDataDTO>().query(
+                SensorDataDTO_.id.equals(1).and(
+                      SensorDataDTO_.dateTime.between(
+                        from.millisecondsSinceEpoch,
+                        to.millisecondsSinceEpoch - 1,
+                      ),
                     ),
-                  ),
-            )..order(SensorDataDTO_.dateTime, flags: Order.descending))
-        .build();
-    var list = query.find();
-    return list.map((e) => e.toSensorData()).toList();
+              )..order(SensorDataDTO_.dateTime, flags: Order.descending))
+          .build();
+      var list = query.find();
+      return list.map((e) => e.toSensorData()).toList();
     }
     return Future.error("Database connection is not established");
   }
 
   ///Saves Data from Database
   Future<void> saveToDatabase(SensorId id) async {
-    if(_objectStore != null){
-    var buffer = _bufferManager.getBuffer(id);
-    var dtoList = buffer.map(SensorDataDTO.fromSensorData).toList();
-    await _objectStore!.box<SensorDataDTO>().putManyAsync(dtoList);
-    buffer.clear();
+    if (_objectStore != null) {
+      var buffer = _bufferManager.getBuffer(id);
+      var dtoList = buffer.map(SensorDataDTO.fromSensorData).toList();
+      await _objectStore!.box<SensorDataDTO>().putManyAsync(dtoList);
+      buffer.clear();
     }
   }
 
