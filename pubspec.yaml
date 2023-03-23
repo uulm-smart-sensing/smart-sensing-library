@@ -14,8 +14,10 @@ dependencies:
   sensing_plugin:
     path: ./sensing-plugin
   collection: any
-  objectbox: ^1.7.2
+  objectbox: ^2.0.0
   objectbox_flutter_libs: any
+  path_provider: ^2.0.14
+  path: ^1.8.2
 
 
 dev_dependencies:
