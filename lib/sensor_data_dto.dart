@@ -1,13 +1,15 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import 'sensor_data.dart';
+
 ///DTO class for SensorData
 @Entity()
-class SensorDataDTO
-{
+class SensorDataDTO {
   ///Id for Objectbox generation
   @Id()
   late int id;
@@ -26,8 +28,9 @@ class SensorDataDTO
 
   ///BaseConstructor
   SensorDataDTO();
+
   ///From Sensordata
-  SensorDataDTO.fromSensorData(SensorData sensorData){
+  SensorDataDTO.fromSensorData(SensorData sensorData) {
     _ensureStableEnumValues();
     id = 0;
     maxPrecision = sensorData.maxPrecision;
@@ -35,25 +38,25 @@ class SensorDataDTO
     dateTime = sensorData.dateTime;
     data = jsonEncode({"data": sensorData.data});
   }
-///Converts DTO to internalSensorData
-SensorData toSensorData(){
-  _ensureStableEnumValues();
-  return SensorData(
-    maxPrecision: maxPrecision,
-    setTime: dateTime,
-    sensorID: SensorId.values[sensorID],
-    data: (jsonDecode(data)['data'] as List<dynamic>).cast<double>(),
-  );
-}
 
-void _ensureStableEnumValues(){
-    assert(SensorId.accelerometer.index == 0,"Test if enum still stable");
-    assert(SensorId.gyroscope.index == 1,"Test if enum still stable");
-    assert(SensorId.magnetometer.index == 2,"Test if enum still stable");
-    assert(SensorId.heading.index == 3,"Test if enum still stable");
-    assert(SensorId.linearAcceleration.index == 4,"Test if enum still stable");
-    assert(SensorId.barometer.index == 5,"Test if enum still stable");
-    assert(SensorId.thermometer.index == 6,"Test if enum still stable");
+  ///Converts DTO to internalSensorData
+  SensorData toSensorData() {
+    _ensureStableEnumValues();
+    return SensorData(
+      maxPrecision: maxPrecision,
+      setTime: dateTime,
+      sensorID: SensorId.values[sensorID],
+      data: (jsonDecode(data)['data'] as List<dynamic>).cast<double>(),
+    );
   }
 
+  void _ensureStableEnumValues() {
+    assert(SensorId.accelerometer.index == 0, "Test if enum still stable");
+    assert(SensorId.gyroscope.index == 1, "Test if enum still stable");
+    assert(SensorId.magnetometer.index == 2, "Test if enum still stable");
+    assert(SensorId.heading.index == 3, "Test if enum still stable");
+    assert(SensorId.linearAcceleration.index == 4, "Test if enum still stable");
+    assert(SensorId.barometer.index == 5, "Test if enum still stable");
+    assert(SensorId.thermometer.index == 6, "Test if enum still stable");
+  }
 }
