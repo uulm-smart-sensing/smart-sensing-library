@@ -4,6 +4,7 @@ import 'package:sensing_plugin/sensing_plugin.dart';
 
 import 'buffer_manager.dart';
 import 'filter_tools.dart';
+import 'mock_sensor_manager.dart';
 import 'objectbox.g.dart';
 import 'sensor_data.dart';
 import 'sensor_data_dto.dart';
@@ -15,10 +16,12 @@ import 'sensor_data_dto.dart';
 class IOManager {
   IOManager._constructor() {
     _bufferManager = BufferManager();
+    _sensorManager = MockSensorManager();
   }
   late final BufferManager _bufferManager;
   static final IOManager _instance = IOManager._constructor();
   late final Store? _objectStore;
+  late final MockSensorManager _sensorManager;
   final int _maxBufferSize = 0;
 
   ///Returns instance of IOManager
@@ -39,24 +42,29 @@ class IOManager {
     return true;
   }
 
-  ///Adds a Sensor with [id]. Works as a test function.
+  ///Adds a Sensor with [id].
+  ///
+  ///WIP. Currently works with a testing Stream
   void addSensor(SensorId id) {
     if (_objectStore == null) {
-      throw Exception(
-          "Database connection is not established!"
+      throw Exception("Database connection is not established!"
           "Please first established to use the IOManager!");
     }
     _bufferManager.addBuffer(id);
+    _sensorManager.addSensor(id).listen(_processSensorData);
+
   }
 
-  ///Removes a Sensor with [id]. Works as a test function.
+  ///Removes a Sensor with [id].
+  ///
+  ///WIP. Currently works with a testing Stream
   void removeSensor(SensorId id) {
-     if (_objectStore == null) {
-      throw Exception(
-          "Database connection is not established!"
+    if (_objectStore == null) {
+      throw Exception("Database connection is not established!"
           "Please first established to use the IOManager!");
     }
     _bufferManager.removeBuffer(id);
+    _sensorManager.removeSensor(id);
   }
 
   ///Gets Data from Database
@@ -84,8 +92,7 @@ class IOManager {
   ///Saves Data from Database
   Future<void> saveToDatabase(SensorId id) async {
     if (_objectStore == null) {
-      throw Exception(
-          "Database connection is not established!"
+      throw Exception("Database connection is not established!"
           "Please first established to use the IOManager!");
     }
     var buffer = _bufferManager.getBuffer(id);
@@ -103,9 +110,8 @@ class IOManager {
     DateTime? to,
     Duration interval = Duration.zero,
   }) async {
-     if (_objectStore == null) {
-      throw Exception(
-          "Database connection is not established!"
+    if (_objectStore == null) {
+      throw Exception("Database connection is not established!"
           "Please first established to use the IOManager!");
     }
     from ??= DateTime.utc(-271821, 04, 20);
@@ -144,5 +150,9 @@ class IOManager {
       }
     }
     return buffer.sublist(start, stop);
+  }
+  _processSensorData(SensorData sensorData) {
+
+
   }
 }
