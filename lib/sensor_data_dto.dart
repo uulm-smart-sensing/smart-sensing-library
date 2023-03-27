@@ -52,7 +52,7 @@ class SensorDataDTO {
     assert(SensorId.accelerometer.index == 0, "Test if enum still stable");
     assert(SensorId.gyroscope.index == 1, "Test if enum still stable");
     assert(SensorId.magnetometer.index == 2, "Test if enum still stable");
-    assert(SensorId.heading.index == 3, "Test if enum still stable");
+    assert(SensorId.orientation.index == 3, "Test if enum still stable");
     assert(SensorId.linearAcceleration.index == 4, "Test if enum still stable");
     assert(SensorId.barometer.index == 5, "Test if enum still stable");
     assert(SensorId.thermometer.index == 6, "Test if enum still stable");
