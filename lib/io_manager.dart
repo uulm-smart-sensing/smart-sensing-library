@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:collection';
+
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
@@ -22,7 +25,8 @@ class IOManager {
   static final IOManager _instance = IOManager._constructor();
   late final Store? _objectStore;
   late final MockSensorManager _sensorManager;
-  final int _maxBufferSize = 0;
+  final int _maxBufferSize = 10000;
+  final HashMap _subscription = HashMap<SensorId, StreamSubscription?>();
 
   ///Returns instance of IOManager
   factory IOManager() => _instance;
@@ -51,20 +55,21 @@ class IOManager {
           "Please first established to use the IOManager!");
     }
     _bufferManager.addBuffer(id);
-    _sensorManager.addSensor(id).listen(_processSensorData);
-
+    _subscription[id] = _sensorManager.addSensor(id).listen(
+          _processSensorData,
+          onDone: () async => _onDataDone(id),
+        );
   }
 
   ///Removes a Sensor with [id].
   ///
   ///WIP. Currently works with a testing Stream
-  void removeSensor(SensorId id) {
+  Future<void> removeSensor(SensorId id) async {
     if (_objectStore == null) {
       throw Exception("Database connection is not established!"
           "Please first established to use the IOManager!");
     }
-    _bufferManager.removeBuffer(id);
-    _sensorManager.removeSensor(id);
+    await _sensorManager.removeSensor(id);
   }
 
   ///Gets Data from Database
@@ -101,6 +106,7 @@ class IOManager {
     buffer.clear();
   }
 
+  ///Checks if buffersize is too big.
   bool _checkBufferSize(int size) => size >= _maxBufferSize;
 
   ///Returns instance of FilterTool with corresponding buffer.
@@ -116,18 +122,15 @@ class IOManager {
     }
     from ??= DateTime.utc(-271821, 04, 20);
     to ??= DateTime.now();
-    try {
-      var buffer = _bufferManager.getBuffer(id);
-      if (buffer.first.dateTime.isBefore(from) &&
-          buffer.last.dateTime.isAfter(to)) {
-        return FilterTools(_splitWithDateTime(from, to, buffer));
-      } else {
-        buffer = await getFromDatabase(from, to, id);
-      }
-      return FilterTools(buffer);
-    } on Exception catch (e) {
-      rethrow;
+
+    var buffer = _bufferManager.getBuffer(id);
+    if (buffer.first.dateTime.isBefore(from) &&
+        buffer.last.dateTime.isAfter(to)) {
+      return FilterTools(_splitWithDateTime(from, to, buffer));
+    } else {
+      buffer = await getFromDatabase(from, to, id);
     }
+    return FilterTools(buffer);
   }
 
   List<SensorData> _splitWithDateTime(
@@ -151,8 +154,19 @@ class IOManager {
     }
     return buffer.sublist(start, stop);
   }
-  _processSensorData(SensorData sensorData) {
 
+  Future<void> _processSensorData(SensorData sensorData) async {
+    var buffer = _bufferManager.getBuffer(sensorData.sensorID);
+    if (_checkBufferSize(buffer.length)) {
+      await saveToDatabase(sensorData.sensorID);
+    }
+    buffer.add(sensorData);
+  }
 
+  Future<void> _onDataDone(SensorId id) async {
+    await (_subscription[id] as StreamSubscription).cancel();
+    _subscription[id] = null;
+    await saveToDatabase(id);
+    _bufferManager.removeBuffer(id);
   }
 }
