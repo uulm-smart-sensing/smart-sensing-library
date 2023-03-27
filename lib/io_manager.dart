@@ -148,6 +148,9 @@ class IOManager {
     } else {
       buffer = await getFromDatabase(from, to, id);
     }
+    if (buffer.isEmpty){
+      throw Exception("Not a valid buffer!");
+    }
     return FilterTools(buffer);
   }
 
