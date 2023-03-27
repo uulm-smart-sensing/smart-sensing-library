@@ -15,16 +15,19 @@ import 'sensor_data_dto.dart';
 /// This class is the core component of the smart sensing library.
 ///
 /// The IOManager is the main access point for getting and saving sensor data.
-/// All other components are used/managed by the IOManager.
+/// All other components are used/managed by the IOManager. To use its
+/// functions, openDatabase() must be called!
 class IOManager {
   IOManager._constructor() {
     _bufferManager = BufferManager();
     _sensorManager = MockSensorManager();
   }
-  late final BufferManager _bufferManager;
   static final IOManager _instance = IOManager._constructor();
+
+  late final BufferManager _bufferManager;
   late final Store? _objectStore;
   late final MockSensorManager _sensorManager;
+
   final int _maxBufferSize = 10000;
   final HashMap _subscription = HashMap<SensorId, StreamSubscription?>();
 
@@ -33,6 +36,9 @@ class IOManager {
 
   ///Opens the database for access.
   ///
+  ///Checks if an the basic Application path is available.
+  ///If there is a database at the given location, it gets initialized.
+  ///Otherwise a new database is created.
   ///Returns true when connection is established.
   Future<bool> openDatabase() async {
     await getApplicationDocumentsDirectory().then(
@@ -48,7 +54,8 @@ class IOManager {
 
   ///Adds a Sensor with [id].
   ///
-  ///WIP. Currently works with a testing Stream
+  ///Throws exception if a database connection is not established.
+  ///WIP. Currently works with the Mock SensorManager
   void addSensor(SensorId id) {
     if (_objectStore == null) {
       throw Exception("Database connection is not established!"
@@ -63,7 +70,8 @@ class IOManager {
 
   ///Removes a Sensor with [id].
   ///
-  ///WIP. Currently works with a testing Stream
+  ///Throws exception if a database connection is not established.
+  ///WIP. Currently works with the Mock SensorManager
   Future<void> removeSensor(SensorId id) async {
     if (_objectStore == null) {
       throw Exception("Database connection is not established!"
@@ -73,6 +81,10 @@ class IOManager {
   }
 
   ///Gets Data from Database
+  ///
+  ///Throws exception if a database connection is not established.
+  ///Returns the a Future with the requested List.
+  ///The list values are between [from] and [to] and from the sensor [id].
   Future<List<SensorData>> getFromDatabase(
     DateTime from,
     DateTime to,
@@ -95,6 +107,9 @@ class IOManager {
   }
 
   ///Saves Data from Database
+  ///
+  ///Takes the buffer with the corresponding [id] and saves the
+  ///content of it to the database. Clears the buffer afterwards.
   Future<void> saveToDatabase(SensorId id) async {
     if (_objectStore == null) {
       throw Exception("Database connection is not established!"
@@ -109,12 +124,15 @@ class IOManager {
   ///Checks if buffersize is too big.
   bool _checkBufferSize(int size) => size >= _maxBufferSize;
 
-  ///Returns instance of FilterTool with corresponding buffer.
+  ///Returns instance of FilterTool with corresponding data.
+  ///
+  ///Gets the data between [from] and [to] from sensor [id].
+  ///If data isn't completly in a buffer, a get request is
+  ///sent to the database.
   Future<FilterTools?> getFilterFrom(
     SensorId id, {
     DateTime? from,
     DateTime? to,
-    Duration interval = Duration.zero,
   }) async {
     if (_objectStore == null) {
       throw Exception("Database connection is not established!"
@@ -133,6 +151,7 @@ class IOManager {
     return FilterTools(buffer);
   }
 
+  ///Splits a partial list from [buffer] between [from] and [to].
   List<SensorData> _splitWithDateTime(
     DateTime from,
     DateTime to,
@@ -155,6 +174,7 @@ class IOManager {
     return buffer.sublist(start, stop);
   }
 
+  ///Adds data to the buffer and checks if the maximum buffersize is reached.
   Future<void> _processSensorData(SensorData sensorData) async {
     var buffer = _bufferManager.getBuffer(sensorData.sensorID);
     if (_checkBufferSize(buffer.length)) {
@@ -163,6 +183,7 @@ class IOManager {
     buffer.add(sensorData);
   }
 
+  ///Closes all connections to the stream and buffer.
   Future<void> _onDataDone(SensorId id) async {
     await (_subscription[id] as StreamSubscription).cancel();
     _subscription[id] = null;
