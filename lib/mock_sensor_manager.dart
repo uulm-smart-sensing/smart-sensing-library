@@ -13,22 +13,26 @@ class MockSensorManager {
   ///Instance for MockSensorManager
   factory MockSensorManager() => _instance;
 
-  ///Creates a Stream for testingPurposes
+  ///Creates a Stream for with [id].
+  ///
+  ///Returns a stream that gives back data every second.
   Stream<SensorData> addSensor(SensorId id) =>
       _createStream(const Duration(seconds: 1), id);
 
-  ///Creates a Stream for testingPurposes
+  ///Removes the stream with [id].
   Future<void> removeSensor(SensorId id) async {
     await (_streamMap[id] as StreamController).close();
     _streamMap[id] = null;
   }
 
+  ///Creates test data.
   SensorData _createTestData(int i, SensorId id) => SensorData(
         data: [i + 0.1, i + 0.2, i + 0.3],
         maxPrecision: 2,
         sensorID: id,
       );
 
+  ///Creates a testing stream.
   Stream<SensorData> _createStream(
     Duration interval,
     SensorId id, [
