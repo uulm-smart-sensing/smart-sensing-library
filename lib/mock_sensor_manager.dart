@@ -1,29 +1,25 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'sensor_data.dart';
 
 ///A SensorManager for testing purposes
-class MockSensorManager{
-
+class MockSensorManager {
   MockSensorManager._constructor();
   static final MockSensorManager _instance = MockSensorManager._constructor();
-  final HashMap _streamMap =
-  HashMap<SensorId, Stream<SensorData>?>();
+  final HashMap _streamMap = HashMap<SensorId, StreamController<SensorData>?>();
 
   ///Instance for MockSensorManager
   factory MockSensorManager() => _instance;
 
- ///Creates a Stream for testingPurposes
-  Stream<SensorData> addSensor(SensorId id) {
-    var stream =  Stream<SensorData>.periodic(
-          const Duration(seconds: 1), (x) => _createTestData(x, id),);
-    _streamMap[id] = stream;
-    return stream;
-  }
+  ///Creates a Stream for testingPurposes
+  Stream<SensorData> addSensor(SensorId id) =>
+      _createStream(const Duration(seconds: 1), id);
 
   ///Creates a Stream for testingPurposes
-  void removeSensor(SensorId id) {
+  Future<void> removeSensor(SensorId id) async {
+    await (_streamMap[id] as StreamController).close();
     _streamMap[id] = null;
   }
 
@@ -33,4 +29,40 @@ class MockSensorManager{
         sensorID: id,
       );
 
+  Stream<SensorData> _createStream(
+    Duration interval,
+    SensorId id, [
+    int? maxCount,
+  ]) {
+    late StreamController<SensorData> controller;
+    Timer? timer;
+    var counter = 0;
+
+    Future<void> tick(_) async {
+      counter++;
+      controller.add(_createTestData(counter, id));
+      if (counter == maxCount) {
+        timer?.cancel();
+        await controller.close(); // Ask stream to shut down and tell listeners.
+      }
+    }
+
+    void startTimer() {
+      timer = Timer.periodic(interval, tick);
+    }
+
+    void stopTimer() {
+      timer?.cancel();
+      timer = null;
+    }
+
+    controller = StreamController<SensorData>(
+      onListen: startTimer,
+      onPause: stopTimer,
+      onResume: startTimer,
+      onCancel: stopTimer,
+    );
+    _streamMap[id] = controller;
+    return controller.stream;
+  }
 }
