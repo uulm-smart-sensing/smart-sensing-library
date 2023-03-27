@@ -58,10 +58,10 @@ void main() {
     });
     test("Remove Data from Buffer", () {
       bufferManager
-        ..addBuffer(SensorId.heading)
-        ..getBuffer(SensorId.heading).add(testData);
-      bufferManager.getBuffer(SensorId.heading).remove(testData);
-      expect(bufferManager.getBuffer(SensorId.heading).isEmpty, true);
+        ..addBuffer(SensorId.orientation)
+        ..getBuffer(SensorId.orientation).add(testData);
+      bufferManager.getBuffer(SensorId.orientation).remove(testData);
+      expect(bufferManager.getBuffer(SensorId.orientation).isEmpty, true);
     });
     test("Remove buffer from buffer manager.", () {
       bufferManager
