@@ -16,7 +16,7 @@ class BufferManager {
     if (_buffer[id] == null) {
       _buffer[id] = <SensorData>[];
     } else {
-      throw Exception("Buffer already added.");
+      throw InvalidBufferException("Buffer already added.");
     }
   }
 
@@ -31,7 +31,7 @@ class BufferManager {
       _sortBuffer(id);
       return _buffer[id] as List<SensorData>;
     } else {
-      throw Exception("No such buffer.");
+      throw InvalidBufferException("No such buffer.");
     }
   }
 
@@ -43,4 +43,13 @@ class BufferManager {
   ///Comparision method that compares Sensordata timestap [a] with [b]
   int _sortComparision(SensorData a, SensorData b) =>
       a.dateTime.compareTo(b.dateTime);
+}
+///Custom exception for wrong buffer
+class InvalidBufferException implements Exception{
+  ///Cause message of Exception
+  String cause;
+  ///Constructor for exception.
+  ///
+  ///Takes [cause] as message for exception.
+  InvalidBufferException(this.cause);
 }
