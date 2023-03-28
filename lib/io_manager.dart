@@ -4,13 +4,13 @@ import 'dart:collection';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
-import 'package:smart_sensing_library/sensor_data_dto.dart';
 
 import 'buffer_manager.dart';
 import 'filter_tools.dart';
 import 'mock_sensor_manager.dart';
 import 'objectbox.g.dart';
 import 'sensor_data.dart';
+import 'sensor_data_dto.dart';
 
 /// This class is the core component of the smart sensing library.
 ///
@@ -94,8 +94,7 @@ class IOManager {
       throw Exception("Database connection is not established!");
     }
     var query = (_objectStore!.box<SensorDataDTO>().query(
-              SensorDataDTO_.sensorID.equals(id.index)
-              .and(
+              SensorDataDTO_.sensorID.equals(id.index).and(
                     SensorDataDTO_.dateTime.between(
                       from.millisecondsSinceEpoch,
                       to.millisecondsSinceEpoch - 1,
@@ -141,21 +140,21 @@ class IOManager {
     }
     from ??= DateTime.utc(-271821, 04, 20);
     to ??= DateTime.now();
-    try{
-    var buffer = _bufferManager.getBuffer(id);
+    try {
+      var buffer = _bufferManager.getBuffer(id);
 
-    if (buffer.first.dateTime.isBefore(from) &&
-        buffer.last.dateTime.isAfter(to)) {
-      return FilterTools(_splitWithDateTime(from, to, buffer));
-    }
+      if (buffer.first.dateTime.isBefore(from) &&
+          buffer.last.dateTime.isAfter(to)) {
+        return FilterTools(_splitWithDateTime(from, to, buffer));
+      }
     }
     // ignore: unused_catch_clause
-    on Exception catch(e) {
+    on Exception catch (e) {
       //Expected catch
     }
     var buffer = await getFromDatabase(from, to, id);
 
-    if (buffer.isEmpty){
+    if (buffer.isEmpty) {
       throw Exception("Not a valid buffer!");
     }
     return FilterTools(buffer);
