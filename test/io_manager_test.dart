@@ -16,10 +16,32 @@ Future<void> main() async {
 
   setUp(() async => ioManager.removeData(SensorId.accelerometer));
 
-  test("Add Sensor", () async {
-    ioManager.addSensor(SensorId.accelerometer);
+  test("Add sensor and get from database", () async {
+    await ioManager.addSensor(SensorId.accelerometer);
     await Future.delayed(const Duration(seconds: 15));
     var test = await ioManager.getFilterFrom(SensorId.accelerometer);
+    expect(test?.result().isNotEmpty, true);
+  });
+  test("Add sensor and get from buffer", () async {
+    await ioManager.addSensor(SensorId.accelerometer);
+    await Future.delayed(const Duration(seconds: 5));
+    var test = await ioManager.getFilterFrom(SensorId.accelerometer);
+    expect(test?.result().isNotEmpty, true);
+  });
+  test("Remove sensor", () async {
+    await ioManager.addSensor(SensorId.accelerometer);
+    expect(() => ioManager.addSensor(SensorId.accelerometer), throwsException);
+
+    await Future.delayed(const Duration(seconds: 5));
+    await ioManager.removeSensor(SensorId.accelerometer);
+    var test = await ioManager.getFilterFrom(SensorId.accelerometer);
+    expect(test?.result().isNotEmpty, true);
+
+    await ioManager.removeData(SensorId.accelerometer);
+    await ioManager.addSensor(SensorId.accelerometer);
+    await Future.delayed(const Duration(seconds: 5));
+    await ioManager.removeSensor(SensorId.accelerometer);
+    test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
   });
 }
