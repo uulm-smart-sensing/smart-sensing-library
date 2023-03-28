@@ -31,8 +31,9 @@ migrate_working_dir/
 /.flutter-plugins-dependencies
 build/
 /lib/objectbox.g.dart
-/objectbox.*
+*/objectbox.*
 /smart_sensing_library.db
+/lib/libobjectbox.so
 
 # CI coverage reports
 report_outputs/
