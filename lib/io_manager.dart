@@ -99,7 +99,7 @@ class IOManager {
   ///Throws exception if a database connection is not established.
   ///Returns the a Future with the requested List.
   ///The list values are between [from] and [to] and from the sensor [id].
-  Future<List<SensorData>> getFromDatabase(
+  Future<List<SensorData>> _getFromDatabase(
     DateTime from,
     DateTime to,
     SensorId id,
@@ -166,7 +166,7 @@ class IOManager {
       if (buffer.last.dateTime.isAfter(to)) {
         buffer = _splitWithDateTime(from, to, buffer);
       }
-      var dbBuffer = await getFromDatabase(from, buffer.first.dateTime, id);
+      var dbBuffer = await _getFromDatabase(from, buffer.first.dateTime, id);
       dbBuffer.addAll(buffer);
       return FilterTools(dbBuffer);
     }
@@ -174,7 +174,7 @@ class IOManager {
     on InvalidBufferException catch (e) {
       //Expected catch
     }
-    var buffer = await getFromDatabase(from, to, id);
+    var buffer = await _getFromDatabase(from, to, id);
 
     if (buffer.isEmpty) {
       throw Exception("Not a valid buffer!");
