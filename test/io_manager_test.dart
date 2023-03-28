@@ -28,6 +28,11 @@ Future<void> main() async {
     var test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
   });
+
+  ///Adds a Sensor and checks if the same sensor can be added.
+  ///If not, removes the sensor and checks if data was written.
+  ///Removes all data and tries again to add a sensor.
+  ///Checks if new sensor add also created data.
   test("Remove sensor", () async {
     await ioManager.addSensor(SensorId.accelerometer);
     expect(() => ioManager.addSensor(SensorId.accelerometer), throwsException);
