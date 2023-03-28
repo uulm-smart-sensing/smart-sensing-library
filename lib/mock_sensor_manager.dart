@@ -44,10 +44,15 @@ class MockSensorManager {
 
     Future<void> tick(_) async {
       counter++;
-      controller.add(_createTestData(counter, id));
-      if (counter == maxCount) {
+      if (!controller.isClosed) {
+        controller.add(_createTestData(counter, id));
+        if (counter == maxCount) {
+          timer?.cancel();
+          await controller
+              .close(); // Ask stream to shut down and tell listeners.
+        }
+      } else {
         timer?.cancel();
-        await controller.close(); // Ask stream to shut down and tell listeners.
       }
     }
 
