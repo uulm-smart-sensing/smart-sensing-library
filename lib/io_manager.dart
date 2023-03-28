@@ -94,7 +94,8 @@ class IOManager {
       throw Exception("Database connection is not established!");
     }
     var query = (_objectStore!.box<SensorDataDTO>().query(
-              SensorDataDTO_.id.equals(id.index).and(
+              SensorDataDTO_.sensorID.equals(id.index)
+              .and(
                     SensorDataDTO_.dateTime.between(
                       from.millisecondsSinceEpoch,
                       to.millisecondsSinceEpoch - 1,
