@@ -14,6 +14,8 @@ Future<void> main() async {
     throw Exception("Database connection failed!");
   }
 
+  setUp(() async => ioManager.removeData(SensorId.accelerometer));
+
   test("Add Sensor", () async {
     ioManager.addSensor(SensorId.accelerometer);
     await Future.delayed(const Duration(seconds: 15));
