@@ -31,6 +31,8 @@ class IOManager {
   final int _maxBufferSize = 10000;
   final HashMap _subscription = HashMap<SensorId, StreamSubscription?>();
 
+  var _threadLock = false;
+
   ///Returns instance of IOManager
   factory IOManager() => _instance;
 
@@ -56,16 +58,24 @@ class IOManager {
   ///
   ///Throws exception if a database connection is not established.
   ///WIP. Currently works with the Mock SensorManager
-  void addSensor(SensorId id) {
-    if (_objectStore == null) {
-      throw Exception("Database connection is not established!"
-          "Please first established to use the IOManager!");
+  Future<void> addSensor(SensorId id) async {
+    try {
+      if (_objectStore == null) {
+        throw Exception("Database connection is not established!"
+            "Please first established to use the IOManager!");
+      }
+      while (_threadLock) {
+        await Future.delayed(Duration.zero);
+      }
+      _threadLock = true;
+      _bufferManager.addBuffer(id);
+      _subscription[id] = _sensorManager.addSensor(id).listen(
+            _processSensorData,
+            onDone: () async => _onDataDone(id),
+          );
+    } finally {
+      _threadLock = false;
     }
-    _bufferManager.addBuffer(id);
-    _subscription[id] = _sensorManager.addSensor(id).listen(
-          _processSensorData,
-          onDone: () async => _onDataDone(id),
-        );
   }
 
   ///Removes a Sensor with [id].
@@ -77,6 +87,10 @@ class IOManager {
       throw Exception("Database connection is not established!"
           "Please first established to use the IOManager!");
     }
+    while (_threadLock) {
+      await Future.delayed(Duration.zero);
+    }
+    _threadLock = true;
     await _sensorManager.removeSensor(id);
   }
 
@@ -129,6 +143,7 @@ class IOManager {
   ///Gets the data between [from] and [to] from sensor [id].
   ///If data isn't completly in a buffer, a get request is
   ///sent to the database.
+  ///Throws an exception if the buffer is empty.
   Future<FilterTools?> getFilterFrom(
     SensorId id, {
     DateTime? from,
@@ -140,16 +155,23 @@ class IOManager {
     }
     from ??= DateTime.utc(-271821, 04, 20);
     to ??= DateTime.now();
+    if (to.isBefore(from)) {
+      throw Exception("Dates are not correct!");
+    }
     try {
       var buffer = _bufferManager.getBuffer(id);
-
-      if (buffer.first.dateTime.isBefore(from) &&
-          buffer.last.dateTime.isAfter(to)) {
+      if (buffer.first.dateTime.isBefore(from)) {
         return FilterTools(_splitWithDateTime(from, to, buffer));
       }
+      if (buffer.last.dateTime.isAfter(to)) {
+        buffer = _splitWithDateTime(from, to, buffer);
+      }
+      var dbBuffer = await getFromDatabase(from, buffer.first.dateTime, id);
+      dbBuffer.addAll(buffer);
+      return FilterTools(dbBuffer);
     }
     // ignore: unused_catch_clause
-    on Exception catch (e) {
+    on InvalidBufferException catch (e) {
       //Expected catch
     }
     var buffer = await getFromDatabase(from, to, id);
@@ -166,8 +188,7 @@ class IOManager {
     DateTime to,
     List<SensorData> buffer,
   ) {
-    var start = 0, stop = 0;
-    buffer.firstWhere((element) => element.dateTime.isAfter(from));
+    var start = buffer.length, stop = 0;
     for (var i = 0; i < buffer.length; i++) {
       if (buffer[i].dateTime.isAfter(from)) {
         start = i;
@@ -198,6 +219,7 @@ class IOManager {
     _subscription[id] = null;
     await saveToDatabase(id);
     _bufferManager.removeBuffer(id);
+    _threadLock = false;
   }
 
   ///Removes data from the Database.
