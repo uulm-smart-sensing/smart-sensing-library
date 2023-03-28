@@ -199,4 +199,21 @@ class IOManager {
     await saveToDatabase(id);
     _bufferManager.removeBuffer(id);
   }
+
+  ///Removes data from the Database.
+  ///
+  ///Removes data between [from] and [to] with senor [id].
+  ///If no [from] or [to] are given, it will use the maximum time for these.
+  Future<void> removeData(SensorId id, [DateTime? from, DateTime? to]) async {
+    from ??= DateTime.utc(-271821, 04, 20);
+    to ??= DateTime.utc(275760, 09, 13);
+    await (_objectStore!.box<SensorDataDTO>().query(
+          SensorDataDTO_.sensorID.equals(id.index).and(
+                SensorDataDTO_.dateTime.between(
+                  from.millisecondsSinceEpoch,
+                  to.millisecondsSinceEpoch - 1,
+                ),
+              ),
+        )).build().removeAsync();
+  }
 }
