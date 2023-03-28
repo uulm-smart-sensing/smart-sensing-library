@@ -44,10 +44,12 @@ class BufferManager {
   int _sortComparision(SensorData a, SensorData b) =>
       a.dateTime.compareTo(b.dateTime);
 }
+
 ///Custom exception for wrong buffer
-class InvalidBufferException implements Exception{
+class InvalidBufferException implements Exception {
   ///Cause message of Exception
   String cause;
+
   ///Constructor for exception.
   ///
   ///Takes [cause] as message for exception.
