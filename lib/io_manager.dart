@@ -31,7 +31,7 @@ class IOManager {
   final int _maxBufferSize = 10000;
   final HashMap _subscription = HashMap<SensorId, StreamSubscription?>();
 
-  var _threadLock = false;
+  var _sensorThreadLock = false;
 
   ///Returns instance of IOManager
   factory IOManager() => _instance;
@@ -64,17 +64,20 @@ class IOManager {
         throw Exception("Database connection is not established!"
             "Please first established to use the IOManager!");
       }
-      while (_threadLock) {
+      while (_sensorThreadLock) {
         await Future.delayed(Duration.zero);
       }
-      _threadLock = true;
+      if (_subscription[id] != null) {
+        throw Exception("Sensor already added!");
+      }
+      _sensorThreadLock = true;
       _bufferManager.addBuffer(id);
       _subscription[id] = _sensorManager.addSensor(id).listen(
             _processSensorData,
             onDone: () async => _onDataDone(id),
           );
     } finally {
-      _threadLock = false;
+      _sensorThreadLock = false;
     }
   }
 
@@ -87,10 +90,13 @@ class IOManager {
       throw Exception("Database connection is not established!"
           "Please first established to use the IOManager!");
     }
-    while (_threadLock) {
+    while (_sensorThreadLock) {
       await Future.delayed(Duration.zero);
     }
-    _threadLock = true;
+    if (_subscription[id] == null) {
+      return;
+    }
+    _sensorThreadLock = true;
     await _sensorManager.removeSensor(id);
   }
 
@@ -131,8 +137,8 @@ class IOManager {
     }
     var buffer = _bufferManager.getBuffer(id);
     var dtoList = buffer.map(SensorDataDTO.fromSensorData).toList();
-    await _objectStore!.box<SensorDataDTO>().putManyAsync(dtoList);
     buffer.clear();
+    await _objectStore!.box<SensorDataDTO>().putManyAsync(dtoList);
   }
 
   ///Checks if buffersize is too big.
@@ -159,15 +165,22 @@ class IOManager {
       throw Exception("Dates are not correct!");
     }
     try {
-      var buffer = _bufferManager.getBuffer(id);
+      var buffer = List.of(_bufferManager.getBuffer(id));
+      //Check if first entry is older then given from.
+      //If so, then the whole buffer contains all needed data.
       if (buffer.first.dateTime.isBefore(from)) {
         return FilterTools(_splitWithDateTime(from, to, buffer));
       }
-      if (buffer.last.dateTime.isAfter(to)) {
+      //Check if first entry is older then given to.
+      //If so, then the buffer contains partial data.
+      if (buffer.first.dateTime.isBefore(to)) {
         buffer = _splitWithDateTime(from, to, buffer);
       }
       var dbBuffer = await _getFromDatabase(from, buffer.first.dateTime, id);
       dbBuffer.addAll(buffer);
+      if (dbBuffer.isEmpty) {
+        throw Exception("Not a valid buffer!");
+      }
       return FilterTools(dbBuffer);
     }
     // ignore: unused_catch_clause
@@ -195,13 +208,13 @@ class IOManager {
         break;
       }
     }
-    for (var i = buffer.length; i >= 0; i--) {
+    for (var i = buffer.length - 1; i >= 0; i--) {
       if (buffer[i].dateTime.isBefore(to)) {
         stop = i;
         break;
       }
     }
-    return buffer.sublist(start, stop);
+    return buffer.sublist(start, stop + 1);
   }
 
   ///Adds data to the buffer and checks if the maximum buffersize is reached.
@@ -219,7 +232,7 @@ class IOManager {
     _subscription[id] = null;
     await saveToDatabase(id);
     _bufferManager.removeBuffer(id);
-    _threadLock = false;
+    _sensorThreadLock = false;
   }
 
   ///Removes data from the Database.
