@@ -7,7 +7,7 @@ Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   const MethodChannel(
     'plugins.flutter.io/path_provider',
-  ).setMockMethodCallHandler((methodCall) async => r"\.");
+  ).setMockMethodCallHandler((methodCall) async => ".");
   var ioManager = IOManager();
 
   if (!await ioManager.openDatabase()) {
