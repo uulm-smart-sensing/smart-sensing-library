@@ -17,7 +17,7 @@ class MockSensorManager {
   ///
   ///Returns a stream that gives back data every second.
   Stream<SensorData> addSensor(SensorId id) =>
-      _createStream(const Duration(seconds: 1), id);
+      _createStream(const Duration(seconds: 1), id, 10);
 
   ///Removes the stream with [id].
   Future<void> removeSensor(SensorId id) async {
