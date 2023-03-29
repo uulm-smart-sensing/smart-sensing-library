@@ -29,7 +29,7 @@ class IOManager {
   late final MockSensorManager _sensorManager;
 
   final int _maxBufferSize = 10000;
-  final HashMap _subscription = HashMap<SensorId, StreamSubscription?>();
+  final HashMap _subscriptions = HashMap<SensorId, StreamSubscription?>();
 
   var _sensorThreadLock = false;
 
@@ -67,12 +67,12 @@ class IOManager {
       while (_sensorThreadLock) {
         await Future.delayed(Duration.zero);
       }
-      if (_subscription[id] != null) {
+      if (_subscriptions[id] != null) {
         throw Exception("Sensor already added!");
       }
       _sensorThreadLock = true;
       _bufferManager.addBuffer(id);
-      _subscription[id] = _sensorManager.addSensor(id).listen(
+      _subscriptions[id] = _sensorManager.addSensor(id).listen(
             _processSensorData,
             onDone: () async => _onDataDone(id),
           );
@@ -93,7 +93,7 @@ class IOManager {
     while (_sensorThreadLock) {
       await Future.delayed(Duration.zero);
     }
-    if (_subscription[id] == null) {
+    if (_subscriptions[id] == null) {
       return;
     }
     _sensorThreadLock = true;
@@ -117,7 +117,7 @@ class IOManager {
               SensorDataDTO_.sensorID.equals(id.index).and(
                     SensorDataDTO_.dateTime.between(
                       from.millisecondsSinceEpoch,
-                      to.millisecondsSinceEpoch - 1,
+                      to.millisecondsSinceEpoch,
                     ),
                   ),
             )..order(SensorDataDTO_.dateTime, flags: Order.descending))
@@ -130,7 +130,7 @@ class IOManager {
   ///
   ///Takes the buffer with the corresponding [id] and saves the
   ///content of it to the database. Clears the buffer afterwards.
-  Future<void> saveToDatabase(SensorId id) async {
+  Future<void> flushToDatabase(SensorId id) async {
     if (_objectStore == null) {
       throw Exception("Database connection is not established!"
           "Please first established to use the IOManager!");
@@ -221,16 +221,16 @@ class IOManager {
   Future<void> _processSensorData(SensorData sensorData) async {
     var buffer = _bufferManager.getBuffer(sensorData.sensorID);
     if (_checkBufferSize(buffer.length)) {
-      await saveToDatabase(sensorData.sensorID);
+      await flushToDatabase(sensorData.sensorID);
     }
     buffer.add(sensorData);
   }
 
   ///Closes all connections to the stream and buffer.
   Future<void> _onDataDone(SensorId id) async {
-    await (_subscription[id] as StreamSubscription).cancel();
-    _subscription[id] = null;
-    await saveToDatabase(id);
+    await (_subscriptions[id] as StreamSubscription).cancel();
+    _subscriptions[id] = null;
+    await flushToDatabase(id);
     _bufferManager.removeBuffer(id);
     _sensorThreadLock = false;
   }
