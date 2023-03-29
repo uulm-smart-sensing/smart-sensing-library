@@ -103,7 +103,7 @@ class IOManager {
   ///Gets Data from Database
   ///
   ///Throws exception if a database connection is not established.
-  ///Returns the a Future with the requested List.
+  ///Returns a Future with the requested List.
   ///The list values are between [from] and [to] and from the sensor [id].
   Future<List<SensorData>> _getFromDatabase(
     DateTime from,
@@ -144,11 +144,11 @@ class IOManager {
   ///Checks if buffersize is too big.
   bool _checkBufferSize(int size) => size >= _maxBufferSize;
 
-  ///Returns instance of FilterTool with corresponding data.
+  ///Returns instance of FilterTools with corresponding data.
   ///
-  ///Gets the data between [from] and [to] from sensor [id].
-  ///If data isn't completly in a buffer, a get request is
-  ///sent to the database.
+  ///Gets the data [from] until [to] from sensor [id].
+  ///If not all of the data is in a buffer a get request
+  ///will be sent to the database.
   ///Throws an exception if the buffer is empty.
   Future<FilterTools?> getFilterFrom(
     SensorId id, {
@@ -162,7 +162,7 @@ class IOManager {
     from ??= DateTime.utc(-271821, 04, 20);
     to ??= DateTime.now();
     if (to.isBefore(from)) {
-      throw Exception("Dates are not correct!");
+      throw Exception("Date range is incorrect: 'to' can not be before 'from'!");
     }
     try {
       var buffer = List.of(_bufferManager.getBuffer(id));
