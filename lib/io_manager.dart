@@ -162,7 +162,8 @@ class IOManager {
     from ??= DateTime.utc(-271821, 04, 20);
     to ??= DateTime.now();
     if (to.isBefore(from)) {
-      throw Exception("Date range is incorrect: 'to' can not be before 'from'!");
+      throw Exception(
+          "Date range is incorrect: 'to' can not be before 'from'!",);
     }
     try {
       var buffer = List.of(_bufferManager.getBuffer(id));
