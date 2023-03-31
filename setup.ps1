@@ -1,4 +1,4 @@
 flutter pub get
 
-cd sensing-plugin
-./setup.sh
+Set-Location sensing-plugin
+.\setup.ps1
