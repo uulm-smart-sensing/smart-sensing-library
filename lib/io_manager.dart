@@ -248,7 +248,7 @@ class IOManager {
           SensorDataDTO_.sensorID.equals(id.index).and(
                 SensorDataDTO_.dateTime.between(
                   from.millisecondsSinceEpoch,
-                  to.millisecondsSinceEpoch - 1,
+                  to.millisecondsSinceEpoch,
                 ),
               ),
         )).build().removeAsync();
