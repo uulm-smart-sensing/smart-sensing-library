@@ -9,8 +9,8 @@ import 'buffer_manager.dart';
 import 'filter_tools.dart';
 import 'mock_sensor_manager.dart';
 import 'objectbox.g.dart';
-import 'sensor_data_mock.dart';
 import 'sensor_data_dto.dart';
+import 'sensor_data_mock.dart';
 
 /// This class is the core component of the smart sensing library.
 ///
