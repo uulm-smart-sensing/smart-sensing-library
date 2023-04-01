@@ -1,35 +1,35 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/buffer_manager.dart';
-import 'package:smart_sensing_library/sensor_data.dart';
+import 'package:smart_sensing_library/sensor_data_mock.dart';
 
 void main() {
   var bufferManager = BufferManager();
-  var testData = SensorData(
+  var testData = SensorDataMock(
     data: const [1.1, 1.2, 1.3],
     maxPrecision: 1,
     sensorID: SensorId.accelerometer,
   );
   var testList = [
-    SensorData(
+    SensorDataMock(
       data: const [1.2, 1.2, 1.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
       setTime: DateTime(2023),
     ),
-    SensorData(
+    SensorDataMock(
       data: const [2.2, 2.2, 3.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
       setTime: DateTime(2022),
     ),
-    SensorData(
+    SensorDataMock(
       data: const [3.2, 3.2, 3.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
       setTime: DateTime(2021),
     ),
-    SensorData(
+    SensorDataMock(
       data: const [4.2, 4.2, 4.3],
       maxPrecision: 1,
       sensorID: SensorId.accelerometer,
