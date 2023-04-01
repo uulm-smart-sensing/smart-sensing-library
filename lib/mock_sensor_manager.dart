@@ -9,7 +9,7 @@ class MockSensorManager {
   MockSensorManager._constructor();
   static final MockSensorManager _instance = MockSensorManager._constructor();
   final HashMap _streamMap =
-  HashMap<SensorId, StreamController<SensorDataMock>?>();
+      HashMap<SensorId, StreamController<SensorDataMock>?>();
 
   ///Instance for MockSensorManager
   factory MockSensorManager() => _instance;
