@@ -16,8 +16,7 @@ class BufferManager {
     if (_buffer[id] == null) {
       _buffer[id] = <SensorData>[];
     } else {
-      throw InvalidBufferException("Buffer already added.");
-      throw InvalidBufferException("Buffer already added.");
+      throw Exception("Buffer already added.");
     }
   }
 
