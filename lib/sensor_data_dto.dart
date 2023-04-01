@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
-import 'sensor_data.dart';
+import 'sensor_data_mock.dart';
 
 ///DTO class for SensorData
 @Entity()
@@ -28,7 +28,7 @@ class SensorDataDTO {
   SensorDataDTO();
 
   ///From Sensordata
-  SensorDataDTO.fromSensorData(SensorData sensorData) {
+  SensorDataDTO.fromSensorData(SensorDataMock sensorData) {
     _ensureStableEnumValues();
     id = 0;
     maxPrecision = sensorData.maxPrecision;
@@ -38,9 +38,9 @@ class SensorDataDTO {
   }
 
   ///Converts DTO to internalSensorData
-  SensorData toSensorData() {
+  SensorDataMock toSensorData() {
     _ensureStableEnumValues();
-    return SensorData(
+    return SensorDataMock(
       maxPrecision: maxPrecision,
       setTime: dateTime,
       sensorID: SensorId.values[sensorID],

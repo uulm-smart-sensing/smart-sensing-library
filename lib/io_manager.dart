@@ -9,7 +9,7 @@ import 'buffer_manager.dart';
 import 'filter_tools.dart';
 import 'mock_sensor_manager.dart';
 import 'objectbox.g.dart';
-import 'sensor_data.dart';
+import 'sensor_data_mock.dart';
 import 'sensor_data_dto.dart';
 
 /// This class is the core component of the smart sensing library.
@@ -105,7 +105,7 @@ class IOManager {
   ///Throws exception if a database connection is not established.
   ///Returns a Future with the requested List.
   ///The list values are between [from] and [to] and from the sensor [id].
-  Future<List<SensorData>> _getFromDatabase(
+  Future<List<SensorDataMock>> _getFromDatabase(
     DateTime from,
     DateTime to,
     SensorId id,
@@ -198,10 +198,10 @@ class IOManager {
   }
 
   ///Splits a partial list from [buffer] between [from] and [to].
-  List<SensorData> _splitWithDateTime(
+  List<SensorDataMock> _splitWithDateTime(
     DateTime from,
     DateTime to,
-    List<SensorData> buffer,
+    List<SensorDataMock> buffer,
   ) {
     var start = buffer.length, stop = 0;
     for (var i = 0; i < buffer.length; i++) {
@@ -220,7 +220,7 @@ class IOManager {
   }
 
   ///Adds data to the buffer and checks if the maximum buffersize is reached.
-  Future<void> _processSensorData(SensorData sensorData) async {
+  Future<void> _processSensorData(SensorDataMock sensorData) async {
     var buffer = _bufferManager.getBuffer(sensorData.sensorID);
     if (_checkBufferSize(buffer.length)) {
       await flushToDatabase(sensorData.sensorID);
