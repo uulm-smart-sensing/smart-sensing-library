@@ -30,6 +30,7 @@ dependencies:
 
   smart_sensing_library:
     path: ../
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
