@@ -7,7 +7,7 @@ import 'package:sensing_plugin/sensing_plugin.dart';
 ///This class represents a data object given from the corresponding
 ///[sensorID]. It also represents the datamodel for the database.
 @immutable
-class SensorData {
+class SensorDataMock {
   ///Id for Objectbox generation
   final int id;
 
@@ -24,7 +24,7 @@ class SensorData {
   late final DateTime dateTime;
 
   ///Constructor for SensorData
-  SensorData({
+  SensorDataMock({
     required this.data,
     required this.maxPrecision,
     required this.sensorID,
@@ -41,7 +41,7 @@ class SensorData {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SensorData &&
+      other is SensorDataMock &&
           (other.dateTime == dateTime &&
               other.maxPrecision == maxPrecision &&
               other.sensorID == sensorID &&

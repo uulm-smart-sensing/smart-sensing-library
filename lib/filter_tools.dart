@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'sensor_data.dart';
+import 'sensor_data_mock.dart';
 
 ///Base class of filter tools.
 ///
@@ -10,7 +10,7 @@ class FilterTools {
   ///
   ///The [buffer] gets shallow copied into the internal [_buffer].
   ///The [_buffer] is used to do all filter options.
-  FilterTools(List<SensorData> buffer) {
+  FilterTools(List<SensorDataMock> buffer) {
     //Asumes that we have a valid buffer with valid enties.
     _buffer.add(List.of(buffer));
     _precision = _buffer[0][0].maxPrecision;
@@ -23,7 +23,7 @@ class FilterTools {
   ///while all other entries should be empty.
   ///The reason why it's a list of lists is
   ///to split it into different intervals within each function.
-  final List<List<SensorData>> _buffer = List.empty(growable: true);
+  final List<List<SensorDataMock>> _buffer = List.empty(growable: true);
   late final int _precision;
 
   ///Splits the fist entry of [_buffer] into equal [interval]s
@@ -43,7 +43,7 @@ class FilterTools {
     if (interval.compareTo(Duration.zero) == 0) {
       return;
     }
-    var tmpList = List<SensorData>.from(_buffer[0]);
+    var tmpList = List<SensorDataMock>.from(_buffer[0]);
     _buffer
       ..clear()
       ..add([]);
@@ -100,7 +100,7 @@ class FilterTools {
   void getMax({Duration interval = Duration.zero, int axis = 0}) {
     _splitBuffer(interval);
     for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
-      _buffer[currinterval] = <SensorData>[
+      _buffer[currinterval] = <SensorDataMock>[
         _buffer[currinterval].reduce(
           (current, next) =>
               (current.data[axis] > next.data[axis]) ? current : next,
@@ -114,7 +114,7 @@ class FilterTools {
   void getMin({Duration interval = Duration.zero, int axis = 0}) {
     _splitBuffer(interval);
     for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
-      _buffer[currinterval] = <SensorData>[
+      _buffer[currinterval] = <SensorDataMock>[
         _buffer[currinterval].reduce(
           (current, next) =>
               (current.data[axis] < next.data[axis]) ? current : next,
@@ -144,7 +144,7 @@ class FilterTools {
         );
       }
       var lastEntry = _buffer[currinterval].last;
-      var avgEntry = SensorData(
+      var avgEntry = SensorDataMock(
         data: avgData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
@@ -172,7 +172,7 @@ class FilterTools {
         sumData[r] = double.parse(sumData[r].toStringAsFixed(_precision));
       }
       var lastEntry = _buffer[i].last;
-      var sumEntry = SensorData(
+      var sumEntry = SensorDataMock(
         data: sumData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
@@ -221,7 +221,7 @@ class FilterTools {
         }
       }
       var lastEntry = _buffer[currinterval].last;
-      var modeEntry = SensorData(
+      var modeEntry = SensorDataMock(
         data: modeData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
@@ -265,7 +265,7 @@ class FilterTools {
         );
       }
       var lastEntry = _buffer[currinterval].last;
-      var rangeEntry = SensorData(
+      var rangeEntry = SensorDataMock(
         data: rangeData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
@@ -293,7 +293,7 @@ class FilterTools {
         medianData.add(_calculateMedian(tmpAxisData));
       }
       var lastEntry = _buffer[currinterval].last;
-      var medianEntry = SensorData(
+      var medianEntry = SensorDataMock(
         data: medianData,
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
@@ -333,7 +333,7 @@ class FilterTools {
         ),
       );
       var lastEntry = _buffer[currinterval].last;
-      var sdEntry = SensorData(
+      var sdEntry = SensorDataMock(
         data: sdData.toList(),
         maxPrecision: lastEntry.maxPrecision,
         sensorID: lastEntry.sensorID,
@@ -347,5 +347,5 @@ class FilterTools {
   }
 
   ///Returns result of querry.
-  List<SensorData> result() => _buffer[0];
+  List<SensorDataMock> result() => _buffer[0];
 }

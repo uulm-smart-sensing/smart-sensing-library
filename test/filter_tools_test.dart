@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/filter_tools.dart';
-import 'package:smart_sensing_library/sensor_data.dart';
+import 'package:smart_sensing_library/sensor_data_mock.dart';
 
 void main() {
   var randomTestDataset = createRandomTestData();
@@ -249,11 +249,11 @@ void main() {
   });
 }
 
-List<SensorData> createRandomTestData() {
-  var testData = <SensorData>[];
+List<SensorDataMock> createRandomTestData() {
+  var testData = <SensorDataMock>[];
   for (var i = 0; i < 30; i++) {
     testData.add(
-      SensorData(
+      SensorDataMock(
         data: [
           Random().nextDouble() * 360,
           Random().nextDouble() * 360,
@@ -276,11 +276,11 @@ List<SensorData> createRandomTestData() {
   return testData;
 }
 
-List<SensorData> createDeterminedTestData() {
-  var testData = <SensorData>[];
+List<SensorDataMock> createDeterminedTestData() {
+  var testData = <SensorDataMock>[];
   for (var i = 0; i < 30; i++) {
     testData.add(
-      SensorData(
+      SensorDataMock(
         data: [
           i + 0.1,
           i + 10.2,
@@ -299,7 +299,7 @@ List<SensorData> createDeterminedTestData() {
   }
   testData
     ..add(
-      SensorData(
+      SensorDataMock(
         data: const [
           0.1,
           10.2,
@@ -321,8 +321,8 @@ List<SensorData> createDeterminedTestData() {
   return testData;
 }
 
-List<SensorData> createDataForSplitting() {
-  var testData = <SensorData>[];
+List<SensorDataMock> createDataForSplitting() {
+  var testData = <SensorDataMock>[];
   for (var month = 1; month < 13; month++) {
     for (var day = 1; day < 32; day++) {
       for (var hour = 0; hour < 24; hour++) {
@@ -334,7 +334,7 @@ List<SensorData> createDataForSplitting() {
             continue;
           }
           testData.add(
-            SensorData(
+            SensorDataMock(
               data: [
                 month.toDouble(),
                 day.toDouble(),
