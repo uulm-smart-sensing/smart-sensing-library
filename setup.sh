@@ -7,4 +7,3 @@ rm -f -r download/
 
 cd sensing-plugin
 bash setup.sh
-cd ..
