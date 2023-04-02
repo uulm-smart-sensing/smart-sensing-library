@@ -67,29 +67,16 @@ class HomePage extends StatelessWidget {
       spaceBetweenChildren: 20,
       hasFixedSize: true,
       size: 80,
-      children: [
-        SizedBox.fromSize(
-          size: const Size(150, 80),
-          child: const Placeholder(
+      children: ["Temperature", "Gyroscope", "Light"]
+        .map((e) => SizedBox(
+          width: 150,
+          height: 80,
+          child: Placeholder(
             color: Colors.red,
-            child: Text("Temperature"),
+            child: Text(e),
           ),
         ),
-        SizedBox.fromSize(
-          size: const Size(150, 80),
-          child: const Placeholder(
-            color: Colors.red,
-            child: Text("Gyroscope"),
-          ),
-        ),
-        SizedBox.fromSize(
-          size: const Size(150, 80),
-          child: const Placeholder(
-            color: Colors.red,
-            child: Text("Light"),
-          ),
-        ),
-      ],
+        ).toList(),
     );
 
     var sensorsSectionHeader = HomePageSectionHeader(
@@ -108,29 +95,16 @@ class HomePage extends StatelessWidget {
       spaceBetweenChildren: 20,
       hasFixedSize: true,
       size: 80,
-      children: [
-        SizedBox.fromSize(
-          size: const Size(150, 80),
-          child: const Placeholder(
+      children: ["Temperature", "Gyroscope", "Light"]
+        .map((e) => SizedBox(
+          width: 150,
+          height: 80,
+          child: Placeholder(
             color: Colors.red,
-            child: Text("Temperature"),
+            child: Text(e),
           ),
         ),
-        SizedBox.fromSize(
-          size: const Size(150, 80),
-          child: const Placeholder(
-            color: Colors.red,
-            child: Text("Gyroscope"),
-          ),
-        ),
-        SizedBox.fromSize(
-          size: const Size(150, 80),
-          child: const Placeholder(
-            color: Colors.red,
-            child: Text("Light"),
-          ),
-        ),
-      ],
+        ).toList(),
     );
 
     var devicesSectionHeader = HomePageSectionHeader(
@@ -139,15 +113,16 @@ class HomePage extends StatelessWidget {
     );
     var devicesSectionBody = HomePageSectionBody(
       spaceBetweenChildren: 20,
-      children: [
-        SizedBox.fromSize(
-          size: const Size(240, 80),
-          child: const Placeholder(
+      children: ["iPhone 13 Pro"]
+        .map((e) => SizedBox(
+          width: 150,
+          height: 80,
+          child: Placeholder(
             color: Colors.red,
-            child: Text("iPhone 13 Pro"),
+            child: Text(e),
           ),
         ),
-      ],
+        ).toList(),
     );
 
     return Scaffold(
