@@ -41,7 +41,7 @@ class HomePageSection extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 18,
             ),
           ),
           const SizedBox(width: 4),
