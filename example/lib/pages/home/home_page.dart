@@ -68,15 +68,17 @@ class HomePage extends StatelessWidget {
       hasFixedSize: true,
       size: 80,
       children: ["Temperature", "Gyroscope", "Light"]
-        .map((e) => SizedBox(
-          width: 150,
-          height: 80,
-          child: Placeholder(
-            color: Colors.red,
-            child: Text(e),
-          ),
-        ),
-        ).toList(),
+          .map(
+            (e) => SizedBox(
+              width: 150,
+              height: 80,
+              child: Placeholder(
+                color: Colors.red,
+                child: Text(e),
+              ),
+            ),
+          )
+          .toList(),
     );
 
     var sensorsSectionHeader = HomePageSectionHeader(
@@ -96,15 +98,17 @@ class HomePage extends StatelessWidget {
       hasFixedSize: true,
       size: 80,
       children: ["Temperature", "Gyroscope", "Light"]
-        .map((e) => SizedBox(
-          width: 150,
-          height: 80,
-          child: Placeholder(
-            color: Colors.red,
-            child: Text(e),
-          ),
-        ),
-        ).toList(),
+          .map(
+            (e) => SizedBox(
+              width: 150,
+              height: 80,
+              child: Placeholder(
+                color: Colors.red,
+                child: Text(e),
+              ),
+            ),
+          )
+          .toList(),
     );
 
     var devicesSectionHeader = HomePageSectionHeader(
@@ -114,15 +118,17 @@ class HomePage extends StatelessWidget {
     var devicesSectionBody = HomePageSectionBody(
       spaceBetweenChildren: 20,
       children: ["iPhone 13 Pro"]
-        .map((e) => SizedBox(
-          width: 150,
-          height: 80,
-          child: Placeholder(
-            color: Colors.red,
-            child: Text(e),
-          ),
-        ),
-        ).toList(),
+          .map(
+            (e) => SizedBox(
+              width: 150,
+              height: 80,
+              child: Placeholder(
+                color: Colors.red,
+                child: Text(e),
+              ),
+            ),
+          )
+          .toList(),
     );
 
     return Scaffold(
