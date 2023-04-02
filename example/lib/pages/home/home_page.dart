@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
 import '../live_view/live_view_page.dart';
 import '../settings/settings_page.dart';
 import '../statistics/statistics_page.dart';
-import 'home_page_section.dart';
+import 'home_page_section_body.dart';
+import 'home_page_section_header.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -50,10 +51,8 @@ class HomePage extends StatelessWidget {
       icon: const Icon(Icons.settings),
     );
 
-    var livePreviewSection = HomePageSection(
+    var livePreviewSectionHeader = HomePageSectionHeader(
       title: "live preview",
-      axis: Axis.horizontal,
-      spaceBetweenChildren: 20,
       onPressed: () {
         Navigator.push(
           context,
@@ -62,28 +61,39 @@ class HomePage extends StatelessWidget {
           ),
         );
       },
+    );
+    var livePreviewSectionBody = HomePageSectionBody(
+      axis: Axis.horizontal,
+      spaceBetweenChildren: 20,
+      hasFixedSize: true,
+      size: 80,
       children: [
         SizedBox.fromSize(
-          size: const Size(150, 70),
+          size: const Size(150, 80),
           child: const Placeholder(
             color: Colors.red,
             child: Text("Temperature"),
           ),
         ),
         SizedBox.fromSize(
-          size: const Size(150, 70),
+          size: const Size(150, 80),
           child: const Placeholder(
             color: Colors.red,
             child: Text("Gyroscope"),
           ),
         ),
+        SizedBox.fromSize(
+          size: const Size(150, 80),
+          child: const Placeholder(
+            color: Colors.red,
+            child: Text("Light"),
+          ),
+        ),
       ],
     );
 
-    var sensorsSection = HomePageSection(
+    var sensorsSectionHeader = HomePageSectionHeader(
       title: "sensors",
-      axis: Axis.horizontal,
-      spaceBetweenChildren: 20,
       onPressed: () {
         Navigator.push(
           context,
@@ -92,30 +102,46 @@ class HomePage extends StatelessWidget {
           ),
         );
       },
+    );
+    var sensorsSectionBody = HomePageSectionBody(
+      axis: Axis.horizontal,
+      spaceBetweenChildren: 20,
+      hasFixedSize: true,
+      size: 80,
       children: [
         SizedBox.fromSize(
-          size: const Size(150, 70),
+          size: const Size(150, 80),
           child: const Placeholder(
             color: Colors.red,
             child: Text("Temperature"),
           ),
         ),
         SizedBox.fromSize(
-          size: const Size(150, 70),
+          size: const Size(150, 80),
           child: const Placeholder(
             color: Colors.red,
             child: Text("Gyroscope"),
           ),
         ),
+        SizedBox.fromSize(
+          size: const Size(150, 80),
+          child: const Placeholder(
+            color: Colors.red,
+            child: Text("Light"),
+          ),
+        ),
       ],
     );
 
-    var devicesSection = HomePageSection(
+    var devicesSectionHeader = HomePageSectionHeader(
       title: "devices",
       onPressed: () {},
+    );
+    var devicesSectionBody = HomePageSectionBody(
+      spaceBetweenChildren: 20,
       children: [
         SizedBox.fromSize(
-          size: const Size(240, 70),
+          size: const Size(240, 80),
           child: const Placeholder(
             color: Colors.red,
             child: Text("iPhone 13 Pro"),
@@ -138,9 +164,12 @@ class HomePage extends StatelessWidget {
         ),
         child: Column(
           children: [
-            livePreviewSection,
-            sensorsSection,
-            devicesSection,
+            livePreviewSectionHeader,
+            livePreviewSectionBody,
+            sensorsSectionHeader,
+            sensorsSectionBody,
+            devicesSectionHeader,
+            devicesSectionBody,
           ],
         ),
       ),
