@@ -50,6 +50,7 @@ class HomePageSection extends StatelessWidget {
       ),
     );
 
+    // Add padding between children
     var bodyElements = <Widget>[];
     for (var i = 0; i < children.length; i++) {
       bodyElements.add(children[i]);
@@ -65,9 +66,7 @@ class HomePageSection extends StatelessWidget {
     var body = Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: axis == Axis.horizontal
-          ? Row(
-              children: bodyElements,
-            )
+          ? Row(children: bodyElements)
           : Column(children: bodyElements),
     );
 
