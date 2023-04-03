@@ -111,24 +111,28 @@ class HomePage extends StatelessWidget {
           .toList(),
     );
 
-    var devicesSectionHeader = HomePageSectionHeader(
-      title: "devices",
-      onPressed: () {},
+    var devicesSectionHeader = Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: const Text(
+        "devices",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
-    var devicesSectionBody = HomePageSectionBody(
-      spaceBetweenChildren: 20,
-      children: ["iPhone 13 Pro"]
-          .map(
-            (e) => SizedBox(
-              width: 150,
-              height: 80,
-              child: Placeholder(
-                color: Colors.red,
-                child: Text(e),
-              ),
-            ),
-          )
-          .toList(),
+    var devicesSectionBody = Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: const SizedBox(
+        width: 320,
+        height: 80,
+        child: Placeholder(
+          color: Colors.red,
+          child: Text("iPhone 13 Pro"),
+        ),
+      ),
     );
 
     return Scaffold(
