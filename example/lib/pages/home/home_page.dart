@@ -27,6 +27,8 @@ class HomePage extends StatelessWidget {
         .join('.');
 
     var title = Row(
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
       children: [
         const Text(
           "Hello",
