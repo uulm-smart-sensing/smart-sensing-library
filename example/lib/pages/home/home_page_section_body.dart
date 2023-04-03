@@ -27,6 +27,7 @@ class HomePageSectionBody extends StatelessWidget {
   /// [Widget]s which are listed in this [HomePageSectionBody].
   ///
   /// Default value is an empty list.
+  /// It is expected that the children widgets are sensor widgets.
   final List<Widget> children;
 
   const HomePageSectionBody({
