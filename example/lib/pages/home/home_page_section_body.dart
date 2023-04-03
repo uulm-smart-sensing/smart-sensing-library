@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HomePageSectionBody extends StatelessWidget {
-  /// Axis on which the children are displayed.
+  /// Axis on which the children are displayed and scrolled.
   ///
   /// Default value is [Axis.vertical].
-  final Axis axis;
+  final Axis scrollDirection;
 
   /// Padding space between each [Widget] in [children].
   ///
@@ -19,9 +19,9 @@ class HomePageSectionBody extends StatelessWidget {
 
   /// Size of this [HomePageSectionBody].
   ///
-  /// The size applies only to the other opposite [Axis] from [axis], i.e. when
-  /// [axis] is [Axis.horizontal] the size will be applied to the vertical axis
-  /// and vice versa.
+  /// The size applies only to the other opposite [Axis] from [scrollDirection],
+  /// i.e. when [scrollDirection] is [Axis.horizontal] the size will be applied
+  /// to the vertical axis and vice versa.
   final double size;
 
   /// [Widget]s which are listed in this [HomePageSectionBody].
@@ -31,7 +31,7 @@ class HomePageSectionBody extends StatelessWidget {
 
   const HomePageSectionBody({
     super.key,
-    this.axis = Axis.vertical,
+    this.scrollDirection = Axis.vertical,
     this.spaceBetweenChildren = 0,
     this.hasFixedSize = false,
     this.size = 0,
@@ -46,7 +46,7 @@ class HomePageSectionBody extends StatelessWidget {
       bodyElements.add(children[i]);
       if (i < children.length - 1) {
         bodyElements.add(
-          axis == Axis.horizontal
+          scrollDirection == Axis.horizontal
               ? SizedBox(width: spaceBetweenChildren)
               : SizedBox(height: spaceBetweenChildren),
         );
@@ -56,13 +56,13 @@ class HomePageSectionBody extends StatelessWidget {
     // This only works using Container:
     // ignore: sized_box_for_whitespace
     return Container(
-      height: hasFixedSize && axis == Axis.horizontal ? size : null,
-      width: hasFixedSize && axis == Axis.vertical ? size : null,
+      height: hasFixedSize && scrollDirection == Axis.horizontal ? size : null,
+      width: hasFixedSize && scrollDirection == Axis.vertical ? size : null,
       child: Expanded(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           physics: const BouncingScrollPhysics(),
-          scrollDirection: axis,
+          scrollDirection: scrollDirection,
           children: bodyElements,
         ),
       ),

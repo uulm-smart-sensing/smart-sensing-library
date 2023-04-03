@@ -63,7 +63,7 @@ class HomePage extends StatelessWidget {
       },
     );
     var livePreviewSectionBody = HomePageSectionBody(
-      axis: Axis.horizontal,
+      scrollDirection: Axis.horizontal,
       spaceBetweenChildren: 20,
       hasFixedSize: true,
       size: 80,
@@ -93,7 +93,7 @@ class HomePage extends StatelessWidget {
       },
     );
     var sensorsSectionBody = HomePageSectionBody(
-      axis: Axis.horizontal,
+      scrollDirection: Axis.horizontal,
       spaceBetweenChildren: 20,
       hasFixedSize: true,
       size: 80,
