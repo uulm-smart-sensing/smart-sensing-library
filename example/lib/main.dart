@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import 'pages/home/home_page.dart';
 import 'pages/information/information_page.dart';
 
 void main() async {
