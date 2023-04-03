@@ -78,7 +78,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         color: Color.fromARGB(255, 170, 77, 255),
       ),
       child: Column(
