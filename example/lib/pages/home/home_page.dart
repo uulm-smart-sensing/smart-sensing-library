@@ -26,14 +26,20 @@ class HomePage extends StatelessWidget {
     var now = DateTime.now();
     // Format the current date according to the locale
     // This will output: en -> 12.31.2023 or de -> 31.12.2023
-    var todayFormatted = DateFormat.yMd(Platform.localeName)
-        .format(now)
-        // Some dates are separated using '/' replace them with '.'
-        .replaceAll("/", ".")
-        // Add a leading zero to single digits for days and months
-        .split('.')
-        .map((part) => part.padLeft(2, '0'))
-        .join('.');
+    var todayFormatted = DateFormat.yMd(Platform.localeName).format(now);
+
+    var datePartSeparator = "";
+    if (todayFormatted.contains("/")) {
+      datePartSeparator = "/";
+    } else if (todayFormatted.contains(".")) {
+      datePartSeparator = ".";
+    }
+
+    // Add a leading zero to single digits for days and months
+    todayFormatted = todayFormatted
+        .split(datePartSeparator)
+        .map((part) => part.padLeft(2, "0"))
+        .join(datePartSeparator);
 
     var title = Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
