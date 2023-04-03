@@ -48,11 +48,17 @@ class HomePage extends StatelessWidget {
         const Text(
           "Hello",
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 36,
             fontWeight: FontWeight.bold,
           ),
         ),
-        Text(", $todayFormatted"),
+        Text(
+          ", $todayFormatted",
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
       ],
     );
 
