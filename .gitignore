@@ -34,6 +34,7 @@ build/
 */objectbox.*
 /smart_sensing_library.db
 /lib/libobjectbox.so
+/lib/libobjectbox.dylib
 
 # CI coverage reports
 report_outputs/
