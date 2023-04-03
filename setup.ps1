@@ -7,6 +7,4 @@ Remove-Item -path ./download/ -recurse
 
 Set-Location sensing-plugin
 .\setup.ps1
-
-
-
+Set-Location ..
