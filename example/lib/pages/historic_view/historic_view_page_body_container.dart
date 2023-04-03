@@ -54,6 +54,7 @@ class _HistoricViewPageBodyContainerState
             ),
           ],
         ),
+        // i Icon that displays the tooltip when tapped on
         GestureDetector(
           child: const SizedBox.square(
             dimension: 30,

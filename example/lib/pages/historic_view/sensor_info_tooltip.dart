@@ -18,7 +18,7 @@ class SensorInfoTooltip extends StatelessWidget {
       _getSensorInfoRow("Unit", sensorInfo.unit.name),
       _getSensorInfoRow("Accuracy", sensorInfo.accuracy.name),
       _getSensorInfoRow(
-        "Time Interval",
+        "Time Interval (ms)",
         sensorInfo.timeIntervalInMilliseconds.toString(),
       ),
     ];
