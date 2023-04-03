@@ -9,6 +9,14 @@ import '../statistics/statistics_page.dart';
 import 'home_page_section_body.dart';
 import 'home_page_section_header.dart';
 
+/// Starting point of this demo app.
+///
+/// This [HomePage] shows different sections which contain sensor widgets.
+/// The first two sections let the user navigate to the according page:
+/// * live view section -> [LiveViewPage].
+/// * sensors section -> [StatisticsPage].
+/// The last section contains basic information about the device on which this
+/// app is running.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
