@@ -40,6 +40,7 @@ class HomePage extends StatelessWidget {
     );
 
     var settingsButton = IconButton(
+      iconSize: 30,
       onPressed: () {
         Navigator.push(
           context,
