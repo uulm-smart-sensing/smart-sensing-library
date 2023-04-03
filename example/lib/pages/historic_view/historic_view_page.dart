@@ -4,12 +4,12 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import 'sensor_info_tooltip.dart';
 
 class HistoricViewPage extends StatelessWidget {
-  final SensorId _sensorId;
+  final SensorId sensorId;
 
   const HistoricViewPage({
     super.key,
-    required SensorId sensorId,
-  }) : _sensorId = sensorId;
+    required this.sensorId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,11 @@ class HistoricViewPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              _capitalizeSensorName(_sensorId.name),
+              _capitalizeSensorName(sensorId.name),
               style: const TextStyle(
                 fontSize: 20,
               ),

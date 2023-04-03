@@ -1,94 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-class SensorInfoTooltip extends StatefulWidget {
-  const SensorInfoTooltip({super.key});
+class SensorInfoTooltip extends StatelessWidget {
+  final SensorId sensorId;
+  final SensorInfo sensorInfo;
 
-  @override
-  State<SensorInfoTooltip> createState() => _SensorInfoTooltipState();
-}
+  const SensorInfoTooltip({
+    super.key,
+    required this.sensorId,
+    required this.sensorInfo,
+  });
 
-class _SensorInfoTooltipState extends State<SensorInfoTooltip> {
   @override
   Widget build(BuildContext context) {
-    var tooltipTextStyle = const TextStyle(
-      color: Colors.white,
-    );
-    var horizontalPadding = 5.0;
+    var tableRows = [
+      _getSensorInfoRow("Sensor ID", sensorId.name),
+      _getSensorInfoRow("Unit", sensorInfo.unit.name),
+      _getSensorInfoRow("Accuracy", sensorInfo.accuracy.name),
+      _getSensorInfoRow(
+        "Time Interval",
+        sensorInfo.timeIntervalInMilliseconds.toString(),
+      ),
+    ];
 
     return Material(
       type: MaterialType.transparency,
       child: Align(
         alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 152, horizontal: 15),
-          child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: Color.fromARGB(255, 38, 0, 80),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
-              child: Table(
-                columnWidths: const <int, TableColumnWidth>{
-                  0: IntrinsicColumnWidth(),
-                  1: IntrinsicColumnWidth(),
-                  2: FlexColumnWidth(),
-                },
-                children: [
-                  TableRow(
-                    children: [
-                      Text(
-                        "Sensor ID:",
-                        style: tooltipTextStyle,
-                      ),
-                      SizedBox(width: horizontalPadding),
-                      Text(
-                        "[Sensor ID]",
-                        style: tooltipTextStyle,
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Text(
-                        "Unit:",
-                        style: tooltipTextStyle,
-                      ),
-                      SizedBox(width: horizontalPadding),
-                      Text(
-                        "[Unit]",
-                        style: tooltipTextStyle,
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Text(
-                        "Accuracy:",
-                        style: tooltipTextStyle,
-                      ),
-                      SizedBox(width: horizontalPadding),
-                      Text(
-                        "[Accuracy]",
-                        style: tooltipTextStyle,
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Text(
-                        "Time Interval:",
-                        style: tooltipTextStyle,
-                      ),
-                      SizedBox(width: horizontalPadding),
-                      Text(
-                        "[Time Interval]",
-                        style: tooltipTextStyle,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: Color.fromARGB(255, 38, 0, 80),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
+            child: Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: IntrinsicColumnWidth(),
+                1: IntrinsicColumnWidth(),
+                2: FlexColumnWidth(),
+              },
+              children: tableRows,
             ),
           ),
         ),
@@ -96,3 +48,21 @@ class _SensorInfoTooltipState extends State<SensorInfoTooltip> {
     );
   }
 }
+
+TableRow _getSensorInfoRow(String title, String value) => TableRow(
+      children: [
+        Text(
+          "$title:",
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(width: 5),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
