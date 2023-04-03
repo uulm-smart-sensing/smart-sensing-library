@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../live_view/live_view_page.dart';
 import '../settings/settings_page.dart';
 import '../statistics/statistics_page.dart';
+import 'device_widget.dart';
 import 'home_page_section_body.dart';
 import 'home_page_section_header.dart';
 
@@ -136,14 +137,7 @@ class HomePage extends StatelessWidget {
     var devicesSectionBody = Container(
       alignment: Alignment.topLeft,
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: const SizedBox(
-        width: 320,
-        height: 80,
-        child: Placeholder(
-          color: Colors.red,
-          child: Text("iPhone 13 Pro"),
-        ),
-      ),
+      child: const DeviceWidget(),
     );
 
     return Scaffold(
