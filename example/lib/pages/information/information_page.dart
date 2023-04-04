@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../settings/settings_page.dart';
-
 import '../../general_widgets/smart_sensing_appbar.dart';
+import '../settings/settings_page.dart';
 import 'information_section_widget.dart';
 
 /// Page containing all useful information about the demo app and the
