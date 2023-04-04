@@ -17,8 +17,7 @@ class HistoricViewPageContainer extends StatefulWidget {
       _HistoricViewPageContainerState();
 }
 
-class _HistoricViewPageContainerState
-    extends State<HistoricViewPageContainer> {
+class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
   var isTooltipVisible = false;
 
   @override
@@ -97,7 +96,6 @@ String _capitalizeSensorName(String name) => name
 
 Widget _getTooltip(SensorId sensorId) => FutureBuilder(
       future: Future.sync(() async {
-        // ignore: todo
         // TODO: replace with call to smart sensing library
         var sensorInfo = SensorInfo(
           unit: Unit.celsius,
