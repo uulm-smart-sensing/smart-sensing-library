@@ -8,8 +8,7 @@ import 'sensor_data_mock.dart';
 class MockSensorManager {
   MockSensorManager._constructor();
   static final MockSensorManager _instance = MockSensorManager._constructor();
-  final HashMap _streamMap =
-      HashMap<SensorId, StreamController<SensorDataMock>?>();
+  final HashMap _streamMap = HashMap<SensorId, StreamController<SensorData>?>();
 
   ///Instance for MockSensorManager
   factory MockSensorManager() => _instance;
@@ -17,7 +16,7 @@ class MockSensorManager {
   ///Creates a Stream for with [id].
   ///
   ///Returns a stream that gives back data every second.
-  Stream<SensorDataMock> addSensor(SensorId id) =>
+  Stream<SensorData> addSensor(SensorId id) =>
       _createStream(const Duration(seconds: 1), id, 10);
 
   ///Removes the stream with [id].
@@ -27,19 +26,20 @@ class MockSensorManager {
   }
 
   ///Creates test data.
-  SensorDataMock _createTestData(int i, SensorId id) => SensorDataMock(
+  SensorData _createTestData(int i, SensorId id) => SensorData(
         data: [i + 0.1, i + 0.2, i + 0.3],
         maxPrecision: 2,
-        sensorID: id,
+        unit: Unit.fahrenheit,
+        timestampInMicroseconds: DateTime.now().toUtc().millisecondsSinceEpoch,
       );
 
   ///Creates a testing stream.
-  Stream<SensorDataMock> _createStream(
+  Stream<SensorData> _createStream(
     Duration interval,
     SensorId id, [
     int? maxCount,
   ]) {
-    late StreamController<SensorDataMock> controller;
+    late StreamController<SensorData> controller;
     Timer? timer;
     var counter = 0;
 
@@ -66,7 +66,7 @@ class MockSensorManager {
       timer = null;
     }
 
-    controller = StreamController<SensorDataMock>(
+    controller = StreamController<SensorData>(
       onListen: startTimer,
       onPause: stopTimer,
       onResume: startTimer,

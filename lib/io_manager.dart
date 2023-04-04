@@ -73,7 +73,7 @@ class IOManager {
       _sensorThreadLock = true;
       _bufferManager.addBuffer(id);
       _subscriptions[id] = _sensorManager.addSensor(id).listen(
-            _processSensorData,
+            (e) => _processSensorData(e, id),
             onDone: () async => _onDataDone(id),
           );
     } finally {
@@ -220,13 +220,25 @@ class IOManager {
   }
 
   ///Adds data to the buffer and checks if the maximum buffersize is reached.
-  Future<void> _processSensorData(SensorDataMock sensorData) async {
-    var buffer = _bufferManager.getBuffer(sensorData.sensorID);
+  Future<void> _processSensorData(SensorData sensorData, SensorId id) async {
+    var buffer = _bufferManager.getBuffer(id);
     if (_checkBufferSize(buffer.length)) {
-      await flushToDatabase(sensorData.sensorID);
+      await flushToDatabase(id);
     }
-    buffer.add(sensorData);
+    buffer.add(_convertFromSensorData(sensorData, id));
   }
+
+  ///Converts SensorData to SensorDataMock
+  SensorDataMock _convertFromSensorData(SensorData data, SensorId id) =>
+      SensorDataMock(
+        data: data.data.map((e) => e ?? 0).toList(),
+        maxPrecision: data.maxPrecision,
+        sensorID: id,
+        setTime: DateTime.fromMillisecondsSinceEpoch(
+          data.timestampInMicroseconds,
+          isUtc: true,
+        ),
+      );
 
   ///Closes all connections to the stream and buffer.
   Future<void> _onDataDone(SensorId id) async {
