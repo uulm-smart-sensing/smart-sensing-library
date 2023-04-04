@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
 
+import './information_page.dart';
+
+/// Widget displaying a information section.
+///
+/// This means, this widget will display a unit containing
+/// * a [sectionTitle] - showing the topic of this section
+/// * as well as [content] below the [sectionTitle] -
+/// showing all the information related to the topic.
+///
+/// For example the current license could be showed by this
+/// [InformationSectionWidget]:
+///
+/// 'License' (= [sectionTitle])
+/// MIT (= [content])
+///
+/// This [InformationSectionWidget] can be used on the [InformationPage]
+/// to display the several information.
 class InformationSectionWidget extends StatelessWidget {
   /// The title of the section.
   ///

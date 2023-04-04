@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
 
+import '../settings/settings_page.dart';
+
 import '../../general_widgets/smart_sensing_appbar.dart';
 import 'information_section_widget.dart';
 
+/// Page containing all useful information about the demo app and the
+/// smart sensing library.
+///
+/// This [InformationPage] shows different sections which contain
+/// information about several topics:
+/// * device-specific information, like the current OS
+/// * license ...
+/// * version ....
+/// * the developer of demo app and smart sensing library.
+///
+/// If further information become interesting and should be accessable by the
+/// user, they should be displayed on this [InformationPage].
+///
+/// This [InformationPage] is reachable through the [SettingsPage].
 class InformationPage extends StatelessWidget {
   const InformationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // The section containing the aggregated information of the device,
+    // this demo app is running on.
+    //
+    // So for example, this section display information about the current OS
+    // and the current amount of free storage.
     var deviceSection = InformationSectionWidget(
       sectionTitle: "Device information",
       content: Column(
@@ -36,6 +57,8 @@ class InformationPage extends StatelessWidget {
       ),
     );
 
+    // The section containing the license for this demo app and
+    // the smart sensing library.
     var licenseSection = const InformationSectionWidget(
       sectionTitle: "License",
       content: Text(
@@ -44,6 +67,8 @@ class InformationPage extends StatelessWidget {
       ),
     );
 
+    // The section containing the current version of the demo app and
+    // the smart sensing library.
     var versionSection = const InformationSectionWidget(
       sectionTitle: "Version",
       content: Text(
@@ -52,6 +77,8 @@ class InformationPage extends StatelessWidget {
       ),
     );
 
+    // The section containing the names of the developer of
+    // the smart sensing library.
     var developerSection = InformationSectionWidget(
       sectionTitle: "Developer",
       content: Column(
@@ -81,6 +108,7 @@ class InformationPage extends StatelessWidget {
       ),
     );
 
+    // Widget that display the list of information on the page.
     Widget body = ListView(
       children: <Widget>[
         deviceSection,
