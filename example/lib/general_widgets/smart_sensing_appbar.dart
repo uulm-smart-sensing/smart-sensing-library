@@ -27,7 +27,7 @@ class SmartSensingAppBar extends StatelessWidget {
   /// Create the [Widget] with displays the [subtitle] at the bottom
   /// of this [AppBar].
   Widget _createSubtitle() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Text(
           subtitle,
           style: const TextStyle(fontSize: 24, color: Colors.white),

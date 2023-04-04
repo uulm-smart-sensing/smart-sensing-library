@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class InformationSectionWidget extends StatelessWidget {
@@ -35,7 +33,8 @@ class InformationSectionWidget extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Color.fromARGB(255, 207, 149, 218),
+        // TODO: change the alpha from 100 to 255 to get correct color
+        color: Color.fromARGB(100, 34, 0, 77),
       ),
       child: content,
     );
