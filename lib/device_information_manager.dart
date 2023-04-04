@@ -1,18 +1,14 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:disk_space/disk_space.dart';
 
-/// Requests the version of the operation system of the device, this library
+/// Requests the free storage of the device, this library
 /// is running on.
 ///
-/// Therefor the [DeviceInfoPlugin] will be used to access the iOS or
-/// Android version of the device.
-///
-/// Depending on the device, the returned string (containing the OS version)
-/// will have a different format:
-/// * iPhone -> "iOS <majorVersion>.<minorVersion", e. g. "iOS 16.2"
-/// * Android device - "Android <majorVersion> (SDK <sdkVersion>)", e. g.
-/// "Android 9 (SDK 23)"
+/// Therefor the [DiskSpace] plugin will be used to access free disk space
+/// The disk space, will be returned in MB rounded to 2 fractional digits, so
+/// e. g. "4038.23 (MB)"
 Future<String> getOSVersion() async {
   var deviceInfo = DeviceInfoPlugin();
   if (Platform.isIOS) {
@@ -28,4 +24,14 @@ Future<String> getOSVersion() async {
   }
 
   return "ERROR: Could not get OS version";
+}
+
+///
+Future<String> getFreeStorage() async {
+  var freeDiskSpace = await DiskSpace.getFreeDiskSpace ?? -1.0;
+  if (freeDiskSpace == -1.0) {
+    return "ERROR: Could not get free storage!";
+  }
+  var freeDiskSpaceRounded = freeDiskSpace.toStringAsFixed(2);
+  return "$freeDiskSpaceRounded (MB)";
 }
