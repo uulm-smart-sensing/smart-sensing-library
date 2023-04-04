@@ -7,18 +7,18 @@ import 'historic_view_page_body.dart';
 import 'sensor_info_tooltip.dart';
 
 /// This [Widget] wraps the header and body to control the state of the tooltip.
-class HistoricViewPageBodyContainer extends StatefulWidget {
+class HistoricViewPageContainer extends StatefulWidget {
   final SensorId sensorId;
 
-  const HistoricViewPageBodyContainer({super.key, required this.sensorId});
+  const HistoricViewPageContainer({super.key, required this.sensorId});
 
   @override
-  State<HistoricViewPageBodyContainer> createState() =>
-      _HistoricViewPageBodyContainerState();
+  State<HistoricViewPageContainer> createState() =>
+      _HistoricViewPageContainerState();
 }
 
-class _HistoricViewPageBodyContainerState
-    extends State<HistoricViewPageBodyContainer> {
+class _HistoricViewPageContainerState
+    extends State<HistoricViewPageContainer> {
   var isTooltipVisible = false;
 
   @override

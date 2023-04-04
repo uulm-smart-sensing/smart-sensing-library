@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import 'historic_view_page_body_container.dart';
+import 'historic_view_page_container.dart';
 
 class HistoricViewPage extends StatelessWidget {
   final SensorId sensorId;
@@ -18,7 +18,7 @@ class HistoricViewPage extends StatelessWidget {
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-          child: HistoricViewPageBodyContainer(sensorId: sensorId),
+          child: HistoricViewPageContainer(sensorId: sensorId),
         ),
       );
 }
