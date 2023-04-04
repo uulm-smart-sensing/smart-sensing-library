@@ -32,25 +32,25 @@ class InformationPage extends StatelessWidget {
       sectionTitle: "Device information",
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             "OS version: ",
-            style: TextStyle(fontSize: 18),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
-            "  \u2022 TODO: get current OS version",
-            style: TextStyle(fontSize: 18),
+            "  • TODO: get current OS version",
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
             "Free storage: ",
-            style: TextStyle(fontSize: 18),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
-            "  \u2022 TODO: get current free storage",
-            style: TextStyle(fontSize: 18),
+            "  • TODO: get current free storage",
+            style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
       ),
@@ -58,21 +58,21 @@ class InformationPage extends StatelessWidget {
 
     // The section containing the license for this demo app and
     // the smart sensing library.
-    var licenseSection = const InformationSectionWidget(
+    var licenseSection = InformationSectionWidget(
       sectionTitle: "License",
       content: Text(
         "MIT",
-        style: TextStyle(fontSize: 18),
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
     );
 
     // The section containing the current version of the demo app and
     // the smart sensing library.
-    var versionSection = const InformationSectionWidget(
+    var versionSection = InformationSectionWidget(
       sectionTitle: "Version",
       content: Text(
         "0.2",
-        style: TextStyle(fontSize: 18),
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
     );
 
@@ -82,26 +82,26 @@ class InformationPage extends StatelessWidget {
       sectionTitle: "Developer",
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
-            "\u2022 Felix Schlegel",
-            style: TextStyle(fontSize: 18),
+            "• Felix Schlegel",
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
-            "\u2022 Hermann Fröhlich",
-            style: TextStyle(fontSize: 18),
+            "• Hermann Fröhlich",
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
-            "\u2022 Florian Gebhardt",
-            style: TextStyle(fontSize: 18),
+            "• Florian Gebhardt",
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
-            "\u2022 Mukhtar Muse",
-            style: TextStyle(fontSize: 18),
+            "• Mukhtar Muse",
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
-            "\u2022 Leonhard Alkewitz",
-            style: TextStyle(fontSize: 18),
+            "• Leonhard Alkewitz",
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),
