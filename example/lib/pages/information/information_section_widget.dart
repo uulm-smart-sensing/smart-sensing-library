@@ -49,8 +49,7 @@ class InformationSectionWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        // TODO: change the alpha from 100 to 255 to get correct color
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: Theme.of(context).cardColor,
       ),
       child: content,
