@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../pages/information/information_page.dart';
+
+/// Custom app bar usable for several pages in the demo app.
+///
+/// This widget builds a customizable app bar, which can be used on several
+/// pages, like the [InformationPage].
+///
+/// Therefor it shows a ordinary [AppBar], whose 'title' and 'bottom' can be
+/// customized by setting a [title] and [subtitle] (combined with a [Divider]).
+///
+/// This custom [SmartSensingAppBar] should be used on every page, which do not
+/// need any more specialed [AppBar] to have a unified layout and design, which
+/// increases the usability.
 class SmartSensingAppBar extends StatelessWidget {
   /// Title of this [AppBar] (= title of the page).
   final String title;
