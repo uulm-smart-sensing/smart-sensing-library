@@ -69,6 +69,7 @@ class FakeSensorManager extends Fake implements SensorManager {
     }
     return Future(() => _platformCallResult);
   }
+
   ///Stops the tracking of a sensor.
   @override
   Future<SensorTaskResult> stopSensorTracking(SensorId id) async {
@@ -84,6 +85,7 @@ class FakeSensorManager extends Fake implements SensorManager {
     }
     return Future(() => SensorTaskResult.success);
   }
+
   ///Returns a list of usable sensors.
   @override
   Future<List<SensorId>> getUsableSensors() => Future(
