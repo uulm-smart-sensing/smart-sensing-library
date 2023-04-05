@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
+import 'package:flutter/material.dart';
 
 /// Requests the free storage of the device, this library
 /// is running on.
@@ -34,4 +35,16 @@ Future<String> getFreeStorage() async {
   }
   var freeDiskSpaceRounded = freeDiskSpace.toStringAsFixed(2);
   return "  • $freeDiskSpaceRounded (MB)";
+}
+
+/// Fetches the device name e.g. OnePlus Nord
+Future<String> getDeviceName() async {
+  var deviceInfo = DeviceInfoPlugin();
+  if (Platform.isIOS) {
+    return deviceInfo.iosInfo.then((info) => info.utsname.machine ?? "");
+  } else if (Platform.isAndroid) {
+    return deviceInfo.androidInfo
+        .then((info) => "${info.brand} ${info.device}");
+  }
+  throw StateError("Unexpected platform");
 }
