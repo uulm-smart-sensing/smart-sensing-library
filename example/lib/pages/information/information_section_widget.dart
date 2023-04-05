@@ -5,15 +5,15 @@ import './information_page.dart';
 /// Widget displaying a information section.
 ///
 /// This means, this widget will display a unit containing
-/// * a [sectionTitle] - showing the topic of this section
-/// * as well as [content] below the [sectionTitle] -
+/// * a [_sectionTitle] - showing the topic of this section
+/// * as well as [_content] below the [_sectionTitle] -
 /// showing all the information related to the topic.
 ///
 /// For example the current license could be showed by this
 /// [InformationSectionWidget]:
 ///
-/// 'License' (= [sectionTitle])
-/// MIT (= [content])
+/// 'License' (= [_sectionTitle])
+/// MIT (= [_content])
 ///
 /// This [InformationSectionWidget] can be used on the [InformationPage]
 /// to display the several information.
@@ -21,25 +21,25 @@ class InformationSectionWidget extends StatelessWidget {
   /// The title of the section.
   ///
   /// For example 'License'.
-  final String sectionTitle;
+  final String _sectionTitle;
 
-  /// The [content] of this information section, which
+  /// The [_content] of this information section, which
   /// should be only [Text] or [ListView], but can contain
   /// more complex text constructions too.
-  final Widget content;
+  final Widget _content;
 
   const InformationSectionWidget({
     super.key,
-    required this.sectionTitle,
-    required this.content,
-  });
+    required String sectionTitle,
+    required Widget content,
+  }) : _content = content, _sectionTitle = sectionTitle;
 
   @override
   Widget build(BuildContext context) {
     // Display the text, which represents the "title" of
     // this information section
     var header = Text(
-      sectionTitle,
+      _sectionTitle,
       textAlign: TextAlign.left,
       style: const TextStyle(fontSize: 24),
     );
@@ -52,7 +52,7 @@ class InformationSectionWidget extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: Theme.of(context).cardColor,
       ),
-      child: content,
+      child: _content,
     );
 
     return Container(
