@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../general_widgets/app_bar_with_header.dart';
 import '../../general_widgets/device_name_title.dart';
 import '../../general_widgets/stylized_container.dart';
 import '../../theme.dart';
@@ -101,27 +102,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Sensors",
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(80.0),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-              child: Column(
-                children: [
-                  header,
-                  const Divider(thickness: 2),
-                ],
-              ),
-            ),
-          ),
-        ),
+        appBar: AppBarWithHeader(header: header, titleText: "Sensors"),
         body: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
           child: Column(
