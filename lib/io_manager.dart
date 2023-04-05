@@ -60,10 +60,25 @@ class IOManager {
     return true;
   }
 
+  ///Returns a list of usable sensors
+  Future<List<SensorId>> getUsableSensors() async =>
+      _sensorManager.getUsableSensors();
+
+  ///Retrieves information about the sensor with the passed [id].
+  Future<SensorInfo> getSensorInfo(SensorId id) async =>
+      _sensorManager.getSensorInfo(id);
+
+  ///Retrieves the stream of sensor with the passed [id].
+  Stream<SensorData>? getSensorStream(SensorId id) =>
+      _sensorManager.getSensorStream(id);
+
+  ///Returns a list of used sensors
+  Future<List<SensorId>> getUsedSensors() async =>
+      _sensorManager.getUsedSensors();
+
   ///Adds a Sensor with [id].
   ///
   ///Throws exception if a database connection is not established.
-  ///WIP. Currently works with the Mock SensorManager
   Future<void> addSensor(SensorId id, int timeIntervalInMilliseconds) async {
     try {
       if (_objectStore == null) {
@@ -98,7 +113,6 @@ class IOManager {
   ///Removes a Sensor with [id].
   ///
   ///Throws exception if a database connection is not established.
-  ///WIP. Currently works with the Mock SensorManager
   Future<void> removeSensor(SensorId id) async {
     if (_objectStore == null) {
       throw Exception("Database connection is not established!"
