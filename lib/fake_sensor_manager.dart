@@ -26,7 +26,7 @@ class FakeSensorManager extends Fake implements SensorManager {
   static SensorTaskResult _platformCallResult = SensorTaskResult.success;
   static SensorData Function(int)? _creationFunction;
   //Is in seconds
-  static int _streamUpTime = 15;
+  static int _streamUpTime = 10;
 
   ///Instance for FakeSensorManager
   factory FakeSensorManager() => _instance;
