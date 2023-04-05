@@ -5,6 +5,7 @@ import '../../general_widgets/app_bar_with_header.dart';
 import '../../general_widgets/device_name_title.dart';
 import '../../general_widgets/stylized_container.dart';
 import '../../theme.dart';
+import 'checkbox_with_text.dart';
 import 'sensor_toggle_list_element.dart';
 
 class SensorSearchPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class SensorSearchPage extends StatefulWidget {
 class _SensorSearchPageState extends State<SensorSearchPage> {
   final _controller = TextEditingController();
   var sensorNameFilter = "";
+  var showOnlyAvailableSensors = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,14 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
             fontSize: 24,
           ),
         ),
-        Checkbox(
-          value: true,
-          onChanged: (isChecked) {},
+        CheckBoxWithText(
+          text: "Only show available",
+          isChecked: showOnlyAvailableSensors,
+          onPressed: (isChecked) {
+            setState(() {
+              showOnlyAvailableSensors = isChecked;
+            });
+          },
         ),
       ],
     );
