@@ -62,17 +62,28 @@ class HomePage extends StatelessWidget {
       ],
     );
 
-    var settingsButton = IconButton(
-      iconSize: 30,
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SettingsPage(),
-          ),
-        );
-      },
-      icon: const Icon(Icons.settings),
+    var settingsButton = Center(
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color.fromARGB(255, 23, 27, 137),
+        ),
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          iconSize: 30,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SettingsPage(),
+              ),
+            );
+          },
+          icon: const Icon(Icons.settings),
+        ),
+      ),
     );
 
     var livePreviewSectionHeader = HomePageSectionHeader(
@@ -141,7 +152,6 @@ class HomePage extends StatelessWidget {
       child: const Text(
         "devices",
         style: TextStyle(
-          fontSize: 18,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -155,9 +165,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: title,
-        actions: [
-          settingsButton,
-        ],
+        actions: [settingsButton, const SizedBox(width: 10)],
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(
