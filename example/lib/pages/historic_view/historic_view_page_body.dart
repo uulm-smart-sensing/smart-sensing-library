@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../general_widgets/stylized_container.dart';
+
 class HistoricViewPageBody extends StatelessWidget {
   final SensorId sensorId;
 
@@ -10,43 +12,48 @@ class HistoricViewPageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     var divider = const VerticalDivider(
       thickness: 1,
-      color: Colors.white,
     );
 
-    var timeIntervalSelection = Container(
+    var timeIntervalSelection = StylizedContainer(
       padding: const EdgeInsets.symmetric(
         horizontal: 12,
-      ),
-      decoration: const ShapeDecoration(
-        shape: StadiumBorder(),
-        color: Color.fromARGB(255, 38, 0, 80),
       ),
       child: IntrinsicHeight(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _getTimeSelectionButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: apply 5 min filter
+              },
               title: "5 min",
             ),
             divider,
             _getTimeSelectionButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: apply 1 h filter
+              },
               title: "1 h",
             ),
             divider,
             _getTimeSelectionButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: apply 12 h filter
+              },
               title: "12 h",
             ),
             divider,
             _getTimeSelectionButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: apply 2 d filter
+              },
               title: "2 d",
             ),
             divider,
             _getTimeSelectionButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: apply 1 w filter
+              },
               title: "1 w",
             ),
           ],

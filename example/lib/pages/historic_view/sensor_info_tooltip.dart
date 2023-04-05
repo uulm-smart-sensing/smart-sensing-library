@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../general_widgets/stylized_container.dart';
+
 class SensorInfoTooltip extends StatelessWidget {
   final SensorId sensorId;
   final SensorInfo sensorInfo;
@@ -27,11 +29,7 @@ class SensorInfoTooltip extends StatelessWidget {
       type: MaterialType.transparency,
       child: Align(
         alignment: Alignment.topCenter,
-        child: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color.fromARGB(255, 38, 0, 80),
-          ),
+        child: StylizedContainer(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
             child: Table(
@@ -51,18 +49,8 @@ class SensorInfoTooltip extends StatelessWidget {
 
 TableRow _getSensorInfoRow(String title, String value) => TableRow(
       children: [
-        Text(
-          "$title:",
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
+        Text("$title:"),
         const SizedBox(width: 5),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
+        Text(value),
       ],
     );
