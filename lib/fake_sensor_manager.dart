@@ -70,7 +70,7 @@ class FakeSensorManager extends Fake implements SensorManager {
   }
 
   @override
-  Future<SensorTaskResult> stopSensorTracking(SensorId id) async{
+  Future<SensorTaskResult> stopSensorTracking(SensorId id) async {
     if (!_streamMap.containsKey(id)) {
       return Future(() => SensorTaskResult.notTrackingSensor);
     }
@@ -103,7 +103,7 @@ class FakeSensorManager extends Fake implements SensorManager {
   Stream<SensorData> _createStream(
     Duration interval,
     SensorId id,
-) {
+  ) {
     late StreamController<SensorData> controller;
     Timer? timer;
     var counter = 0;
