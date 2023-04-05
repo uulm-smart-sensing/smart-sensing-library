@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../date_formatter.dart';
 import '../../general_widgets/stylized_container.dart';
 
 enum _Filter {
@@ -142,7 +146,6 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
 
           setState(() {
             selectedFilter = newFilter;
-            // TODO: apply filter
           });
         },
       ),
@@ -152,6 +155,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     // When visualization is selected, according visualization is shown
     var visualizationSelection = IntrinsicHeight(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _getVisualizationSelectionButton(
             onPressed: () {
@@ -176,6 +180,9 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       ),
     );
 
+    var paddingRow = _getPaddingRow(widget.sensorId);
+
+    // Table that visualizes sensor data
     var visualizationTable = Table(
       columnWidths: columnWidths,
       children: [
@@ -188,6 +195,9 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
             ),
           ],
         ),
+        paddingRow,
+        // TODO: Add data row using call to smart sensing library
+        // and _getTableRowFromSensorData add padding with paddingRow
       ],
     );
 
@@ -292,7 +302,7 @@ Map<int, TableColumnWidth> _getColumnWidthsFromSensorId(SensorId sensorId) {
 /// * sensors with a single value
 ///
 /// Both types need different table header elements
-List<Text> _getTableElementsFromSensorId(
+List<Widget> _getTableElementsFromSensorId(
   SensorId sensorId,
   _Visualization selectedVisualization,
 ) {
@@ -338,5 +348,50 @@ List<Text> _getTableElementsFromSensorId(
       break;
   }
 
-  return elements;
+  return elements.map((element) => Center(child: element)).toList();
+}
+
+TableRow _getPaddingRow(SensorId sensorId) {
+  int columns;
+  switch (sensorId) {
+    case SensorId.accelerometer:
+    case SensorId.gyroscope:
+    case SensorId.magnetometer:
+    case SensorId.orientation:
+    case SensorId.linearAcceleration:
+      columns = 4;
+      break;
+    case SensorId.barometer:
+    case SensorId.thermometer:
+      columns = 2;
+      break;
+  }
+
+  return TableRow(
+    children: List.filled(
+      columns,
+      const SizedBox(height: 10),
+    ),
+  );
+}
+
+// ignore: unused_element
+TableRow _getTableRowFromSensorData(DateTime dateTime, List<double> data) {
+  var dayName = DateFormat.E(Platform.localeName).format(dateTime);
+  var formattedDate = formatDate(dateTime: dateTime, shortenYear: true);
+  var formattedTime = DateFormat.Hms(Platform.localeName).format(dateTime);
+
+  return TableRow(
+    children: [
+      Center(
+        child: Column(
+          children: [
+            Text("$dayName. $formattedDate"),
+            Text(formattedTime),
+          ],
+        ),
+      ),
+      ...data.map((value) => Center(child: Text(value.toString()))),
+    ],
+  );
 }

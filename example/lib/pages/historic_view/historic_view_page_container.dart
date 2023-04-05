@@ -46,6 +46,7 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
               ),
             ),
             const Text(
+              // TODO: Replace with call to smart sensing library
               "(in m/s^2, prec: 2)",
               style: TextStyle(
                 fontSize: 12,
@@ -73,13 +74,60 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
       ],
     );
 
+    var exampleSection = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text(
+          "Example",
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
+        Divider(thickness: 2),
+        Text.rich(
+          TextSpan(
+            text: "Show me the (y-) minimum of all hourly averages from "
+                "yesterday ",
+            children: <InlineSpan>[
+              TextSpan(
+                text: "(= avg(1 hour, axis = y).min())",
+                style: TextStyle(fontSize: 14),
+              )
+            ],
+          ),
+        ),
+        // TODO: Make call to smart sensing library
+        SizedBox(height: 10),
+        Text.rich(
+          TextSpan(
+            text: "Show me the range of amount of datapoints a day from last "
+                "week",
+            children: <InlineSpan>[
+              TextSpan(
+                text: "(= count(1 day).range())",
+                style: TextStyle(fontSize: 14),
+              )
+            ],
+          ),
+        ),
+        // TODO: Make call to smart sensing library
+        SizedBox(height: 5),
+      ],
+    );
+
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        header,
-        const Divider(thickness: 2),
-        // The overlay contains the body and controls the tooltip which is
-        // displayed on top of the body
-        Stack(children: children),
+        Column(
+          children: [
+            header,
+            const Divider(thickness: 2),
+            // The overlay contains the body and controls the tooltip which is
+            // displayed on top of the body
+            Stack(children: children),
+          ],
+        ),
+        exampleSection,
       ],
     );
   }
@@ -96,7 +144,7 @@ String _capitalizeSensorName(String name) => name
 
 Widget _getTooltip(SensorId sensorId) => FutureBuilder(
       future: Future.sync(() async {
-        // TODO: replace with call to smart sensing library
+        // TODO: Replace with call to smart sensing library
         var sensorInfo = SensorInfo(
           unit: Unit.celsius,
           accuracy: SensorAccuracy.high,
