@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../date_formatter.dart';
 import '../live_view/live_view_page.dart';
 import '../settings/settings_page.dart';
 import '../statistics/statistics_page.dart';
@@ -23,23 +24,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var now = DateTime.now();
-    // Format the current date according to the locale
-    // This will output: en -> 12.31.2023 or de -> 31.12.2023
-    var todayFormatted = DateFormat.yMd(Platform.localeName).format(now);
-
-    var datePartSeparator = "";
-    if (todayFormatted.contains("/")) {
-      datePartSeparator = "/";
-    } else if (todayFormatted.contains(".")) {
-      datePartSeparator = ".";
-    }
-
-    // Add a leading zero to single digits for days and months
-    todayFormatted = todayFormatted
-        .split(datePartSeparator)
-        .map((part) => part.padLeft(2, "0"))
-        .join(datePartSeparator);
+    var todayFormatted = formatDate(dateTime: DateTime.now());
 
     var title = Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
