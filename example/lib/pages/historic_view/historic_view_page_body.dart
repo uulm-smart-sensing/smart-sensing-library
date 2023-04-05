@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/stylized_container.dart';
+import 'historic_view_page_data_container.dart';
 
 class HistoricViewPageBody extends StatelessWidget {
   final SensorId sensorId;
@@ -64,6 +65,8 @@ class HistoricViewPageBody extends StatelessWidget {
     return Column(
       children: [
         timeIntervalSelection,
+        const SizedBox(height: 10),
+        HistoricViewPageDataContainer(sensorId: sensorId),
       ],
     );
   }
