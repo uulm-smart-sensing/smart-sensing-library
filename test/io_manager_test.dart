@@ -19,7 +19,7 @@ Future<void> main() async {
     await ioManager.removeSensor(SensorId.accelerometer);
   });
 
-  ///The mockSensorManager cancles the Stream after 10 seconds,
+  ///The fakeSensorManager cancles the Stream after 10 seconds,
   ///so after 15 seconds all data is saved in the database.
   test("Add sensor and get from database", () async {
     await ioManager.addSensor(SensorId.accelerometer, 1000);
