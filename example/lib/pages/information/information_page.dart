@@ -34,18 +34,12 @@ class InformationPage extends StatelessWidget {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "OS version: ",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          const Text("OS version: "),
           _getOSInformation(),
           const SizedBox(
             height: 10,
           ),
-          Text(
-            "Free storage: ",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          const Text("Free storage: "),
           _getStorageInformation(),
         ],
       ),
@@ -53,22 +47,16 @@ class InformationPage extends StatelessWidget {
 
     // The section containing the license for this demo app and
     // the smart sensing library.
-    var licenseSection = InformationSectionWidget(
+    var licenseSection = const InformationSectionWidget(
       sectionTitle: "License",
-      content: Text(
-        "MIT",
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
+      content: Text("MIT"),
     );
 
     // The section containing the current version of the demo app and
     // the smart sensing library.
-    var versionSection = InformationSectionWidget(
+    var versionSection = const InformationSectionWidget(
       sectionTitle: "Version",
-      content: Text(
-        "0.2",
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
+      content: Text("0.2"),
     );
 
     // The section containing the names of the developer of
@@ -77,27 +65,12 @@ class InformationPage extends StatelessWidget {
       sectionTitle: "Developer",
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "• Felix Schlegel",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          Text(
-            "• Hermann Fröhlich",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          Text(
-            "• Florian Gebhardt",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          Text(
-            "• Mukhtar Muse",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          Text(
-            "• Leonhard Alkewitz",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+        children: const [
+          Text("• Felix Schlegel"),
+          Text("• Hermann Fröhlich"),
+          Text("• Florian Gebhardt"),
+          Text("• Mukhtar Muse"),
+          Text("• Leonhard Alkewitz"),
         ],
       ),
     );
