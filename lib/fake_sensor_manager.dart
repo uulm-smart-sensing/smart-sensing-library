@@ -52,6 +52,7 @@ class FakeSensorManager extends Fake implements SensorManager {
   Stream<SensorData>? getSensorStream(SensorId id) =>
       _createStream(const Duration(seconds: 1), id);
 
+  ///Starts the tracking of a sensor.
   @override
   Future<SensorTaskResult> startSensorTracking(
     SensorId id,
@@ -68,7 +69,7 @@ class FakeSensorManager extends Fake implements SensorManager {
     }
     return Future(() => _platformCallResult);
   }
-
+  ///Stops the tracking of a sensor.
   @override
   Future<SensorTaskResult> stopSensorTracking(SensorId id) async {
     if (!_streamMap.containsKey(id)) {
@@ -83,7 +84,7 @@ class FakeSensorManager extends Fake implements SensorManager {
     }
     return Future(() => SensorTaskResult.success);
   }
-
+  ///Returns a list of usable sensors.
   @override
   Future<List<SensorId>> getUsableSensors() => Future(
         () => (Map.from(_sensorAvailableMap)
