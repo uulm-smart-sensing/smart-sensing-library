@@ -2,12 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/stylized_container.dart';
-import 'historic_view_page_data_container.dart';
 
-class HistoricViewPageBody extends StatelessWidget {
+enum Filter {
+  noFilter,
+  count,
+  mode,
+  min,
+}
+
+class HistoricViewPageBody extends StatefulWidget {
   final SensorId sensorId;
 
   const HistoricViewPageBody({super.key, required this.sensorId});
+
+  @override
+  State<HistoricViewPageBody> createState() => _HistoricViewPageBodyState();
+}
+
+class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
+  var selectedFilter = Filter.noFilter;
+  var selectedDuration = const Duration(minutes: 5);
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +29,8 @@ class HistoricViewPageBody extends StatelessWidget {
       thickness: 1,
     );
 
+    // Selection between different time intervals
+    // When time interval is selected, new interval will be applied to table/graph
     var timeIntervalSelection = StylizedContainer(
       padding: const EdgeInsets.symmetric(
         horizontal: 12,
@@ -25,35 +41,45 @@ class HistoricViewPageBody extends StatelessWidget {
           children: [
             _getTimeSelectionButton(
               onPressed: () {
-                // TODO: apply 5 min filter
+                setState(() {
+                  selectedDuration = const Duration(minutes: 5);
+                });
               },
               title: "5 min",
             ),
             divider,
             _getTimeSelectionButton(
               onPressed: () {
-                // TODO: apply 1 h filter
+                setState(() {
+                  selectedDuration = const Duration(hours: 1);
+                });
               },
               title: "1 h",
             ),
             divider,
             _getTimeSelectionButton(
               onPressed: () {
-                // TODO: apply 12 h filter
+                setState(() {
+                  selectedDuration = const Duration(hours: 12);
+                });
               },
               title: "12 h",
             ),
             divider,
             _getTimeSelectionButton(
               onPressed: () {
-                // TODO: apply 2 d filter
+                setState(() {
+                  selectedDuration = const Duration(days: 2);
+                });
               },
               title: "2 d",
             ),
             divider,
             _getTimeSelectionButton(
               onPressed: () {
-                // TODO: apply 1 w filter
+                setState(() {
+                  selectedDuration = const Duration(days: 7);
+                });
               },
               title: "1 w",
             ),
@@ -62,11 +88,46 @@ class HistoricViewPageBody extends StatelessWidget {
       ),
     );
 
+    var filterSelectionDropdown = StylizedContainer(
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 15),
+      width: double.infinity,
+      child: DropdownButton(
+        isExpanded: true,
+        isDense: true,
+        iconSize: 30,
+        icon: const Icon(Icons.keyboard_arrow_down_rounded),
+        iconEnabledColor: Colors.white,
+        underline: const SizedBox.shrink(),
+        value: selectedFilter,
+        dropdownColor: Theme.of(context).cardColor,
+        items: const [
+          DropdownMenuItem(
+            enabled: false,
+            value: Filter.noFilter,
+            child: Text("Please select a filter"),
+          ),
+          DropdownMenuItem(value: Filter.count, child: Text("Count")),
+          DropdownMenuItem(value: Filter.mode, child: Text("Mode")),
+          DropdownMenuItem(value: Filter.min, child: Text("Min")),
+        ],
+        onChanged: (newFilter) {
+          if (newFilter == null) {
+            return;
+          }
+
+          setState(() {
+            selectedFilter = newFilter;
+            // TODO: apply filter
+          });
+        },
+      ),
+    );
+
     return Column(
       children: [
         timeIntervalSelection,
         const SizedBox(height: 10),
-        HistoricViewPageDataContainer(sensorId: sensorId),
+        filterSelectionDropdown,
       ],
     );
   }

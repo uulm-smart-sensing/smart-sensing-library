@@ -48,6 +48,10 @@ class SmartSensingLibraryDemoApp extends StatelessWidget {
               color: Colors.white,
               fontSize: 18,
             ),
+            titleMedium: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+            ),
           ),
           textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(
