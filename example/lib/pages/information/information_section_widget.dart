@@ -7,11 +7,15 @@ import './information_page.dart';
 /// This means, this widget will display a unit containing
 /// * a [_sectionTitle] - showing the topic of this section
 /// * as well as [_content] below the [_sectionTitle] -
+/// * a [_sectionTitle] - showing the topic of this section
+/// * as well as [_content] below the [_sectionTitle] -
 /// showing all the information related to the topic.
 ///
 /// For example the current license could be showed by this
 /// [InformationSectionWidget]:
 ///
+/// 'License' (= [_sectionTitle])
+/// MIT (= [_content])
 /// 'License' (= [_sectionTitle])
 /// MIT (= [_content])
 ///
