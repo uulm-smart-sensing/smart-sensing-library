@@ -70,12 +70,12 @@ class FakeSensorManager extends Fake implements SensorManager {
   }
 
   @override
-  Future<SensorTaskResult> stopSensorTracking(SensorId id) {
+  Future<SensorTaskResult> stopSensorTracking(SensorId id) async{
     if (!_streamMap.containsKey(id)) {
       return Future(() => SensorTaskResult.notTrackingSensor);
     }
     try {
-      (_streamMap[id] as StreamController<SensorData>).close();
+      await (_streamMap[id] as StreamController<SensorData>).close();
       _streamMap.remove(id);
     } on Exception catch (e) {
       log(e.toString());
@@ -115,8 +115,8 @@ class FakeSensorManager extends Fake implements SensorManager {
         controller.add(create(counter));
         if (counter == _streamUpTime) {
           timer?.cancel();
-          await controller
-              .close(); // Ask stream to shut down and tell listeners.
+          // Ask stream to shut down and tell listeners.
+          await stopSensorTracking(id);
         }
       } else {
         timer?.cancel();
