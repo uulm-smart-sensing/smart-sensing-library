@@ -98,10 +98,7 @@ class InformationPage extends StatelessWidget {
         future: getOSVersion(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(
-              snapshot.data!,
-              style: Theme.of(context).textTheme.bodyMedium,
-            );
+            return Text(snapshot.data!);
           }
 
           if (snapshot.hasError) {
@@ -120,10 +117,7 @@ class InformationPage extends StatelessWidget {
         future: getFreeStorage(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(
-              snapshot.data!,
-              style: Theme.of(context).textTheme.bodyMedium,
-            );
+            return Text(snapshot.data!);
           }
 
           if (snapshot.hasError) {
