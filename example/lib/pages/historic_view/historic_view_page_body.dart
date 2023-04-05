@@ -28,6 +28,13 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   var selectedFilter = _Filter.noFilter;
   var selectedDuration = const Duration(minutes: 5);
   var selectedVisualization = _Visualization.table;
+  late Map<int, TableColumnWidth> columnWidths;
+
+  @override
+  void initState() {
+    columnWidths = _getColumnWidthsFromSensorId(widget.sensorId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,54 +176,16 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       ),
     );
 
-    List<Text> xyzElements;
-    if (selectedVisualization == _Visualization.graph) {
-      xyzElements = [
-        const Text(
-          "X",
-          style: TextStyle(
-            color: Colors.red,
-          ),
-        ),
-        const Text(
-          "Y",
-          style: TextStyle(
-            color: Colors.green,
-          ),
-        ),
-        const Text(
-          "Z",
-          style: TextStyle(
-            color: Colors.blue,
-          ),
-        ),
-      ];
-    } else {
-      xyzElements = [
-        const Text("X"),
-        const Text("Y"),
-        const Text("Z"),
-      ];
-    }
-
     var visualizationTable = Table(
-      columnWidths: const <int, TableColumnWidth>{
-        0: FlexColumnWidth(3),
-        1: FlexColumnWidth(),
-        2: FlexColumnWidth(),
-        3: FlexColumnWidth(),
-      },
+      columnWidths: columnWidths,
       children: [
         TableRow(
           children: [
             visualizationSelection,
-            ...xyzElements,
-          ],
-        ),
-        TableRow(
-          children: [
-            visualizationSelection,
-            ...xyzElements,
+            ..._getTableElementsFromSensorId(
+              widget.sensorId,
+              selectedVisualization,
+            ),
           ],
         ),
       ],
@@ -280,3 +249,94 @@ Widget _getVisualizationSelectionButton({
       title: title,
       isSelected: isSelected,
     );
+
+/// Create column widths according to the sensorId.
+///
+/// There are two types atm:
+/// * sensors with 3 axes
+/// * sensors with a single value
+///
+/// Both types need different column widths
+Map<int, TableColumnWidth> _getColumnWidthsFromSensorId(SensorId sensorId) {
+  Map<int, TableColumnWidth> columnWidths;
+
+  switch (sensorId) {
+    case SensorId.accelerometer:
+    case SensorId.gyroscope:
+    case SensorId.magnetometer:
+    case SensorId.orientation:
+    case SensorId.linearAcceleration:
+      columnWidths = {
+        0: const FlexColumnWidth(3),
+        1: const FlexColumnWidth(),
+        2: const FlexColumnWidth(),
+        3: const FlexColumnWidth(),
+      };
+      break;
+    case SensorId.barometer:
+    case SensorId.thermometer:
+      columnWidths = {
+        0: const FlexColumnWidth(1.5),
+        1: const FlexColumnWidth(),
+      };
+      break;
+  }
+
+  return columnWidths;
+}
+
+/// Create table header elements according to the sensorId.
+///
+/// There are two types atm:
+/// * sensors with 3 axes
+/// * sensors with a single value
+///
+/// Both types need different table header elements
+List<Text> _getTableElementsFromSensorId(
+  SensorId sensorId,
+  _Visualization selectedVisualization,
+) {
+  List<Text> elements;
+
+  switch (sensorId) {
+    case SensorId.accelerometer:
+    case SensorId.gyroscope:
+    case SensorId.magnetometer:
+    case SensorId.orientation:
+    case SensorId.linearAcceleration:
+      // Axes are colored when graph is selected
+      elements = [
+        Text(
+          "X",
+          style: TextStyle(
+            color: selectedVisualization == _Visualization.graph
+                ? Colors.red
+                : null,
+          ),
+        ),
+        Text(
+          "Y",
+          style: TextStyle(
+            color: selectedVisualization == _Visualization.graph
+                ? Colors.green
+                : null,
+          ),
+        ),
+        Text(
+          "Z",
+          style: TextStyle(
+            color: selectedVisualization == _Visualization.graph
+                ? Colors.blue
+                : null,
+          ),
+        ),
+      ];
+      break;
+    case SensorId.barometer:
+    case SensorId.thermometer:
+      elements = [const Text("Value")];
+      break;
+  }
+
+  return elements;
+}
