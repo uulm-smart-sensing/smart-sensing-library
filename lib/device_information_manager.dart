@@ -15,23 +15,23 @@ Future<String> getOSVersion() async {
     var iosDeviceInfo = await deviceInfo.iosInfo;
     var os = iosDeviceInfo.systemName;
     var version = iosDeviceInfo.systemVersion;
-    return "$os $version";
+    return "  • $os $version";
   } else if (Platform.isAndroid) {
     var androidDeviceInfo = await deviceInfo.androidInfo;
     var releaseVersion = androidDeviceInfo.version.release;
     var sdkVersion = androidDeviceInfo.version.sdkInt;
-    return "Android $releaseVersion (SDK $sdkVersion)";
+    return "  • Android $releaseVersion (SDK $sdkVersion)";
   }
 
-  return "ERROR: Could not get OS version";
+  return "   ERROR: Could not get OS version";
 }
 
 ///
 Future<String> getFreeStorage() async {
   var freeDiskSpace = await DiskSpace.getFreeDiskSpace ?? -1.0;
   if (freeDiskSpace == -1.0) {
-    return "ERROR: Could not get free storage!";
+    return "   ERROR: Could not get free storage!";
   }
   var freeDiskSpaceRounded = freeDiskSpace.toStringAsFixed(2);
-  return "$freeDiskSpaceRounded (MB)";
+  return "  • $freeDiskSpaceRounded (MB)";
 }
