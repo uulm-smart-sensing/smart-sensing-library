@@ -174,11 +174,14 @@ class IOManager {
           "Please first established to use the IOManager!");
     }
     from ??= DateTime.utc(-271821, 04, 20);
-    to ??= DateTime.now();
+    to ??= DateTime.now().toUtc();
     if (to.isBefore(from)) {
       throw Exception(
         "Date range is incorrect: 'to' can not be before 'from'!",
       );
+    }
+    while (_sensorThreadLock) {
+      await Future.delayed(Duration.zero);
     }
     try {
       var buffer = List.of(_bufferManager.getBuffer(id));
