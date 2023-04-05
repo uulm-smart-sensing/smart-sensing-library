@@ -6,8 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import 'buffer_manager.dart';
+import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
-import 'mock_sensor_manager.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
 import 'sensor_data_mock.dart';
@@ -20,13 +20,13 @@ import 'sensor_data_mock.dart';
 class IOManager {
   IOManager._constructor() {
     _bufferManager = BufferManager();
-    _sensorManager = MockSensorManager();
+    _sensorManager = SensorManager();
   }
   static final IOManager _instance = IOManager._constructor();
 
   late final BufferManager _bufferManager;
   late final Store? _objectStore;
-  late final MockSensorManager _sensorManager;
+  late final SensorManager _sensorManager;
 
   final int _maxBufferSize = 10000;
   final HashMap _subscriptions = HashMap<SensorId, StreamSubscription?>();
@@ -35,6 +35,12 @@ class IOManager {
 
   ///Returns instance of IOManager
   factory IOManager() => _instance;
+
+  ///Constructor for testing
+  IOManager.testManager() {
+    _bufferManager = BufferManager();
+    _sensorManager = FakeSensorManager();
+  }
 
   ///Opens the database for access.
   ///
@@ -58,7 +64,7 @@ class IOManager {
   ///
   ///Throws exception if a database connection is not established.
   ///WIP. Currently works with the Mock SensorManager
-  Future<void> addSensor(SensorId id) async {
+  Future<void> addSensor(SensorId id, int timeIntervalInMilliseconds) async {
     try {
       if (_objectStore == null) {
         throw Exception("Database connection is not established!"
@@ -72,10 +78,18 @@ class IOManager {
       }
       _sensorThreadLock = true;
       _bufferManager.addBuffer(id);
-      _subscriptions[id] = _sensorManager.addSensor(id).listen(
-            (e) => _processSensorData(e, id),
-            onDone: () async => _onDataDone(id),
-          );
+      var result = await _sensorManager.startSensorTracking(
+        id,
+        timeIntervalInMilliseconds,
+      );
+      if (result == SensorTaskResult.success) {
+        _subscriptions[id] = _sensorManager.getSensorStream(id)!.listen(
+              (e) => _processSensorData(e, id),
+              onDone: () async => _onDataDone(id),
+            );
+      } else {
+        throw Exception("Failed with $result");
+      }
     } finally {
       _sensorThreadLock = false;
     }
@@ -97,7 +111,7 @@ class IOManager {
       return;
     }
     _sensorThreadLock = true;
-    await _sensorManager.removeSensor(id);
+    await _sensorManager.stopSensorTracking(id);
   }
 
   ///Gets Data from Database
