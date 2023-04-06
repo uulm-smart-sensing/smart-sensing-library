@@ -14,16 +14,12 @@ class HomePageSectionHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => MaterialButton(
-        padding: EdgeInsets.zero,
+  Widget build(BuildContext context) => TextButton(
         onPressed: onPressed,
         child: Row(
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 18,
-              ),
             ),
             const SizedBox(width: 4),
             const Icon(Icons.arrow_forward_rounded),
