@@ -214,6 +214,21 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         paddingRow,
         // TODO: Add data row using call to smart sensing library
         // and _getTableRowFromSensorData add padding with paddingRow
+        _getTableRowFromSensorData(
+          DateTime.fromMillisecondsSinceEpoch(1234567890123),
+          [1, 2, 3],
+        ),
+        paddingRow,
+        _getTableRowFromSensorData(
+          DateTime.fromMillisecondsSinceEpoch(9876543210987),
+          [3, 2, 1],
+        ),
+        paddingRow,
+        _getTableRowFromSensorData(
+          DateTime.fromMillisecondsSinceEpoch(5555555555555),
+          [69, 42, 666],
+        ),
+        paddingRow,
       ],
     );
 
