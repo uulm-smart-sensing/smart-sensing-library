@@ -69,7 +69,7 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
         Text(
           "Example",
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 24,
           ),
         ),
         Divider(thickness: 2),
