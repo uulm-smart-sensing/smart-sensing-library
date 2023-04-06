@@ -147,13 +147,13 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: title,
-        actions: [settingsButton, const SizedBox(width: 10)],
+        actions: [
+          settingsButton,
+          const SizedBox(width: 10),
+        ],
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
           children: [
             livePreviewSectionHeader,
