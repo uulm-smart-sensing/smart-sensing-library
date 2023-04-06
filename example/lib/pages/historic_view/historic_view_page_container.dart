@@ -8,6 +8,11 @@ import 'historic_view_page_body.dart';
 import 'sensor_info_tooltip.dart';
 
 /// This [Widget] wraps the header and body to control the state of the tooltip.
+///
+/// The header contains the info button which triggers the display of the
+/// [SensorInfoTooltip].
+/// To show the tooltip above the body of the page, it is stacked above the body
+/// and made visible while the info button is pressed.
 class HistoricViewPageContainer extends StatefulWidget {
   final SensorId sensorId;
 
