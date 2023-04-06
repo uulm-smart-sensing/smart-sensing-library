@@ -9,6 +9,7 @@ class AppBarWithHeader extends AppBar {
     required this.header,
     required this.titleText,
   }) : super(
+          elevation: 0,
           title: Text(
             titleText,
             style: const TextStyle(

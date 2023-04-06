@@ -116,7 +116,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBarWithHeader(header: header, titleText: "Sensors"),
+        appBar: AppBarWithHeader(titleText: "Sensors", header: header),
         body: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
           child: Column(

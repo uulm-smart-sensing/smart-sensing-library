@@ -91,7 +91,7 @@ class _SensorToggleElementState extends State<SensorToggleElement> {
             Container(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                formatPascalCase(widget._sensorId.name),
+                formatPascalCase(widget.sensorId.name),
                 style: TextStyle(
                   color: widget.textColor,
                   fontSize: widget.fontSize,
