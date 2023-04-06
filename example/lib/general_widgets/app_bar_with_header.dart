@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// [AppBar] with a [Widget] as header in the bottom part of the app bar.
+///
+/// The header is seperated from the body by a [Divider].
 class AppBarWithHeader extends AppBar {
   final String titleText;
   final Widget header;
