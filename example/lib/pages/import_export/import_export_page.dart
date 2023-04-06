@@ -1,3 +1,6 @@
+// import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../general_widgets/smart_sensing_appbar.dart';
@@ -26,7 +29,26 @@ import 'import_export_section_widget.dart';
 class ImportExportPage extends StatelessWidget {
   const ImportExportPage({super.key});
 
-  void _importData() {}
+  /// Imports sensor data from a single file.
+  ///
+  /// Therefor a file picker is opened, where the user can select a file
+  /// containing the sensor data, which should be imported. The selected file
+  /// is delegated to the 'Import / Export' module in the smart sensing library.
+  /// > Warning: Currently only one single .json file is
+  /// > allowed to be imported.
+  Future<void> _importData() async {
+    // TODO: do not used hardcoded 'json' but instead request supported formats
+    // from smart sensing library
+    var result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+      allowMultiple: false,
+    );
+
+    if (result != null) {
+      // var file = File(result.files.single.path!);
+    }
+  }
 
   void _exportAllData() {}
 

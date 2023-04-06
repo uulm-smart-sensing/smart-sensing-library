@@ -90,8 +90,8 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
         items: _sensorOptions
             .map(
               (e) => DropdownMenuItem(
-                /// TODO: do not use string as value, but the corresponding
-                /// sensorId instead
+                // TODO: do not use string as value, but the corresponding
+                // sensorId instead
                 value: e,
                 child: Text(e),
               ),
