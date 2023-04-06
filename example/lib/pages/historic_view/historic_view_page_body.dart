@@ -6,6 +6,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../date_formatter.dart';
 import '../../general_widgets/stylized_container.dart';
+import '../../utils.dart';
 import 'historic_view_page.dart';
 import 'time_selection_button.dart';
 import 'visualization_selection_button.dart';
@@ -138,15 +139,19 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         underline: const SizedBox.shrink(),
         value: selectedFilter,
         dropdownColor: Theme.of(context).cardColor,
-        items: const [
-          DropdownMenuItem(
+        items: [
+          const DropdownMenuItem(
             enabled: false,
             value: _Filter.noFilter,
             child: Text("Please select a filter"),
           ),
-          DropdownMenuItem(value: _Filter.count, child: Text("Count")),
-          DropdownMenuItem(value: _Filter.mode, child: Text("Mode")),
-          DropdownMenuItem(value: _Filter.min, child: Text("Min")),
+          // Create the rest of the filters automatically
+          ..._Filter.values.where((value) => value != _Filter.noFilter).map(
+                (value) => DropdownMenuItem(
+                  value: value,
+                  child: Text(formatPascalCase(value.name)),
+                ),
+              ),
         ],
         onChanged: (newFilter) {
           if (newFilter == null) {
