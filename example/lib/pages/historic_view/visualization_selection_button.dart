@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'selection_button.dart';
 
 class VisualizationSelectionButton extends SelectionButton {
@@ -9,5 +11,6 @@ class VisualizationSelectionButton extends SelectionButton {
   }) : super(
           width: 50,
           height: 20,
+          selectedColor: const Color.fromARGB(255, 218, 188, 255),
         );
 }
