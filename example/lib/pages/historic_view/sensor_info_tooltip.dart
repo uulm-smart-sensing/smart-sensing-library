@@ -34,22 +34,16 @@ class SensorInfoTooltip extends StatelessWidget {
       ),
     ];
 
-    return Material(
-      type: MaterialType.transparency,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: StylizedContainer(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
-            child: Table(
-              columnWidths: const <int, TableColumnWidth>{
-                0: IntrinsicColumnWidth(),
-                1: IntrinsicColumnWidth(),
-                2: FlexColumnWidth(),
-              },
-              children: tableRows,
-            ),
-          ),
+    return StylizedContainer(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
+        child: Table(
+          columnWidths: const <int, TableColumnWidth>{
+            0: IntrinsicColumnWidth(),
+            1: IntrinsicColumnWidth(),
+            2: FlexColumnWidth(),
+          },
+          children: tableRows,
         ),
       ),
     );
