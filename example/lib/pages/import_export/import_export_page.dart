@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../settings/settings_page.dart';
 import 'import_export_section_widget.dart';
+import 'manual_export_page.dart';
 
 /// Page for importing and exporting sensor data into / from the smart
 /// sensing library.
@@ -50,9 +51,18 @@ class ImportExportPage extends StatelessWidget {
     }
   }
 
-  void _exportAllData() {}
+  /// Exports all sensor data of a specified sensor into a generated file, which
+  /// will be located in the picked "selectedDirectory".
+  ///
+  /// Therefor a directory picker is opened, where the user can select the
+  /// directory, where the sensor data should be exported to. If the
+  /// selected directory is valid it is delegated to the 'Import / Export'
+  /// module in the smart sensing library.
+  Future<void> _exportAllData() async {
+    var selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
-  void _exportManualData() {}
+    if (selectedDirectory != null) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +111,14 @@ class ImportExportPage extends StatelessWidget {
               SizedBox(
                 width: 120,
                 child: TextButton(
-                  onPressed: _exportManualData,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ManualExportPage(),
+                      ),
+                    );
+                  },
                   child: const Text("Manual"),
                 ),
               ),
