@@ -51,7 +51,7 @@ class ImportExportSectionWidget extends StatefulWidget {
 
 class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
   String? _selectedSensor;
-  List<String> _sensorOptions = [];
+  final List<String> _sensorOptions = [];
 
   @override
   void initState() {
@@ -65,30 +65,37 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var dropdownMenuForSensorSelection = DropdownButton(
-      isExpanded: true,
-      hint: Text(
-        "Choose a sensor",
-        style: Theme.of(context).textTheme.bodyMedium,
+    var dropdownMenuForSensorSelection = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
       ),
-      borderRadius: BorderRadius.circular(20),
-      iconSize: 30,
-      alignment: Alignment.centerLeft,
-      icon: const Icon(Icons.keyboard_arrow_down_rounded),
-      iconEnabledColor: Colors.white,
-      dropdownColor: Theme.of(context).cardColor,
-      value: _selectedSensor,
-      items: _sensorOptions
-          .map((e) => DropdownMenuItem(
-                value: e,
-                child: Text(e),
-              ))
-          .toList(),
-      onChanged: (val) {
-        setState(() {
-          _selectedSensor = val;
-        });
-      },
+      child: DropdownButton(
+        isExpanded: true,
+        underline: const SizedBox.shrink(),
+        hint: Text(
+          "Choose a sensor",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        iconSize: 30,
+        iconEnabledColor: Colors.white,
+        icon: const Icon(Icons.keyboard_arrow_down_rounded),
+        dropdownColor: Theme.of(context).cardColor,
+        value: _selectedSensor,
+        items: _sensorOptions
+            .map((e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(e),
+                ))
+            .toList(),
+        onChanged: (val) {
+          setState(() {
+            _selectedSensor = val;
+          });
+        },
+      ),
     );
 
     // Display the text, which represents the "title" of
