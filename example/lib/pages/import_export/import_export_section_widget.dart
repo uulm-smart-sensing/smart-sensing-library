@@ -58,8 +58,11 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
     super.initState();
     _sensorOptions
       ..add("All")
-      ..addAll(SensorId.values
-          .map((e) => toBeginningOfSentenceCase(e.toString().split('.').last)!))
+      ..addAll(
+        SensorId.values.map(
+          (e) => toBeginningOfSentenceCase(e.toString().split('.').last)!,
+        ),
+      )
       ..add("None");
   }
 
@@ -85,10 +88,14 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
         dropdownColor: Theme.of(context).cardColor,
         value: _selectedSensor,
         items: _sensorOptions
-            .map((e) => DropdownMenuItem(
-                  value: e,
-                  child: Text(e),
-                ))
+            .map(
+              (e) => DropdownMenuItem(
+                /// TODO: do not use string as value, but the corresponding
+                /// sensorId instead
+                value: e,
+                child: Text(e),
+              ),
+            )
             .toList(),
         onChanged: (val) {
           setState(() {

@@ -6,17 +6,11 @@ import 'import_export_section_widget.dart';
 class ImportExportPage extends StatelessWidget {
   const ImportExportPage({super.key});
 
-  void _importData() {
-    print("Import data not implemented yet!");
-  }
+  void _importData() {}
 
-  void _exportAllData() {
-    print("Export all data not implemented yet!");
-  }
+  void _exportAllData() {}
 
-  void _exportManualData() {
-    print("Export data (with manual time interval) not implemented yet!");
-  }
+  void _exportManualData() {}
 
   @override
   Widget build(BuildContext context) {

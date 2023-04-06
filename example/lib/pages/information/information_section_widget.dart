@@ -32,7 +32,8 @@ class InformationSectionWidget extends StatelessWidget {
     super.key,
     required String sectionTitle,
     required Widget content,
-  }) : _content = content, _sectionTitle = sectionTitle;
+  })  : _content = content,
+        _sectionTitle = sectionTitle;
 
   @override
   Widget build(BuildContext context) {
