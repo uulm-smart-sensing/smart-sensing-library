@@ -194,6 +194,8 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       ),
     );
 
+    // The rows are too tightly packed, which is why a row is inserted in
+    // between to serve as padding.
     var paddingRow = _getPaddingRow(widget.sensorId);
 
     // Table that visualizes sensor data
