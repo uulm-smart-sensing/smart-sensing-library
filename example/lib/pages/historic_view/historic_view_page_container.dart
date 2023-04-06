@@ -97,7 +97,7 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
             children: <InlineSpan>[
               TextSpan(
                 text: "(= avg(1 hour, axis = y).min())",
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 12),
               )
             ],
           ),
@@ -111,7 +111,7 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
             children: <InlineSpan>[
               TextSpan(
                 text: "(= count(1 day).range())",
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 12),
               )
             ],
           ),

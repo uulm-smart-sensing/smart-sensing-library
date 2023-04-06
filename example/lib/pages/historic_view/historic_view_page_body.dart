@@ -220,7 +220,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     return Column(
       children: [
         timeIntervalSelection,
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         filterSelectionDropdown,
         const SizedBox(height: 20),
         visualizationTable,
