@@ -6,6 +6,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../date_formatter.dart';
 import '../../general_widgets/stylized_container.dart';
+import 'historic_view_page.dart';
 
 enum _Filter {
   noFilter,
@@ -19,6 +20,12 @@ enum _Visualization {
   graph,
 }
 
+/// This is the widget representing the body of the [HistoricViewPage].
+///
+/// It contains:
+/// * the time interval selection
+/// * the filter selection
+/// * the graph / table visualization of the filtered sensor values
 class HistoricViewPageBody extends StatefulWidget {
   final SensorId sensorId;
 
