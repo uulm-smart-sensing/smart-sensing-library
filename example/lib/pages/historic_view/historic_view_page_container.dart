@@ -41,24 +41,11 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
     var header = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              formatPascalCase(widget.sensorId.name),
-              style: const TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            const Text(
-              // TODO: Replace with call to smart sensing library
-              "(in m/s^2, prec: 2)",
-              style: TextStyle(
-                fontSize: 12,
-              ),
-            ),
-          ],
+        Text(
+          formatPascalCase(widget.sensorId.name),
+          style: const TextStyle(
+            fontSize: 20,
+          ),
         ),
         // i Icon that displays the tooltip when tapped on
         GestureDetector(
