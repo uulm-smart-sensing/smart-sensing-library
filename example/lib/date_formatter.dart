@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 String formatDate({required DateTime dateTime, bool shortenYear = false}) {
   // Format the date according to the locale
-  // This will output: en -> 12.31.2023 or de -> 31.12.2023
+  // This will output: en -> 12/31/2023 or de -> 31.12.2023
   var dateFormatted = DateFormat.yMd(Platform.localeName).format(dateTime);
 
   var datePartSeparator = "";

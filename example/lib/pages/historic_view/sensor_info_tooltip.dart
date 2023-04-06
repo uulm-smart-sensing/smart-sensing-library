@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/stylized_container.dart';
+import 'historic_view_page.dart';
 
+/// This widget is used to display the [SensorInfo] of the according sensor with
+/// the passed [sensorId] on top of the [HistoricViewPage].
+///
+/// The following information is arranged in a table and displayed:
+/// * [SensorId]
+/// * [SensorInfo.unit]
+/// * [SensorInfo.accuracy]
+/// * [SensorInfo.timeIntervalInMilliseconds]
 class SensorInfoTooltip extends StatelessWidget {
   final SensorId sensorId;
   final SensorInfo sensorInfo;
