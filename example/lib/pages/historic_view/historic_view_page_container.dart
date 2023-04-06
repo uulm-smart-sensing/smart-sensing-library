@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../utils.dart';
 import 'historic_view_page_body.dart';
 import 'sensor_info_tooltip.dart';
 
@@ -40,7 +41,7 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
           textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              _capitalizeSensorName(widget.sensorId.name),
+              formatPascalCase(widget.sensorId.name),
               style: const TextStyle(
                 fontSize: 20,
               ),
@@ -132,15 +133,6 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
     );
   }
 }
-
-String _capitalizeSensorName(String name) => name
-    .split(RegExp("(?=[A-Z])"))
-    .map(
-      (word) =>
-          word.characters.take(1).toUpperCase().join() +
-          word.characters.skip(1).join(),
-    )
-    .join(" ");
 
 Widget _getTooltip(SensorId sensorId) => FutureBuilder(
       future: Future.sync(() async {
