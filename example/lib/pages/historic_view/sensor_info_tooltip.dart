@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/stylized_container.dart';
+import '../../utils.dart';
 import 'historic_view_page.dart';
 
 /// This widget is used to display the [SensorInfo] of the according sensor with
@@ -25,9 +26,9 @@ class SensorInfoTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tableRows = [
-      _getSensorInfoRow("Sensor ID", sensorId.name),
-      _getSensorInfoRow("Unit", sensorInfo.unit.name),
-      _getSensorInfoRow("Accuracy", sensorInfo.accuracy.name),
+      _getSensorInfoRow("Sensor ID", formatPascalCase(sensorId.name)),
+      _getSensorInfoRow("Unit", formatPascalCase(sensorInfo.unit.name)),
+      _getSensorInfoRow("Accuracy", formatPascalCase(sensorInfo.accuracy.name)),
       _getSensorInfoRow(
         "Time Interval (ms)",
         sensorInfo.timeIntervalInMilliseconds.toString(),
