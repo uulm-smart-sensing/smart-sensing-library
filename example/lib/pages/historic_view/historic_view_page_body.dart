@@ -320,7 +320,7 @@ List<Widget> _getTableElementsFromSensorId(
           "Z",
           style: TextStyle(
             color: selectedVisualization == _Visualization.graph
-                ? Colors.blue
+                ? Colors.lightBlue
                 : null,
           ),
         ),

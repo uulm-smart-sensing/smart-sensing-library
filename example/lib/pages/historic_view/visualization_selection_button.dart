@@ -9,7 +9,7 @@ class VisualizationSelectionButton extends SelectionButton {
     required super.title,
     required super.isSelected,
   }) : super(
-          width: 50,
+          width: 65,
           height: 20,
           selectedColor: const Color.fromARGB(255, 218, 188, 255),
         );
