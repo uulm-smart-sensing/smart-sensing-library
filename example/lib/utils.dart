@@ -11,7 +11,6 @@ String formatPascalCase(String text) => text
     .split(RegExp("(?=[A-Z])"))
     .map(
       (word) =>
-          word.characters.first.toUpperCase() +
-          word.characters.skip(1).join(),
+          word.characters.first.toUpperCase() + word.characters.skip(1).join(),
     )
     .join(" ");

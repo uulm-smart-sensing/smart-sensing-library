@@ -7,6 +7,8 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../date_formatter.dart';
 import '../../general_widgets/stylized_container.dart';
 import 'historic_view_page.dart';
+import 'time_selection_button.dart';
+import 'visualization_selection_button.dart';
 
 enum _Filter {
   noFilter,
@@ -63,7 +65,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _getTimeSelectionButton(
+            TimeSelectionButton(
               onPressed: () {
                 setState(() {
                   selectedDuration = const Duration(minutes: 5);
@@ -74,7 +76,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
                   selectedDuration.compareTo(const Duration(minutes: 5)) == 0,
             ),
             divider,
-            _getTimeSelectionButton(
+            TimeSelectionButton(
               onPressed: () {
                 setState(() {
                   selectedDuration = const Duration(hours: 1);
@@ -85,7 +87,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
                   selectedDuration.compareTo(const Duration(hours: 1)) == 0,
             ),
             divider,
-            _getTimeSelectionButton(
+            TimeSelectionButton(
               onPressed: () {
                 setState(() {
                   selectedDuration = const Duration(hours: 12);
@@ -96,7 +98,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
                   selectedDuration.compareTo(const Duration(hours: 12)) == 0,
             ),
             divider,
-            _getTimeSelectionButton(
+            TimeSelectionButton(
               onPressed: () {
                 setState(() {
                   selectedDuration = const Duration(days: 2);
@@ -107,7 +109,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
                   selectedDuration.compareTo(const Duration(days: 2)) == 0,
             ),
             divider,
-            _getTimeSelectionButton(
+            TimeSelectionButton(
               onPressed: () {
                 setState(() {
                   selectedDuration = const Duration(days: 7);
@@ -164,7 +166,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _getVisualizationSelectionButton(
+          VisualizationSelectionButton(
             onPressed: () {
               setState(() {
                 selectedVisualization = _Visualization.graph;
@@ -174,7 +176,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
             isSelected: selectedVisualization == _Visualization.graph,
           ),
           divider,
-          _getVisualizationSelectionButton(
+          VisualizationSelectionButton(
             onPressed: () {
               setState(() {
                 selectedVisualization = _Visualization.table;
@@ -219,53 +221,6 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     );
   }
 }
-
-Widget _getSelectionButton({
-  required double width,
-  required double height,
-  required void Function() onPressed,
-  required String title,
-  required bool isSelected,
-}) =>
-    SizedBox(
-      width: width,
-      height: height,
-      child: TextButton(
-        onPressed: onPressed,
-        child: Text(
-          title,
-          style: TextStyle(
-            decoration: isSelected ? TextDecoration.underline : null,
-          ),
-        ),
-      ),
-    );
-
-Widget _getTimeSelectionButton({
-  required void Function() onPressed,
-  required String title,
-  required bool isSelected,
-}) =>
-    _getSelectionButton(
-      width: 50,
-      height: 35,
-      onPressed: onPressed,
-      title: title,
-      isSelected: isSelected,
-    );
-
-Widget _getVisualizationSelectionButton({
-  required void Function() onPressed,
-  required String title,
-  required bool isSelected,
-}) =>
-    _getSelectionButton(
-      width: 50,
-      height: 20,
-      onPressed: onPressed,
-      title: title,
-      isSelected: isSelected,
-    );
 
 /// Create column widths according to the sensorId.
 ///
