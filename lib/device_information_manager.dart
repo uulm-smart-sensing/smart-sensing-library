@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disk_space/disk_space.dart';
-import 'package:flutter/material.dart';
 
 /// Requests the free storage of the device, this library
 /// is running on.
