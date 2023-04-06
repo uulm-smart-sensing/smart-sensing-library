@@ -44,9 +44,15 @@ class SmartSensingLibraryDemoApp extends StatelessWidget {
             color: Colors.white,
           ),
           textTheme: const TextTheme(
+            // Style used for Text widget
             bodyMedium: TextStyle(
               color: Colors.white,
               fontSize: 18,
+            ),
+            // Style used for DropdownButton text
+            titleMedium: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
             ),
           ),
           textButtonTheme: TextButtonThemeData(

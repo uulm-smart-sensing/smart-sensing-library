@@ -1,8 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../../date_formatter.dart';
 import '../live_view/live_view_page.dart';
 import '../settings/settings_page.dart';
 import '../statistics/statistics_page.dart';
@@ -23,23 +21,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var now = DateTime.now();
-    // Format the current date according to the locale
-    // This will output: en -> 12.31.2023 or de -> 31.12.2023
-    var todayFormatted = DateFormat.yMd(Platform.localeName).format(now);
-
-    var datePartSeparator = "";
-    if (todayFormatted.contains("/")) {
-      datePartSeparator = "/";
-    } else if (todayFormatted.contains(".")) {
-      datePartSeparator = ".";
-    }
-
-    // Add a leading zero to single digits for days and months
-    todayFormatted = todayFormatted
-        .split(datePartSeparator)
-        .map((part) => part.padLeft(2, "0"))
-        .join(datePartSeparator);
+    var todayFormatted = formatDate(dateTime: DateTime.now());
 
     var title = Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -62,17 +44,28 @@ class HomePage extends StatelessWidget {
       ],
     );
 
-    var settingsButton = IconButton(
-      iconSize: 30,
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SettingsPage(),
-          ),
-        );
-      },
-      icon: const Icon(Icons.settings),
+    var settingsButton = Center(
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color.fromARGB(255, 23, 27, 137),
+        ),
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          iconSize: 30,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SettingsPage(),
+              ),
+            );
+          },
+          icon: const Icon(Icons.settings),
+        ),
+      ),
     );
 
     var livePreviewSectionHeader = HomePageSectionHeader(
@@ -141,7 +134,6 @@ class HomePage extends StatelessWidget {
       child: const Text(
         "devices",
         style: TextStyle(
-          fontSize: 18,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -157,13 +149,11 @@ class HomePage extends StatelessWidget {
         title: title,
         actions: [
           settingsButton,
+          const SizedBox(width: 10),
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
           children: [
             livePreviewSectionHeader,

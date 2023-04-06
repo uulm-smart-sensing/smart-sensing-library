@@ -46,6 +46,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
               const Text(
                 "sensors available",
                 style: TextStyle(
+                  color: Colors.black,
                   fontSize: 16,
                 ),
               ),
@@ -66,6 +67,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
               const Text(
                 "sensors running",
                 style: TextStyle(
+                  color: Colors.black,
                   fontSize: 16,
                 ),
               ),
@@ -108,8 +110,7 @@ Widget _getDeviceNameTitle() => FutureBuilder(
           return Text(
             snapshot.data!,
             style: const TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 18,
+              color: Colors.black,
             ),
           );
         }
@@ -126,7 +127,6 @@ Widget _getDeviceNameTitle() => FutureBuilder(
 Widget _getAvailableSensorsText() => FutureBuilder(
       // ignore: prefer_expression_function_bodies
       future: Future.sync(() async {
-        // ignore: todo
         // TODO: Replace with call to smart sensing library
         return "14";
       }),
@@ -155,7 +155,6 @@ Widget _getAvailableSensorsText() => FutureBuilder(
 Widget _getRunningSensorsText() => FutureBuilder(
       // ignore: prefer_expression_function_bodies
       future: Future.sync(() async {
-        // ignore: todo
         // TODO: Replace with call to smart sensing library
         return "10";
       }),
