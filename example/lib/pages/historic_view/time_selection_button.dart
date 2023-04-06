@@ -1,5 +1,6 @@
 import 'selection_button.dart';
 
+/// [SelectionButton] that is used for displaying the time selection.
 class TimeSelectionButton extends SelectionButton {
   TimeSelectionButton({
     super.key,
