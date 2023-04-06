@@ -2,10 +2,38 @@ import 'dart:io';
 
 import 'package:intl/intl.dart';
 
-String formatDate({required DateTime dateTime, bool shortenYear = false}) {
+/// Formats the passed [dateTime] according to the passed [locale].
+///
+/// When [locale] is null, [Platform.localeName] will be used instead.
+/// When [shortenYear] is true, the first two characters of the year will be
+/// omitted.
+///
+/// Example:
+/// ```dart
+/// // Date is formatted according to passed locale
+/// formatDate(dateTime: DateTime(2023, 12, 1), locale: "en");
+/// // results in 12/01/2023
+/// formatDate(dateTime: DateTime(2023, 12, 1), locale: "de");
+/// // results in 01.12.2023
+///
+/// // Year can be shortened
+/// formatDate(
+///   dateTime: DateTime(2023, 12, 1),
+///   locale: "en",
+///   shortenYear: true,
+/// );
+/// // results in 12/01/23
+/// ```
+String formatDate({
+  required DateTime dateTime,
+  bool shortenYear = false,
+  String? locale,
+}) {
+  locale ??= Platform.localeName;
+
   // Format the date according to the locale
   // This will output: en -> 12/31/2023 or de -> 31.12.2023
-  var dateFormatted = DateFormat.yMd(Platform.localeName).format(dateTime);
+  var dateFormatted = DateFormat.yMd(locale).format(dateTime);
 
   var datePartSeparator = "";
   if (dateFormatted.contains("/")) {
