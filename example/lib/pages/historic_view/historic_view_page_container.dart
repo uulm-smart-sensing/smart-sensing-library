@@ -117,7 +117,7 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
           ),
         ),
         // TODO: Make call to smart sensing library
-        SizedBox(height: 5),
+        SizedBox(height: 20),
       ],
     );
 
@@ -128,6 +128,9 @@ class _HistoricViewPageContainerState extends State<HistoricViewPageContainer> {
           children: [
             header,
             const Divider(thickness: 2),
+            const SizedBox(
+              height: 15,
+            ),
             // The overlay contains the body and controls the tooltip which is
             // displayed on top of the body
             Stack(children: children),

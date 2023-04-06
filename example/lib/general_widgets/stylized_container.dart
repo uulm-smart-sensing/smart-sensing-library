@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 /// * Rounded border with radius 20
 /// * Color ARGB: (255, 34, 0, 77)
 ///
-/// This widget can be used to wrap other widgets and provide a backround for
-/// them.
+/// This widget can be used to wrap other widgets and provide a purple backround
+/// which rounded corners for them.
 class StylizedContainer extends StatelessWidget {
   final AlignmentGeometry? alignment;
   final EdgeInsetsGeometry? padding;
