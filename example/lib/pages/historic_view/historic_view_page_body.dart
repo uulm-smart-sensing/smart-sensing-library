@@ -29,7 +29,7 @@ enum _Visualization {
 /// * the time interval selection
 /// * the filter selection
 /// * the graph / table visualization of the filtered sensor values
-/// * some possible requests and the results from the smart sensing library 
+/// * some possible requests and the results from the smart sensing library
 class HistoricViewPageBody extends StatefulWidget {
   final SensorId sensorId;
 
