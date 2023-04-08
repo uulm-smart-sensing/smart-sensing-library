@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import 'pages/historic_view/historic_view_page.dart';
 import 'pages/home/home_page.dart';
+import 'pages/statistics/statistics_page.dart';
 
 void main() async {
   // Initialize date formatting for configured locale
@@ -65,6 +68,8 @@ class SmartSensingLibraryDemoApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const HomePage(),
+        home: const HistoricViewPage(
+          sensorId: SensorId.accelerometer,
+        ),
       );
 }

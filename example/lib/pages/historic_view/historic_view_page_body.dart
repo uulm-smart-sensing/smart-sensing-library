@@ -361,8 +361,11 @@ TableRow _getPaddingRow(SensorId sensorId) {
 
 // ignore: unused_element
 TableRow _getTableRowFromSensorData(DateTime dateTime, List<double> data) {
-  var dayName = DateFormat.E(Platform.localeName).format(dateTime);
-  var formattedDate = formatDate(dateTime: dateTime, shortenYear: true);
+  var formattedDate = formatDate(
+    dateTime: dateTime,
+    shortenYear: true,
+    extendWithDayName: true,
+  );
   var formattedTime = DateFormat.Hms(Platform.localeName).format(dateTime);
 
   return TableRow(
@@ -370,7 +373,7 @@ TableRow _getTableRowFromSensorData(DateTime dateTime, List<double> data) {
       Center(
         child: Column(
           children: [
-            Text("$dayName. $formattedDate"),
+            Text(formattedDate),
             Text(formattedTime),
           ],
         ),

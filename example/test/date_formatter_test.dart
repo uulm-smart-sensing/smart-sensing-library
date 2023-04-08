@@ -35,4 +35,33 @@ void main() {
       expect(result, equals("12/01/23"));
     },
   );
+
+  test(
+    """
+    When date is formatted and extendWithDayName is true,
+    day name is added in front of formatted date""",
+    () {
+      var result = formatDate(
+        dateTime: DateTime(2023, 12, 6),
+        locale: "en",
+        shortenYear: true,
+        extendWithDayName: true,
+      );
+      expect(result, equals("Wed. 12/06/23"));
+    },
+  );
+
+  test(
+    """
+    When date is formatted and extendWithDayName is true,
+    day name is added in front of formatted date (2)""",
+    () {
+      var result = formatDate(
+        dateTime: DateTime(2023, 12, 6),
+        locale: "de",
+        extendWithDayName: true,
+      );
+      expect(result, equals("Mi. 06.12.2023"));
+    },
+  );
 }
