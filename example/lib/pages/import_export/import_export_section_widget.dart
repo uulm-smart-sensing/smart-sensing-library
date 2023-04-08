@@ -38,12 +38,25 @@ class ImportExportSectionWidget extends StatefulWidget {
   /// 'Manual'.
   final Widget _buttons;
 
+  /// Function passed by the parent widget ([ImportExportPage]) to set
+  /// which sensor id was selected by the user.
+  final Function _setSensorId;
+
+  /// Function passed by the parent widget ([ImportExportPage]) to set
+  /// whether the user selected 'All' in the dropdown menu meaning,
+  /// all possible sensor ids should be considered.
+  final Function _setUseAllPossibleSensorIds;
+
   const ImportExportSectionWidget({
     super.key,
     required String sectionTitle,
     required Widget buttons,
+    required Function setSensorId,
+    required Function setUseAllPossibleSensorIds,
   })  : _buttons = buttons,
-        _sectionTitle = sectionTitle;
+        _sectionTitle = sectionTitle,
+        _setSensorId = setSensorId,
+        _setUseAllPossibleSensorIds = setUseAllPossibleSensorIds;
 
   @override
   State<StatefulWidget> createState() => _ImportExportSectionWidgetState();
@@ -62,8 +75,7 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
         SensorId.values.map(
           (e) => toBeginningOfSentenceCase(e.toString().split('.').last)!,
         ),
-      )
-      ..add("None");
+      );
   }
 
   @override
@@ -77,29 +89,33 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
       child: DropdownButton(
         isExpanded: true,
         underline: const SizedBox.shrink(),
+        borderRadius: BorderRadius.circular(20),
+        dropdownColor: Theme.of(context).cardColor,
         hint: Text(
           "Choose a sensor",
           style: Theme.of(context).textTheme.bodyMedium,
         ),
-        borderRadius: BorderRadius.circular(20),
         iconSize: 30,
         iconEnabledColor: Colors.white,
         icon: const Icon(Icons.keyboard_arrow_down_rounded),
-        dropdownColor: Theme.of(context).cardColor,
         value: _selectedSensor,
-        items: _sensorOptions
-            .map(
-              (e) => DropdownMenuItem(
-                // TODO: do not use string as value, but the corresponding
-                // sensorId instead
-                value: e,
-                child: Text(e),
-              ),
-            )
-            .toList(),
+        items: _sensorOptions.map(_getDropdownItemFromSensorName).toList(),
         onChanged: (val) {
           setState(() {
             _selectedSensor = val;
+            // set the state of the [ImportExportPage]
+            if (val != null) {
+              if (val == 'All') {
+                widget._setUseAllPossibleSensorIds(true);
+              } else {
+                widget._setUseAllPossibleSensorIds(false);
+                var find = SensorId.values.firstWhere(
+                  (element) =>
+                      element.toString() == "SensorId.${val.toLowerCase()}",
+                );
+                widget._setSensorId(find);
+              }
+            }
           });
         },
       ),
@@ -156,4 +172,13 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
       ),
     );
   }
+
+  /// Gets a DropdownMenuItem from the sensor name (or the entry 'All'),
+  /// to create the selectable options in the dropdown button from the sensors
+  /// list.
+  DropdownMenuItem<String?> _getDropdownItemFromSensorName(String name) =>
+      DropdownMenuItem(
+        value: name,
+        child: Text(name),
+      );
 }

@@ -2,6 +2,7 @@
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../settings/settings_page.dart';
@@ -27,8 +28,69 @@ import 'manual_export_page.dart';
 /// be used.
 ///
 /// This [ImportExportPage] is reachable through the [SettingsPage].
-class ImportExportPage extends StatelessWidget {
+class ImportExportPage extends StatefulWidget {
   const ImportExportPage({super.key});
+
+  @override
+  State<ImportExportPage> createState() => _ImportExportPageState();
+}
+
+class _ImportExportPageState extends State<ImportExportPage> {
+  SensorId? _selectedSensorIdForImport;
+  late bool _importEntireDirectory;
+
+  SensorId? _selectedSensorIdForExport;
+  late bool _exportForAllSensorIds;
+
+  DateTime? _startDateTimeForExport;
+  DateTime? _endDateTimeForExport;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _importEntireDirectory = false;
+    _exportForAllSensorIds = false;
+  }
+
+  /// Setter methods for defining the state of this page by the
+  /// 'Import' and 'Export' widgets.
+
+  void _setSelectedSensorIdForImport(SensorId selectedSensorIdForImport) {
+    setState(() {
+      _selectedSensorIdForImport = selectedSensorIdForImport;
+    });
+  }
+
+  void _setImportEntireDirectory(bool importEntireDirectory) {
+    setState(() {
+      _importEntireDirectory = importEntireDirectory;
+    });
+  }
+
+  void _setSelectedSensorIdForExport(SensorId selectedSensorIdForExport) {
+    setState(() {
+      _selectedSensorIdForExport = selectedSensorIdForExport;
+    });
+  }
+
+  void _setExportForAllSensorIds(bool exportForAllSensorIds) {
+    setState(() {
+      _exportForAllSensorIds = exportForAllSensorIds;
+    });
+  }
+
+  void _setStartDateForExport(DateTime startDateTimeForExport) {
+    setState(() {
+      _startDateTimeForExport = startDateTimeForExport;
+    });
+  }
+
+  void _setEndDateForExport(DateTime endDateTimeForExport) {
+    setState(() {
+      _endDateTimeForExport = endDateTimeForExport;
+    });
+  }
 
   /// Imports sensor data from a single file.
   ///
@@ -40,14 +102,31 @@ class ImportExportPage extends StatelessWidget {
   Future<void> _importData() async {
     // TODO: do not used hardcoded 'json' but instead request supported formats
     // from smart sensing library
-    var result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['json'],
-      allowMultiple: false,
-    );
+    FilePickerResult? result;
+    if (_importEntireDirectory) {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+        allowMultiple: true,
+      );
+    } else {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+      );
+    }
 
     if (result != null) {
-      // var file = File(result.files.single.path!);
+      if (_importEntireDirectory) {
+        // List<File> files = result.paths.map((path) => File(path!)).toList();
+        // TODO: call smart sensing library with 'files'
+      } else if (_selectedSensorIdForImport != null) {
+        // var file = File(result.files.single.path!);
+        // TODO: call smart sensing library with 'file' and
+        // 'selectedSensorIdForImport'
+      } else {
+        // TODO: provide hint, that user need to select sensorId
+      }
     }
   }
 
@@ -58,10 +137,21 @@ class ImportExportPage extends StatelessWidget {
   /// directory, where the sensor data should be exported to. If the
   /// selected directory is valid it is delegated to the 'Import / Export'
   /// module in the smart sensing library.
-  Future<void> _exportAllData() async {
+  Future<void> _exportData() async {
     var selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
-    if (selectedDirectory != null) {}
+    if (selectedDirectory != null) {
+      // use datetimes for export
+      if (_exportForAllSensorIds) {
+        // TODO: call smart sensing library with 'selectedDirectory'
+        // and 'SensorId.values'
+      } else if (_selectedSensorIdForExport != null) {
+        // TODO: call smart sensing library with 'selectedDirectory'
+        // and 'selectedSensorIdForExport!'
+      } else {
+        // TODO: provide hint, that user need to select sensorId
+      }
+    }
   }
 
   @override
@@ -73,10 +163,15 @@ class ImportExportPage extends StatelessWidget {
       buttons: SizedBox(
         width: 120,
         child: TextButton(
-          onPressed: _importData,
+          onPressed:
+              _selectedSensorIdForImport != null || _importEntireDirectory
+                  ? _importData
+                  : null,
           child: const Text("Import"),
         ),
       ),
+      setSensorId: _setSelectedSensorIdForImport,
+      setUseAllPossibleSensorIds: _setImportEntireDirectory,
     );
 
     // The widget (= section) containing all information and buttons
@@ -87,8 +182,11 @@ class ImportExportPage extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.centerLeft,
+            // TODO: delete or restructure as soon as call to smart sensing
+            // library is realized and datetimes are used
             child: Text(
-              "time interval: ",
+              """
+time interval:       $_startDateTimeForExport - $_endDateTimeForExport""",
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -101,7 +199,10 @@ class ImportExportPage extends StatelessWidget {
               SizedBox(
                 width: 120,
                 child: TextButton(
-                  onPressed: _exportAllData,
+                  onPressed: _selectedSensorIdForExport != null ||
+                          _exportForAllSensorIds
+                      ? _exportData
+                      : null,
                   child: const Text("All"),
                 ),
               ),
@@ -111,14 +212,20 @@ class ImportExportPage extends StatelessWidget {
               SizedBox(
                 width: 120,
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ManualExportPage(),
-                      ),
-                    );
-                  },
+                  onPressed: _selectedSensorIdForExport != null ||
+                          _exportForAllSensorIds
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ManualExportPage(
+                                setStartDatetime: _setStartDateForExport,
+                                setEndDatetime: _setEndDateForExport,
+                              ),
+                            ),
+                          );
+                        }
+                      : null,
                   child: const Text("Manual"),
                 ),
               ),
@@ -126,6 +233,8 @@ class ImportExportPage extends StatelessWidget {
           ),
         ],
       ),
+      setSensorId: _setSelectedSensorIdForExport,
+      setUseAllPossibleSensorIds: _setExportForAllSensorIds,
     );
 
     return SmartSensingAppBar(
