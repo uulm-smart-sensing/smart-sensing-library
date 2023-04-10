@@ -201,19 +201,21 @@ class IOManager {
       var buffer = List.of(_bufferManager.getBuffer(id));
       //Check if first entry is older then given from.
       //If so, then the whole buffer contains all needed data.
-      if (DateTime.fromMicrosecondsSinceEpoch(
-        buffer.first.timestampInMicroseconds,
-        isUtc: true,
-      ).isBefore(from)) {
-        return FilterTools(_splitWithDateTime(from, to, buffer));
-      }
-      //Check if first entry is older then given to.
-      //If so, then the buffer contains partial data.
-      if (DateTime.fromMicrosecondsSinceEpoch(
-        buffer.first.timestampInMicroseconds,
-        isUtc: true,
-      ).isBefore(to)) {
-        buffer = _splitWithDateTime(from, to, buffer);
+      if (buffer.isNotEmpty) {
+        if (DateTime.fromMicrosecondsSinceEpoch(
+          buffer.first.timestampInMicroseconds,
+          isUtc: true,
+        ).isBefore(from)) {
+          return FilterTools(_splitWithDateTime(from, to, buffer));
+        }
+        //Check if first entry is older then given to.
+        //If so, then the buffer contains partial data.
+        if (DateTime.fromMicrosecondsSinceEpoch(
+          buffer.first.timestampInMicroseconds,
+          isUtc: true,
+        ).isBefore(to)) {
+          buffer = _splitWithDateTime(from, to, buffer);
+        }
       }
       var dbBuffer = await _getFromDatabase(
         from,
