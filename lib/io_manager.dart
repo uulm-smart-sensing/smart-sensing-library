@@ -6,8 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import 'buffer_manager.dart';
+import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
-import 'mock_sensor_manager.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
 import 'sensor_data_mock.dart';
@@ -20,13 +20,13 @@ import 'sensor_data_mock.dart';
 class IOManager {
   IOManager._constructor() {
     _bufferManager = BufferManager();
-    _sensorManager = MockSensorManager();
+    _sensorManager = SensorManager();
   }
   static final IOManager _instance = IOManager._constructor();
 
   late final BufferManager _bufferManager;
   late final Store? _objectStore;
-  late final MockSensorManager _sensorManager;
+  late final SensorManager _sensorManager;
 
   final int _maxBufferSize = 10000;
   final HashMap _subscriptions = HashMap<SensorId, StreamSubscription?>();
@@ -35,6 +35,12 @@ class IOManager {
 
   ///Returns instance of IOManager
   factory IOManager() => _instance;
+
+  ///Constructor for testing
+  IOManager.testManager() {
+    _bufferManager = BufferManager();
+    _sensorManager = FakeSensorManager();
+  }
 
   ///Opens the database for access.
   ///
@@ -54,11 +60,26 @@ class IOManager {
     return true;
   }
 
+  ///Returns a list of usable sensors
+  Future<List<SensorId>> getUsableSensors() async =>
+      _sensorManager.getUsableSensors();
+
+  ///Retrieves information about the sensor with the passed [id].
+  Future<SensorInfo> getSensorInfo(SensorId id) async =>
+      _sensorManager.getSensorInfo(id);
+
+  ///Retrieves the stream of sensor with the passed [id].
+  Stream<SensorData>? getSensorStream(SensorId id) =>
+      _sensorManager.getSensorStream(id);
+
+  ///Returns a list of used sensors
+  Future<List<SensorId>> getUsedSensors() async =>
+      _sensorManager.getUsedSensors();
+
   ///Adds a Sensor with [id].
   ///
   ///Throws exception if a database connection is not established.
-  ///WIP. Currently works with the Mock SensorManager
-  Future<void> addSensor(SensorId id) async {
+  Future<void> addSensor(SensorId id, int timeIntervalInMilliseconds) async {
     try {
       if (_objectStore == null) {
         throw Exception("Database connection is not established!"
@@ -72,10 +93,18 @@ class IOManager {
       }
       _sensorThreadLock = true;
       _bufferManager.addBuffer(id);
-      _subscriptions[id] = _sensorManager.addSensor(id).listen(
-            _processSensorData,
-            onDone: () async => _onDataDone(id),
-          );
+      var result = await _sensorManager.startSensorTracking(
+        id,
+        timeIntervalInMilliseconds,
+      );
+      if (result == SensorTaskResult.success) {
+        _subscriptions[id] = _sensorManager.getSensorStream(id)!.listen(
+              (e) => _processSensorData(e, id),
+              onDone: () async => _onDataDone(id),
+            );
+      } else {
+        throw Exception("Failed with $result");
+      }
     } finally {
       _sensorThreadLock = false;
     }
@@ -84,7 +113,6 @@ class IOManager {
   ///Removes a Sensor with [id].
   ///
   ///Throws exception if a database connection is not established.
-  ///WIP. Currently works with the Mock SensorManager
   Future<void> removeSensor(SensorId id) async {
     if (_objectStore == null) {
       throw Exception("Database connection is not established!"
@@ -97,7 +125,7 @@ class IOManager {
       return;
     }
     _sensorThreadLock = true;
-    await _sensorManager.removeSensor(id);
+    await _sensorManager.stopSensorTracking(id);
   }
 
   ///Gets Data from Database
@@ -160,11 +188,14 @@ class IOManager {
           "Please first established to use the IOManager!");
     }
     from ??= DateTime.utc(-271821, 04, 20);
-    to ??= DateTime.now();
+    to ??= DateTime.now().toUtc();
     if (to.isBefore(from)) {
       throw Exception(
         "Date range is incorrect: 'to' can not be before 'from'!",
       );
+    }
+    while (_sensorThreadLock) {
+      await Future.delayed(Duration.zero);
     }
     try {
       var buffer = List.of(_bufferManager.getBuffer(id));
@@ -220,13 +251,25 @@ class IOManager {
   }
 
   ///Adds data to the buffer and checks if the maximum buffersize is reached.
-  Future<void> _processSensorData(SensorDataMock sensorData) async {
-    var buffer = _bufferManager.getBuffer(sensorData.sensorID);
+  Future<void> _processSensorData(SensorData sensorData, SensorId id) async {
+    var buffer = _bufferManager.getBuffer(id);
     if (_checkBufferSize(buffer.length)) {
-      await flushToDatabase(sensorData.sensorID);
+      await flushToDatabase(id);
     }
-    buffer.add(sensorData);
+    buffer.add(_convertFromSensorData(sensorData, id));
   }
+
+  ///Converts SensorData to SensorDataMock
+  SensorDataMock _convertFromSensorData(SensorData data, SensorId id) =>
+      SensorDataMock(
+        data: data.data.map((e) => e ?? 0).toList(),
+        maxPrecision: data.maxPrecision,
+        sensorID: id,
+        setTime: DateTime.fromMillisecondsSinceEpoch(
+          data.timestampInMicroseconds,
+          isUtc: true,
+        ),
+      );
 
   ///Closes all connections to the stream and buffer.
   Future<void> _onDataDone(SensorId id) async {
