@@ -35,10 +35,10 @@ Future<void> main() async {
   });
 
   test("Manual save to database", () async {
-    var from = DateTime.now();
+    var from = DateTime.now().toUtc();
     await ioManager.addSensor(SensorId.accelerometer, 1000);
     await Future.delayed(const Duration(seconds: 3));
-    var to = DateTime.now();
+    var to = DateTime.now().toUtc();
     await ioManager.flushToDatabase(SensorId.accelerometer);
     await Future.delayed(const Duration(seconds: 3));
     var test = await ioManager.getFilterFrom(
