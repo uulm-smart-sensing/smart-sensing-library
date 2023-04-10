@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/filter_tools.dart';
-import 'package:smart_sensing_library/sensor_data_mock.dart';
 
 void main() {
   var randomTestDataset = createRandomTestData();
@@ -249,80 +248,84 @@ void main() {
   });
 }
 
-List<SensorDataMock> createRandomTestData() {
-  var testData = <SensorDataMock>[];
+List<SensorData> createRandomTestData() {
+  var testData = <SensorData>[];
   for (var i = 0; i < 30; i++) {
     testData.add(
-      SensorDataMock(
+      SensorData(
         data: [
           Random().nextDouble() * 360,
           Random().nextDouble() * 360,
           Random().nextDouble() * 360,
         ],
         maxPrecision: 1,
-        sensorID: SensorId.accelerometer,
-        setTime: DateTime(
+        timestampInMicroseconds: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ),
+        ).microsecondsSinceEpoch,
+        unit: Unit.bar,
       ),
     );
   }
   testData.sort(
-    (a, b) => a.dateTime.compareTo(b.dateTime),
+    (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
+        .compareTo(
+            DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds)),
   );
   return testData;
 }
 
-List<SensorDataMock> createDeterminedTestData() {
-  var testData = <SensorDataMock>[];
+List<SensorData> createDeterminedTestData() {
+  var testData = <SensorData>[];
   for (var i = 0; i < 30; i++) {
     testData.add(
-      SensorDataMock(
+      SensorData(
         data: [
           i + 0.1,
           i + 10.2,
           i + 100.3,
         ],
         maxPrecision: 1,
-        sensorID: SensorId.accelerometer,
-        setTime: DateTime(
+        unit: Unit.bar,
+        timestampInMicroseconds: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ),
+        ).microsecondsSinceEpoch,
       ),
     );
   }
   testData
     ..add(
-      SensorDataMock(
+      SensorData(
         data: const [
           0.1,
           10.2,
           100.3,
         ],
         maxPrecision: 1,
-        sensorID: SensorId.accelerometer,
-        setTime: DateTime(
+        unit: Unit.bar,
+        timestampInMicroseconds: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ),
+        ).microsecondsSinceEpoch,
       ),
     )
     ..sort(
-      (a, b) => a.dateTime.compareTo(b.dateTime),
+      (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
+          .compareTo(
+              DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds)),
     );
   return testData;
 }
 
-List<SensorDataMock> createDataForSplitting() {
-  var testData = <SensorDataMock>[];
+List<SensorData> createDataForSplitting() {
+  var testData = <SensorData>[];
   for (var month = 1; month < 13; month++) {
     for (var day = 1; day < 32; day++) {
       for (var hour = 0; hour < 24; hour++) {
@@ -334,21 +337,21 @@ List<SensorDataMock> createDataForSplitting() {
             continue;
           }
           testData.add(
-            SensorDataMock(
+            SensorData(
               data: [
                 month.toDouble(),
                 day.toDouble(),
                 hour.toDouble(),
               ],
               maxPrecision: 1,
-              sensorID: SensorId.accelerometer,
-              setTime: DateTime.utc(
+              unit: Unit.celsius,
+              timestampInMicroseconds: DateTime.utc(
                 2023,
                 month,
                 day,
                 hour,
                 minute,
-              ),
+              ).microsecondsSinceEpoch,
             ),
           );
         }
@@ -356,7 +359,9 @@ List<SensorDataMock> createDataForSplitting() {
     }
   }
   testData.sort(
-    (a, b) => a.dateTime.compareTo(b.dateTime),
+    (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
+        .compareTo(
+            DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds)),
   );
 
   return testData;
