@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:html';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,7 +10,6 @@ import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
-import 'sensor_data_mock.dart';
 
 /// This class is the core component of the smart sensing library.
 ///
@@ -220,7 +218,8 @@ class IOManager {
       var dbBuffer = await _getFromDatabase(
         from,
         DateTime.fromMicrosecondsSinceEpoch(
-            buffer.first.timestampInMicroseconds),
+          buffer.first.timestampInMicroseconds,
+        ),
         id,
       );
       dbBuffer.addAll(buffer);
