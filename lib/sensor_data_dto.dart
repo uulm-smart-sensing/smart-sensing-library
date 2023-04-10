@@ -2,9 +2,6 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
-
-import 'sensor_data_mock.dart';
-
 ///DTO class for SensorData
 @Entity()
 class SensorDataDTO {
@@ -24,27 +21,32 @@ class SensorDataDTO {
   ///Time the data got saved.
   late DateTime dateTime;
 
+  ///Unit of sensor data.
+  late Unit unit;
+
   ///BaseConstructor
   SensorDataDTO();
 
   ///From Sensordata
-  SensorDataDTO.fromSensorData(SensorDataMock sensorData) {
+  SensorDataDTO.fromSensorData(SensorData sensorData, SensorId senId) {
     _ensureStableEnumValues();
     id = 0;
     maxPrecision = sensorData.maxPrecision;
-    sensorID = sensorData.sensorID.index;
-    dateTime = sensorData.dateTime;
+    sensorID = senId.index;
+    dateTime = DateTime.
+    fromMicrosecondsSinceEpoch(sensorData.timestampInMicroseconds, isUtc:true);
     data = jsonEncode({"data": sensorData.data});
+    unit = sensorData.unit;
   }
 
   ///Converts DTO to internalSensorData
-  SensorDataMock toSensorData() {
+  SensorData toSensorData() {
     _ensureStableEnumValues();
-    return SensorDataMock(
+    return SensorData(
       maxPrecision: maxPrecision,
-      setTime: dateTime,
-      sensorID: SensorId.values[sensorID],
+      timestampInMicroseconds: dateTime.microsecondsSinceEpoch,
       data: (jsonDecode(data)['data'] as List<dynamic>).cast<double>(),
+      unit: unit,
     );
   }
 
