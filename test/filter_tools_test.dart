@@ -17,7 +17,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getMax(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getMin in interval with random data", () {
@@ -27,7 +27,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getMin(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getAvg in interval with random data", () {
@@ -37,7 +37,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getAvg(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getCount in interval with random data", () {
@@ -57,7 +57,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getMedian(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getMode in interval with random data", () {
@@ -67,7 +67,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getMode(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getRange in interval with random data", () {
@@ -77,7 +77,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getRange(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getSum in interval with random data", () {
@@ -87,7 +87,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getSum(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getSD in interval with random data", () {
@@ -97,7 +97,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getSD(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
   });
 
@@ -365,4 +365,34 @@ List<SensorData> createDataForSplitting() {
   );
 
   return testData;
+}
+
+class SensorDataMatcher extends Matcher {
+  final List<SensorData> _thisList;
+
+  SensorDataMatcher(this._thisList);
+
+  @override
+  Description describe(Description description) =>
+      description.add("The same sensor data.");
+
+  @override
+  bool matches(dynamic item, Map matchState) {
+    var matchList = item as List<SensorData>;
+    if (matchList.length != _thisList.length) {
+      return false;
+    }
+    for (var i = 0; i < _thisList.length; i++) {
+      if (!_isSameSensorData(matchList[i], _thisList[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _isSameSensorData(SensorData a, SensorData b) =>
+      containsAllInOrder(a.data).matches(b.data, {}) &&
+      a.maxPrecision == b.maxPrecision &&
+      a.timestampInMicroseconds == b.timestampInMicroseconds &&
+      a.unit == b.unit;
 }
