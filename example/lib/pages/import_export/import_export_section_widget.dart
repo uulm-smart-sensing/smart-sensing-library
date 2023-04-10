@@ -125,7 +125,6 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
     // this section
     var header = Text(
       widget._sectionTitle,
-      textAlign: TextAlign.left,
       style: const TextStyle(fontSize: 24),
     );
 
@@ -176,7 +175,7 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
   /// Gets a DropdownMenuItem from the sensor name (or the entry 'All'),
   /// to create the selectable options in the dropdown button from the sensors
   /// list.
-  DropdownMenuItem<String?> _getDropdownItemFromSensorName(String name) =>
+  DropdownMenuItem<String> _getDropdownItemFromSensorName(String name) =>
       DropdownMenuItem(
         value: name,
         child: Text(name),
