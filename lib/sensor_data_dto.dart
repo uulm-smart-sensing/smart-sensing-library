@@ -35,8 +35,9 @@ class SensorDataDTO {
     maxPrecision = sensorData.maxPrecision;
     sensorID = senId.index;
     dateTime = DateTime.fromMicrosecondsSinceEpoch(
-        sensorData.timestampInMicroseconds,
-        isUtc: true,);
+      sensorData.timestampInMicroseconds,
+      isUtc: true,
+    );
     data = jsonEncode({"data": sensorData.data});
     unit = sensorData.unit;
   }
