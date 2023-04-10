@@ -66,7 +66,13 @@ class SmartSensingAppBar extends StatelessWidget {
         preferredSize: const Size.fromHeight(80.0),
         child: Center(
           child: Column(
-            children: [_createSubtitle(), _createDivider()],
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: _createSubtitle(),
+              ),
+              _createDivider(),
+            ],
           ),
         ),
       );
