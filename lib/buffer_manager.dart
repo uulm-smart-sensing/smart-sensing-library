@@ -43,10 +43,10 @@ class BufferManager {
 
   ///Comparision method that compares Sensordata timestap [a] with [b]
   int _sortComparision(SensorData a, SensorData b) =>
-      DateTime.fromMillisecondsSinceEpoch(
+      DateTime.fromMicrosecondsSinceEpoch(
         a.timestampInMicroseconds,
         isUtc: true,
-      ).compareTo(DateTime.fromMillisecondsSinceEpoch(b.timestampInMicroseconds,
+      ).compareTo(DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds,
           isUtc: true,),);
 }
 
