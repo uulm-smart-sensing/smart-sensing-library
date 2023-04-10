@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:html';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -133,7 +134,7 @@ class IOManager {
   ///Throws exception if a database connection is not established.
   ///Returns a Future with the requested List.
   ///The list values are between [from] and [to] and from the sensor [id].
-  Future<List<SensorDataMock>> _getFromDatabase(
+  Future<List<SensorData>> _getFromDatabase(
     DateTime from,
     DateTime to,
     SensorId id,
@@ -164,7 +165,8 @@ class IOManager {
           "Please first established to use the IOManager!");
     }
     var buffer = _bufferManager.getBuffer(id);
-    var dtoList = buffer.map(SensorDataDTO.fromSensorData).toList();
+    var dtoList =
+        buffer.map((e) => SensorDataDTO.fromSensorData(e, id)).toList();
     buffer.clear();
     await _objectStore!.box<SensorDataDTO>().putManyAsync(dtoList);
   }
@@ -201,15 +203,26 @@ class IOManager {
       var buffer = List.of(_bufferManager.getBuffer(id));
       //Check if first entry is older then given from.
       //If so, then the whole buffer contains all needed data.
-      if (buffer.first.dateTime.isBefore(from)) {
+      if (DateTime.fromMicrosecondsSinceEpoch(
+        buffer.first.timestampInMicroseconds,
+        isUtc: true,
+      ).isBefore(from)) {
         return FilterTools(_splitWithDateTime(from, to, buffer));
       }
       //Check if first entry is older then given to.
       //If so, then the buffer contains partial data.
-      if (buffer.first.dateTime.isBefore(to)) {
+      if (DateTime.fromMicrosecondsSinceEpoch(
+        buffer.first.timestampInMicroseconds,
+        isUtc: true,
+      ).isBefore(to)) {
         buffer = _splitWithDateTime(from, to, buffer);
       }
-      var dbBuffer = await _getFromDatabase(from, buffer.first.dateTime, id);
+      var dbBuffer = await _getFromDatabase(
+        from,
+        DateTime.fromMicrosecondsSinceEpoch(
+            buffer.first.timestampInMicroseconds),
+        id,
+      );
       dbBuffer.addAll(buffer);
       if (dbBuffer.isEmpty) {
         throw Exception("Not a valid buffer!");
@@ -229,20 +242,22 @@ class IOManager {
   }
 
   ///Splits a partial list from [buffer] between [from] and [to].
-  List<SensorDataMock> _splitWithDateTime(
+  List<SensorData> _splitWithDateTime(
     DateTime from,
     DateTime to,
-    List<SensorDataMock> buffer,
+    List<SensorData> buffer,
   ) {
     var start = buffer.length, stop = 0;
     for (var i = 0; i < buffer.length; i++) {
-      if (buffer[i].dateTime.isAfter(from)) {
+      if (DateTime.fromMicrosecondsSinceEpoch(buffer[i].timestampInMicroseconds)
+          .isAfter(from)) {
         start = i;
         break;
       }
     }
     for (var i = buffer.length - 1; i >= 0; i--) {
-      if (buffer[i].dateTime.isBefore(to)) {
+      if (DateTime.fromMicrosecondsSinceEpoch(buffer[i].timestampInMicroseconds)
+          .isBefore(to)) {
         stop = i;
         break;
       }
@@ -256,20 +271,8 @@ class IOManager {
     if (_checkBufferSize(buffer.length)) {
       await flushToDatabase(id);
     }
-    buffer.add(_convertFromSensorData(sensorData, id));
+    buffer.add(sensorData);
   }
-
-  ///Converts SensorData to SensorDataMock
-  SensorDataMock _convertFromSensorData(SensorData data, SensorId id) =>
-      SensorDataMock(
-        data: data.data.map((e) => e ?? 0).toList(),
-        maxPrecision: data.maxPrecision,
-        sensorID: id,
-        setTime: DateTime.fromMillisecondsSinceEpoch(
-          data.timestampInMicroseconds,
-          isUtc: true,
-        ),
-      );
 
   ///Closes all connections to the stream and buffer.
   Future<void> _onDataDone(SensorId id) async {
