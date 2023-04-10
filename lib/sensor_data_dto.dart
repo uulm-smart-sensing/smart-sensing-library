@@ -23,7 +23,7 @@ class SensorDataDTO {
   late DateTime dateTime;
 
   ///Unit of sensor data.
-  late Unit unit;
+  late int unit;
 
   ///BaseConstructor
   SensorDataDTO();
@@ -39,7 +39,7 @@ class SensorDataDTO {
       isUtc: true,
     );
     data = jsonEncode({"data": sensorData.data});
-    unit = sensorData.unit;
+    unit = sensorData.unit.index;
   }
 
   ///Converts DTO to internalSensorData
@@ -49,7 +49,7 @@ class SensorDataDTO {
       maxPrecision: maxPrecision,
       timestampInMicroseconds: dateTime.microsecondsSinceEpoch,
       data: (jsonDecode(data)['data'] as List<dynamic>).cast<double>(),
-      unit: unit,
+      unit: Unit.values[unit],
     );
   }
 
@@ -61,5 +61,20 @@ class SensorDataDTO {
     assert(SensorId.linearAcceleration.index == 4, "Test if enum still stable");
     assert(SensorId.barometer.index == 5, "Test if enum still stable");
     assert(SensorId.thermometer.index == 6, "Test if enum still stable");
+
+    assert(Unit.metersPerSecondSquared.index == 0, "Test if enum still stable");
+    assert(Unit.gravitationalForce.index == 1, "Test if enum still stable");
+    assert(Unit.radiansPerSecond.index == 2, "Test if enum still stable");
+    assert(Unit.degreesPerSecond.index == 3, "Test if enum still stable");
+    assert(Unit.microTeslas.index == 4, "Test if enum still stable");
+    assert(Unit.radians.index == 5, "Test if enum still stable");
+    assert(Unit.degrees.index == 6, "Test if enum still stable");
+    assert(Unit.hectoPascal.index == 7, "Test if enum still stable");
+    assert(Unit.kiloPascal.index == 8, "Test if enum still stable");
+    assert(Unit.bar.index == 9, "Test if enum still stable");
+    assert(Unit.celsius.index == 10, "Test if enum still stable");
+    assert(Unit.fahrenheit.index == 11, "Test if enum still stable");
+    assert(Unit.kelvin.index == 12, "Test if enum still stable");
+    assert(Unit.unitless.index == 13, "Test if enum still stable");
   }
 }
