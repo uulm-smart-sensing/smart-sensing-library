@@ -7,7 +7,7 @@ import 'sensor_data_mock.dart';
 class BufferManager {
   BufferManager._constructor();
   static final _instance = BufferManager._constructor();
-  final HashMap _buffer = HashMap<SensorId, List<SensorDataMock>>();
+  final HashMap _buffer = HashMap<SensorId, List<SensorData>>();
 
   ///Return instance of BufferManager
   factory BufferManager() => _instance;
@@ -15,7 +15,7 @@ class BufferManager {
   ///Adds a Buffer to the Manager
   void addBuffer(SensorId id) {
     if (_buffer[id] == null) {
-      _buffer[id] = <SensorDataMock>[];
+      _buffer[id] = <SensorData>[];
     } else {
       throw Exception("Buffer already added.");
     }
@@ -27,10 +27,10 @@ class BufferManager {
   }
 
   ///Returns the sorted buffer list with [id] from the Manager
-  List<SensorDataMock> getBuffer(SensorId id) {
+  List<SensorData> getBuffer(SensorId id) {
     if (_buffer[id] != null) {
       _sortBuffer(id);
-      return _buffer[id] as List<SensorDataMock>;
+      return _buffer[id] as List<SensorData>;
     } else {
       throw InvalidBufferException("No such buffer.");
     }
@@ -38,12 +38,16 @@ class BufferManager {
 
   ///Sorts the buffer with [id]
   void _sortBuffer(SensorId id) {
-    (_buffer[id] as List<SensorDataMock>).sort(_sortComparision);
+    (_buffer[id] as List<SensorData>).sort(_sortComparision);
   }
 
   ///Comparision method that compares Sensordata timestap [a] with [b]
-  int _sortComparision(SensorDataMock a, SensorDataMock b) =>
-      a.dateTime.compareTo(b.dateTime);
+  int _sortComparision(SensorData a, SensorData b) =>
+      DateTime.fromMillisecondsSinceEpoch(
+        a.timestampInMicroseconds,
+        isUtc: true,
+      ).compareTo(DateTime.fromMillisecondsSinceEpoch(b.timestampInMicroseconds,
+          isUtc: true,),);
 }
 
 ///Custom exception for wrong buffer
