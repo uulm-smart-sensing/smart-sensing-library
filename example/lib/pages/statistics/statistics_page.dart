@@ -6,12 +6,22 @@ import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../general_widgets/stylized_container.dart';
 import '../../utils.dart';
 import '../historic_view/historic_view_page.dart';
+import '../home/home_page.dart';
 
+/// Page containing a list of all implemented sensors and enables navigation
+/// to the [HistoricViewPage]s of this sensors.
+///
+/// Therefor this list consists of [TextButton]s, which navigate to the
+/// corresponding page of the sensor when pressed.
+///
+/// This [HistoricViewPage] is reachable through the [HomePage].
 class StatisticsPage extends StatelessWidget {
   const StatisticsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // The list containing the buttons for all implemented sensors
+    // for navigation to the [HistoricViewPage]s.
     var sensorList = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       child: Column(
@@ -45,6 +55,7 @@ class StatisticsPage extends StatelessWidget {
     );
   }
 
+  // Create the button (= List item) for a sensor with [sensorId]
   Widget _getSensorListItem(SensorId sensorId, BuildContext context) {
     var sensorButton = StylizedContainer(
       height: 50,

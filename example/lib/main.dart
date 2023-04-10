@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import 'pages/statistics/statistics_page.dart';
+import 'pages/home/home_page.dart';
 
 void main() async {
   // Initialize date formatting for configured locale
@@ -65,6 +65,6 @@ class SmartSensingLibraryDemoApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const StatisticsPage(),
+        home: const HomePage(),
       );
 }
