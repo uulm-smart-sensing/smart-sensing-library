@@ -35,21 +35,13 @@ class ImportExportPage extends StatefulWidget {
 
 class _ImportExportPageState extends State<ImportExportPage> {
   SensorId? _selectedSensorIdForImport;
-  late bool _importEntireDirectory;
+  bool _importEntireDirectory = false;
 
   SensorId? _selectedSensorIdForExport;
-  late bool _exportForAllSensorIds;
+  bool _exportForAllSensorIds = false;
 
   DateTime? _startDateTimeForExport;
   DateTime? _endDateTimeForExport;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _importEntireDirectory = false;
-    _exportForAllSensorIds = false;
-  }
 
   /// Setter methods for defining the state of this page by the
   /// 'Import' and 'Export' widgets.
@@ -114,17 +106,17 @@ class _ImportExportPageState extends State<ImportExportPage> {
       );
     }
 
-    if (result != null) {
-      if (_importEntireDirectory) {
-        // List<File> files = result.paths.map((path) => File(path!)).toList();
-        // TODO: call smart sensing library with 'files'
-      } else if (_selectedSensorIdForImport != null) {
-        // var file = File(result.files.single.path!);
-        // TODO: call smart sensing library with 'file' and
-        // 'selectedSensorIdForImport'
-      } else {
-        // TODO: provide hint, that user need to select sensorId
-      }
+    if (result == null) return;
+
+    if (_importEntireDirectory) {
+      // List<File> files = result.paths.map((path) => File(path!)).toList();
+      // TODO: call smart sensing library with 'files'
+    } else if (_selectedSensorIdForImport != null) {
+      // var file = File(result.files.single.path!);
+      // TODO: call smart sensing library with 'file' and
+      // 'selectedSensorIdForImport'
+    } else {
+      // TODO: provide hint, that user need to select sensorId
     }
   }
 
@@ -138,18 +130,29 @@ class _ImportExportPageState extends State<ImportExportPage> {
   Future<void> _exportData() async {
     var selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
-    if (selectedDirectory != null) {
-      // use datetimes for export
-      if (_exportForAllSensorIds) {
-        // TODO: call smart sensing library with 'selectedDirectory'
-        // and 'SensorId.values'
-      } else if (_selectedSensorIdForExport != null) {
-        // TODO: call smart sensing library with 'selectedDirectory'
-        // and 'selectedSensorIdForExport!'
-      } else {
-        // TODO: provide hint, that user need to select sensorId
-      }
+    if (selectedDirectory == null) return;
+
+    if (_exportForAllSensorIds) {
+      // TODO: call smart sensing library with 'selectedDirectory'
+      // and 'SensorId.values'
+    } else if (_selectedSensorIdForExport != null) {
+      // TODO: call smart sensing library with 'selectedDirectory'
+      // and 'selectedSensorIdForExport!'
+    } else {
+      // TODO: provide hint, that user need to select sensorId
     }
+  }
+
+  void selectTimeIntervalForExport() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ManualExportPage(
+          setStartDatetime: _setStartDateForExport,
+          setEndDatetime: _setEndDateForExport,
+        ),
+      ),
+    );
   }
 
   @override
@@ -172,6 +175,38 @@ class _ImportExportPageState extends State<ImportExportPage> {
       setUseAllPossibleSensorIds: _setImportEntireDirectory,
     );
 
+    // Export buttons enabling the user to select, at which time interval
+    // ('All' possible data vs 'Manual' selected time interval) the sensor data
+    // should be exported
+    var exportButtons = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 120,
+          child: TextButton(
+            onPressed:
+                _selectedSensorIdForExport != null || _exportForAllSensorIds
+                    ? _exportData
+                    : null,
+            child: const Text("All"),
+          ),
+        ),
+        const SizedBox(
+          width: 25,
+        ),
+        SizedBox(
+          width: 120,
+          child: TextButton(
+            onPressed:
+                _selectedSensorIdForExport != null || _exportForAllSensorIds
+                    ? selectTimeIntervalForExport
+                    : null,
+            child: const Text("Manual"),
+          ),
+        ),
+      ],
+    );
+
     // The widget (= section) containing all information and buttons
     // for allowing the user to export sensor data
     var exportContainer = ImportExportSectionWidget(
@@ -191,44 +226,7 @@ time interval:       $_startDateTimeForExport - $_endDateTimeForExport""",
           const SizedBox(
             height: 10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 120,
-                child: TextButton(
-                  onPressed: _selectedSensorIdForExport != null ||
-                          _exportForAllSensorIds
-                      ? _exportData
-                      : null,
-                  child: const Text("All"),
-                ),
-              ),
-              const SizedBox(
-                width: 25,
-              ),
-              SizedBox(
-                width: 120,
-                child: TextButton(
-                  onPressed: _selectedSensorIdForExport != null ||
-                          _exportForAllSensorIds
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ManualExportPage(
-                                setStartDatetime: _setStartDateForExport,
-                                setEndDatetime: _setEndDateForExport,
-                              ),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: const Text("Manual"),
-                ),
-              ),
-            ],
-          ),
+          exportButtons,
         ],
       ),
       setSensorId: _setSelectedSensorIdForExport,
