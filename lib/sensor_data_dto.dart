@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
+
 ///DTO class for SensorData
 @Entity()
 class SensorDataDTO {
@@ -33,8 +34,9 @@ class SensorDataDTO {
     id = 0;
     maxPrecision = sensorData.maxPrecision;
     sensorID = senId.index;
-    dateTime = DateTime.
-    fromMicrosecondsSinceEpoch(sensorData.timestampInMicroseconds, isUtc:true);
+    dateTime = DateTime.fromMicrosecondsSinceEpoch(
+        sensorData.timestampInMicroseconds,
+        isUtc: true);
     data = jsonEncode({"data": sensorData.data});
     unit = sensorData.unit;
   }
