@@ -37,9 +37,8 @@ void main() {
   );
 
   test(
-    """
-    When date is formatted and extendWithDayName is true,
-    day name is added in front of formatted date""",
+    "When date is formatted and extendWithDayName is true, day name is added in"
+    " front of formatted date (2)",
     () {
       var result = formatDate(
         dateTime: DateTime(2023, 12, 6),

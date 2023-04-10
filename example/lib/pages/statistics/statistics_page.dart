@@ -79,7 +79,7 @@ class StatisticsPage extends StatelessWidget {
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            formatPascalCase(sensorId.toString().split(".").last),
+            formatPascalCase(sensorId.name),
           ),
         ),
       ),
