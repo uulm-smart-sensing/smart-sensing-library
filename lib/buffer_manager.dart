@@ -46,8 +46,12 @@ class BufferManager {
       DateTime.fromMicrosecondsSinceEpoch(
         a.timestampInMicroseconds,
         isUtc: true,
-      ).compareTo(DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds,
-          isUtc: true,),);
+      ).compareTo(
+        DateTime.fromMicrosecondsSinceEpoch(
+          b.timestampInMicroseconds,
+          isUtc: true,
+        ),
+      );
 }
 
 ///Custom exception for wrong buffer
