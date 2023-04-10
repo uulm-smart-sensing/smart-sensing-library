@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
@@ -26,6 +28,8 @@ class StatisticsPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       child: Column(
         children: [
+          // TODO: add some items like below with "Favorites"
+          // and filter only favorites in the ListView
           const Align(
             alignment: Alignment.centerLeft,
             child: Text("All"),
@@ -48,7 +52,7 @@ class StatisticsPage extends StatelessWidget {
       title: "Statistics",
       subtitle: formatDate(
         dateTime: DateTime.now(),
-        locale: "de",
+        locale: Platform.localeName,
         extendWithDayName: true,
       ),
       body: sensorList,
