@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../settings/settings_page.dart';
 import 'import_export_section_widget.dart';
@@ -163,12 +164,12 @@ class _ImportExportPageState extends State<ImportExportPage> {
       sectionTitle: "Import sensor data",
       buttons: SizedBox(
         width: 120,
-        child: TextButton(
+        child: CustomTextButton(
           onPressed:
               _selectedSensorIdForImport != null || _importEntireDirectory
                   ? _importData
                   : null,
-          child: const Text("Import"),
+          text: "Import",
         ),
       ),
       setSensorId: _setSelectedSensorIdForImport,
@@ -183,12 +184,12 @@ class _ImportExportPageState extends State<ImportExportPage> {
       children: [
         SizedBox(
           width: 120,
-          child: TextButton(
+          child: CustomTextButton(
             onPressed:
                 _selectedSensorIdForExport != null || _exportForAllSensorIds
                     ? _exportData
                     : null,
-            child: const Text("All"),
+            text: "All",
           ),
         ),
         const SizedBox(
@@ -196,12 +197,12 @@ class _ImportExportPageState extends State<ImportExportPage> {
         ),
         SizedBox(
           width: 120,
-          child: TextButton(
+          child: CustomTextButton(
             onPressed:
                 _selectedSensorIdForExport != null || _exportForAllSensorIds
                     ? selectTimeIntervalForExport
                     : null,
-            child: const Text("Manual"),
+            text: "Manual",
           ),
         ),
       ],
