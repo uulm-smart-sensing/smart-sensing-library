@@ -272,7 +272,8 @@ List<SensorData> createRandomTestData() {
   testData.sort(
     (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
         .compareTo(
-            DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds)),
+      DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
+    ),
   );
   return testData;
 }
@@ -319,7 +320,8 @@ List<SensorData> createDeterminedTestData() {
     ..sort(
       (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
           .compareTo(
-              DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds)),
+        DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
+      ),
     );
   return testData;
 }
@@ -361,7 +363,8 @@ List<SensorData> createDataForSplitting() {
   testData.sort(
     (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
         .compareTo(
-            DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds)),
+      DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
+    ),
   );
 
   return testData;
