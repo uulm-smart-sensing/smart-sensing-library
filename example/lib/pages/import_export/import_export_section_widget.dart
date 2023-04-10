@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../general_widgets/stylized_container.dart';
+import '../../utils.dart';
 import './import_export_page.dart';
 
 /// Widget displaying a section on the 'Import / Export' page.
@@ -73,19 +75,15 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
       ..add("All")
       ..addAll(
         SensorId.values.map(
-          (e) => toBeginningOfSentenceCase(e.toString().split('.').last)!,
+          (e) => formatPascalCase(e.name),
         ),
       );
   }
 
   @override
   Widget build(BuildContext context) {
-    var dropdownMenuForSensorSelection = Container(
+    var dropdownMenuForSensorSelection = StylizedContainer(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
       child: DropdownButton(
         isExpanded: true,
         underline: const SizedBox.shrink(),
@@ -111,7 +109,8 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
                 widget._setUseAllPossibleSensorIds(false);
                 var find = SensorId.values.firstWhere(
                   (element) =>
-                      element.toString() == "SensorId.${val.toLowerCase()}",
+                      element.toString() ==
+                      "SensorId.${unformatPascalCase(val)}",
                 );
                 widget._setSensorId(find);
               }
