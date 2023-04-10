@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
-import 'sensor_data_mock.dart';
-
 ///Base class of filter tools.
 ///
 ///This class is used for filtering Sensor data lists.

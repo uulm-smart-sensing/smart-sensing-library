@@ -36,7 +36,7 @@ class SensorDataDTO {
     sensorID = senId.index;
     dateTime = DateTime.fromMicrosecondsSinceEpoch(
         sensorData.timestampInMicroseconds,
-        isUtc: true);
+        isUtc: true,);
     data = jsonEncode({"data": sensorData.data});
     unit = sensorData.unit;
   }
