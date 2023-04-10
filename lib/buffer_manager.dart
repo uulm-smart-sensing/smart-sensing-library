@@ -1,8 +1,6 @@
 import 'dart:collection';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
-import 'sensor_data_mock.dart';
-
 ///Base class of BufferManager
 class BufferManager {
   BufferManager._constructor();
