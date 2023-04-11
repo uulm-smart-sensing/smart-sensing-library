@@ -198,6 +198,15 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     // between to serve as padding.
     var paddingRow = _getPaddingRow(widget.sensorId);
 
+    // TODO: Remove when using real values
+    int numberOfDataPoints;
+    if (widget.sensorId == SensorId.thermometer ||
+        widget.sensorId == SensorId.barometer) {
+      numberOfDataPoints = 1;
+    } else {
+      numberOfDataPoints = 3;
+    }
+
     // Table that visualizes sensor data
     var visualizationTable = Table(
       columnWidths: columnWidths,
@@ -216,17 +225,17 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         // and _getTableRowFromSensorData add padding with paddingRow
         _getTableRowFromSensorData(
           DateTime.fromMillisecondsSinceEpoch(1234567890123),
-          [1, 2, 3],
+          [1.0, 2.0, 3.0].take(numberOfDataPoints).toList(),
         ),
         paddingRow,
         _getTableRowFromSensorData(
           DateTime.fromMillisecondsSinceEpoch(9876543210987),
-          [3, 2, 1],
+          [3.0, 2.0, 1.0].take(numberOfDataPoints).toList(),
         ),
         paddingRow,
         _getTableRowFromSensorData(
           DateTime.fromMillisecondsSinceEpoch(5555555555555),
-          [69, 42, 666],
+          [69.0, 42.0, 666.0].take(numberOfDataPoints).toList(),
         ),
         paddingRow,
       ],
@@ -361,8 +370,11 @@ TableRow _getPaddingRow(SensorId sensorId) {
 
 // ignore: unused_element
 TableRow _getTableRowFromSensorData(DateTime dateTime, List<double> data) {
-  var dayName = DateFormat.E(Platform.localeName).format(dateTime);
-  var formattedDate = formatDate(dateTime: dateTime, shortenYear: true);
+  var formattedDate = formatDate(
+    dateTime: dateTime,
+    shortenYear: true,
+    extendWithDayName: true,
+  );
   var formattedTime = DateFormat.Hms(Platform.localeName).format(dateTime);
 
   return TableRow(
@@ -370,7 +382,7 @@ TableRow _getTableRowFromSensorData(DateTime dateTime, List<double> data) {
       Center(
         child: Column(
           children: [
-            Text("$dayName. $formattedDate"),
+            Text(formattedDate),
             Text(formattedTime),
           ],
         ),
