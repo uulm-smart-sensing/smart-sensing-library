@@ -92,7 +92,7 @@ class SmartSensingAppBar extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             title,
-            style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
           ),
           bottom: _createBottom(),
         ),

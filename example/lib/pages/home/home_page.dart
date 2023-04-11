@@ -146,6 +146,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: title,
         actions: [
           settingsButton,
