@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../general_widgets/blue_button.dart';
+import '../../general_widgets/section_header.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
+import 'precision_slider.dart';
 
-class SensorSettingsPage extends StatelessWidget {
+class SensorSettingsPage extends StatefulWidget {
   final SensorId sensorId;
 
   const SensorSettingsPage({
@@ -12,15 +15,22 @@ class SensorSettingsPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    var unitHeader = const Text(
-      "devices",
-      style: TextStyle(
-        fontSize: 24,
-      ),
-    );
-    var unitSelection = Container(
+  State<SensorSettingsPage> createState() => _SensorSettingsPageState();
+}
 
+class _SensorSettingsPageState extends State<SensorSettingsPage> {
+  var selectedPrecision = 2;
+
+  @override
+  Widget build(BuildContext context) {
+    var unitHeader = SectionHeader("devices");
+
+    var unitSelection = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        BlueButton(title: "G"),
+        BlueButton(title: "m/s^2"),
+      ],
     );
 
     var precisionHeader = const Text(
@@ -33,15 +43,10 @@ class SensorSettingsPage extends StatelessWidget {
 
     );
 
-    var timeIntervalHeader = const Text(
-      "Time Interval (h:m:s)",
-      style: TextStyle(
-        fontSize: 24,
-      ),
-    );
+    var timeIntervalHeader = SectionHeader("Time Interval (h:m:s)");
     var timeIntervalSelection = Container(
-      // TODO: use time selection from demo maybe
-    );
+        // TODO: use time selection from demo maybe
+        );
 
     var applyButton = Container(
       width: 100,
@@ -52,7 +57,7 @@ class SensorSettingsPage extends StatelessWidget {
     return SmartSensingAppBar(
       title: "Sensor settings",
       // TODO: Capitalize
-      subtitle: sensorId.name,
+      subtitle: widget.sensorId.name,
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
