@@ -1,39 +1,39 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/buffer_manager.dart';
-import 'package:smart_sensing_library/sensor_data_mock.dart';
 
 void main() {
   var bufferManager = BufferManager();
-  var testData = SensorDataMock(
+  var testData = SensorData(
     data: const [1.1, 1.2, 1.3],
     maxPrecision: 1,
-    sensorID: SensorId.accelerometer,
+    unit: Unit.microTeslas,
+    timestampInMicroseconds: DateTime.utc(2023).microsecondsSinceEpoch,
   );
   var testList = [
-    SensorDataMock(
+    SensorData(
       data: const [1.2, 1.2, 1.3],
       maxPrecision: 1,
-      sensorID: SensorId.accelerometer,
-      setTime: DateTime(2023),
+      unit: Unit.microTeslas,
+      timestampInMicroseconds: DateTime.utc(2023).microsecondsSinceEpoch,
     ),
-    SensorDataMock(
+    SensorData(
       data: const [2.2, 2.2, 3.3],
       maxPrecision: 1,
-      sensorID: SensorId.accelerometer,
-      setTime: DateTime(2022),
+      unit: Unit.microTeslas,
+      timestampInMicroseconds: DateTime.utc(2022).microsecondsSinceEpoch,
     ),
-    SensorDataMock(
+    SensorData(
       data: const [3.2, 3.2, 3.3],
       maxPrecision: 1,
-      sensorID: SensorId.accelerometer,
-      setTime: DateTime(2021),
+      unit: Unit.microTeslas,
+      timestampInMicroseconds: DateTime.utc(2021).microsecondsSinceEpoch,
     ),
-    SensorDataMock(
+    SensorData(
       data: const [4.2, 4.2, 4.3],
       maxPrecision: 1,
-      sensorID: SensorId.accelerometer,
-      setTime: DateTime(2020),
+      unit: Unit.microTeslas,
+      timestampInMicroseconds: DateTime.utc(2020).microsecondsSinceEpoch,
     )
   ];
 
@@ -77,11 +77,23 @@ void main() {
         ..addBuffer(SensorId.magnetometer)
         ..getBuffer(SensorId.magnetometer).addAll(testList);
       expect(
-        bufferManager.getBuffer(SensorId.magnetometer).last.dateTime.year,
+        DateTime.fromMicrosecondsSinceEpoch(
+          bufferManager
+              .getBuffer(SensorId.magnetometer)
+              .last
+              .timestampInMicroseconds,
+          isUtc: true,
+        ).year,
         2023,
       );
       expect(
-        bufferManager.getBuffer(SensorId.magnetometer).first.dateTime.year,
+        DateTime.fromMicrosecondsSinceEpoch(
+          bufferManager
+              .getBuffer(SensorId.magnetometer)
+              .first
+              .timestampInMicroseconds,
+          isUtc: true,
+        ).year,
         2020,
       );
     });
