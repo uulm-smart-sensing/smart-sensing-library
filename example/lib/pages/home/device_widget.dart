@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+
+import '../../general_widgets/device_name_title.dart';
 
 class DeviceWidget extends StatefulWidget {
   const DeviceWidget({super.key});
@@ -19,7 +20,11 @@ class _DeviceWidgetState extends State<DeviceWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _getDeviceNameTitle(),
+          const DeviceNameTitle(
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
           Icon(
             phoneIcon,
             color: Colors.white,
@@ -92,36 +97,6 @@ class _DeviceWidgetState extends State<DeviceWidget> {
     );
   }
 }
-
-/// Fetches the device name and builds a [Text] widget with it.
-Widget _getDeviceNameTitle() => FutureBuilder(
-      future: Future.sync(() async {
-        var deviceInfo = DeviceInfoPlugin();
-        if (Platform.isIOS) {
-          return deviceInfo.iosInfo.then((info) => info.utsname.machine);
-        } else if (Platform.isAndroid) {
-          return deviceInfo.androidInfo
-              .then((info) => "${info.brand} ${info.device}");
-        }
-        throw StateError("Unexpected platform");
-      }),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(
-            snapshot.data!,
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return const Text("Error occured while fetching device name.");
-        }
-
-        return const Text("Device name is being fetched ...");
-      },
-    );
 
 /// Fetches the number of available sensors and builds a [Text] widget with it.
 Widget _getAvailableSensorsText() => FutureBuilder(
