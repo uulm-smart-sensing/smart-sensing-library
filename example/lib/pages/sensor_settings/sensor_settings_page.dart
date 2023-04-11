@@ -7,6 +7,7 @@ import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../utils.dart';
 import 'precision_slider.dart';
 import 'time_interval_selection_button.dart';
+import 'unit_selection_button.dart';
 
 class SensorSettingsPage extends StatefulWidget {
   final SensorId sensorId;
@@ -23,6 +24,7 @@ class SensorSettingsPage extends StatefulWidget {
 class _SensorSettingsPageState extends State<SensorSettingsPage> {
   var selectedPrecision = 2;
   late int selectedTimeInterval;
+  Unit? selectedUnit;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +33,26 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     var unitSelection = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CustomTextButton(text: "G", onPressed: () {}),
-        CustomTextButton(text: "m/s^2", onPressed: () {}),
+        UnitSelectionButton(
+          onPressed: () {
+            setState(() {
+              selectedUnit = Unit.gravitationalForce;
+            });
+          },
+          unit: Unit.gravitationalForce,
+          isSelected:  selectedUnit == Unit.gravitationalForce,
+          width: 60,
+        ),
+        UnitSelectionButton(
+          onPressed: () {
+            setState(() {
+              selectedUnit = Unit.metersPerSecondSquared;
+            });
+          },
+          unit: Unit.metersPerSecondSquared,
+          isSelected: selectedUnit == Unit.metersPerSecondSquared,
+          width: 60,
+        ),
       ],
     );
 
