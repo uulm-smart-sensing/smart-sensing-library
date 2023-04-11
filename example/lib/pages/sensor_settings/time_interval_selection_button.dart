@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
+import '../../general_widgets/custom_text_button.dart';
 import 'time_interval_picker.dart';
 
 class TimeIntervalSelectionButton extends StatefulWidget {
   final SensorId sensorId;
   final void Function(int newValue) onChanged;
-  final void Function(int initialValue) init;
 
   const TimeIntervalSelectionButton({
     super.key,
     required this.sensorId,
     required this.onChanged,
-    required this.init,
   });
 
   @override
@@ -26,28 +25,31 @@ class _TimeIntervalSelectionButtonState
 
   @override
   Widget build(BuildContext context) {
-    var button = _getTimeIntervalSelectionButtonBase(() async {
-      var currentDateTime = DateTime.fromMillisecondsSinceEpoch(
-        timeIntervalInMilliseconds!,
-        isUtc: true,
-      );
+    var button = CustomTextButton(
+      text: "Update interval",
+      onPressed: () async {
+        var currentDateTime = DateTime.fromMillisecondsSinceEpoch(
+          timeIntervalInMilliseconds!,
+          isUtc: true,
+        );
 
-      var newDate = await DatePicker.showPicker(
-        context,
-        pickerModel: TimeIntervalPicker(
-          startTime: currentDateTime,
-        ),
-      );
+        var newDate = await DatePicker.showPicker(
+          context,
+          pickerModel: TimeIntervalPicker(
+            startTime: currentDateTime,
+          ),
+        );
 
-      if (newDate == null) {
-        return;
-      }
+        if (newDate == null) {
+          return;
+        }
 
-      setState(() {
-        timeIntervalInMilliseconds = newDate.millisecondsSinceEpoch;
-      });
-      widget.onChanged.call(timeIntervalInMilliseconds!);
-    });
+        setState(() {
+          timeIntervalInMilliseconds = newDate.millisecondsSinceEpoch;
+        });
+        widget.onChanged.call(timeIntervalInMilliseconds!);
+      },
+    );
 
     if (timeIntervalInMilliseconds == null) {
       // Use FutureBuilder to get configured time interval
@@ -56,11 +58,11 @@ class _TimeIntervalSelectionButtonState
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             timeIntervalInMilliseconds = snapshot.data;
-            widget.init.call(timeIntervalInMilliseconds!);
+            widget.onChanged.call(timeIntervalInMilliseconds!);
             return button;
           }
 
-          return _getTimeIntervalSelectionButtonBase(() {});
+          return CustomTextButton(text: "Update interval", onPressed: () {});
         },
       );
     } else {
@@ -74,18 +76,3 @@ Future<int> _getTimeIntervalInMs(SensorId sensorId) async {
   var timeInterval = 100;
   return timeInterval;
 }
-
-Widget _getTimeIntervalSelectionButtonBase(void Function() onPressed) =>
-    MaterialButton(
-      color: const Color.fromARGB(255, 23, 27, 137),
-      shape: const StadiumBorder(),
-      onPressed: onPressed,
-      child: const Text(
-        "Update interval",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.normal,
-        ),
-      ),
-    );

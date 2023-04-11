@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../general_widgets/blue_button.dart';
+import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/section_header.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
+import '../../utils.dart';
 import 'precision_slider.dart';
+import 'time_interval_selection_button.dart';
 
 class SensorSettingsPage extends StatefulWidget {
   final SensorId sensorId;
@@ -20,51 +22,52 @@ class SensorSettingsPage extends StatefulWidget {
 
 class _SensorSettingsPageState extends State<SensorSettingsPage> {
   var selectedPrecision = 2;
+  late int selectedTimeInterval;
 
   @override
   Widget build(BuildContext context) {
-    var unitHeader = SectionHeader("devices");
+    var unitHeader = SectionHeader("Unit");
 
     var unitSelection = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        BlueButton(title: "G"),
-        BlueButton(title: "m/s^2"),
+        CustomTextButton(text: "G", onPressed: () {}),
+        CustomTextButton(text: "m/s^2", onPressed: () {}),
       ],
     );
 
-    var precisionHeader = const Text(
-      "Precision",
-      style: TextStyle(
-        fontSize: 24,
+    var precisionHeader = SectionHeader("Precision");
+    var precisionSelection = PrecisionSlider(
+      startValue: selectedPrecision,
+      onChanged: (newValue) {
+        selectedPrecision = newValue;
+      },
+    );
+
+    var timeIntervalHeader = SectionHeader("Time Interval (m:s:ms)");
+    var timeIntervalSelection = Center(
+      child: TimeIntervalSelectionButton(
+        sensorId: widget.sensorId,
+        onChanged: (newValue) {
+          selectedTimeInterval = newValue;
+        },
       ),
     );
-    var precisionSelection = Container(
 
-    );
-
-    var timeIntervalHeader = SectionHeader("Time Interval (h:m:s)");
-    var timeIntervalSelection = Container(
-        // TODO: use time selection from demo maybe
-        );
-
-    var applyButton = Container(
-      width: 100,
-      height: 40,
-      child: const Placeholder(),
+    var applyButton = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: CustomTextButton(text: "Apply", onPressed: () {}),
     );
 
     return SmartSensingAppBar(
       title: "Sensor settings",
-      // TODO: Capitalize
-      subtitle: widget.sensorId.name,
+      subtitle: formatPascalCase(widget.sensorId.name),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 unitHeader,
                 unitSelection,

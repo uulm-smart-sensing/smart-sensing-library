@@ -18,19 +18,17 @@ class _PrecisionSliderState extends State<PrecisionSlider> {
   late int sliderValue = widget.startValue;
 
   @override
-  Widget build(BuildContext context) => Container(
-        child: Slider(
-          min: 0,
-          max: 10,
-          value: sliderValue.toDouble(),
-          label: sliderValue.toString(),
-          divisions: 10,
-          onChanged: (newValue) {
-            setState(() {
-              sliderValue = newValue.toInt();
-            });
-            widget.onChanged.call(sliderValue);
-          },
-        ),
+  Widget build(BuildContext context) => Slider(
+        min: 0,
+        max: 10,
+        value: sliderValue.toDouble(),
+        label: sliderValue.toString(),
+        divisions: 10,
+        onChanged: (newValue) {
+          setState(() {
+            sliderValue = newValue.toInt();
+          });
+          widget.onChanged.call(sliderValue);
+        },
       );
 }
