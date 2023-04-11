@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import './import_export_page.dart';
-import '../../general_widgets/stylized_container.dart';
+import '../../general_widgets/custom_dropdown_button.dart';
 import '../../utils.dart';
 
 /// Widget displaying a section on the 'Import / Export' page.
@@ -81,42 +81,30 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var dropdownMenuForSensorSelection = StylizedContainer(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: DropdownButton(
-        isExpanded: true,
-        underline: const SizedBox.shrink(),
-        borderRadius: BorderRadius.circular(20),
-        dropdownColor: Theme.of(context).cardColor,
-        hint: Text(
-          "Choose a sensor",
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        iconSize: 30,
-        iconEnabledColor: Colors.white,
-        icon: const Icon(Icons.keyboard_arrow_down_rounded),
-        value: _selectedSensor,
-        items: _sensorOptions.map(_getDropdownItemFromSensorName).toList(),
-        onChanged: (val) {
-          setState(() {
-            _selectedSensor = val;
-            // set the state of the [ImportExportPage]
-            if (val != null) {
-              if (val == 'All') {
-                widget._setUseAllPossibleSensorIds(true);
-              } else {
-                widget._setUseAllPossibleSensorIds(false);
-                var find = SensorId.values.firstWhere(
-                  (element) =>
-                      element.toString() ==
-                      "SensorId.${unformatPascalCase(val)}",
-                );
-                widget._setSensorId(find);
-              }
+    var dropdownMenuForSensorSelection = CustomDropdownButton(
+      hint: "Choose a sensor",
+      value: _selectedSensor,
+      isDense: false,
+      items: _sensorOptions.map(_getDropdownItemFromSensorName).toList(),
+      onChanged: (newValue) {
+        setState(() {
+          _selectedSensor = newValue;
+          // set the state of the [ImportExportPage]
+          if (newValue != null) {
+            if (newValue == 'All') {
+              widget._setUseAllPossibleSensorIds(true);
+            } else {
+              widget._setUseAllPossibleSensorIds(false);
+              var find = SensorId.values.firstWhere(
+                (element) =>
+                    element.toString() ==
+                    "SensorId.${unformatPascalCase(newValue)}",
+              );
+              widget._setSensorId(find);
             }
-          });
-        },
-      ),
+          }
+        });
+      },
     );
 
     // Display the text, which represents the "title" of
