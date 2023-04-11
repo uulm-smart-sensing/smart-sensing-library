@@ -93,19 +93,11 @@ class _ImportExportPageState extends State<ImportExportPage> {
   Future<void> _importData() async {
     // TODO: do not used hardcoded 'json' but instead request supported formats
     // from smart sensing library
-    FilePickerResult? result;
-    if (_importEntireDirectory) {
-      result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['json'],
-        allowMultiple: true,
-      );
-    } else {
-      result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['json'],
-      );
-    }
+    var result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+      allowMultiple: _importEntireDirectory,
+    );
 
     if (result == null) return;
 
