@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'sensor_data_mock.dart';
+import 'package:sensing_plugin/sensing_plugin.dart';
 
 ///Base class of filter tools.
 ///
@@ -10,7 +10,7 @@ class FilterTools {
   ///
   ///The [buffer] gets shallow copied into the internal [_buffer].
   ///The [_buffer] is used to do all filter options.
-  FilterTools(List<SensorDataMock> buffer) {
+  FilterTools(List<SensorData> buffer) {
     //Asumes that we have a valid buffer with valid enties.
     _buffer.add(List.of(buffer));
     _precision = _buffer[0][0].maxPrecision;
@@ -23,7 +23,7 @@ class FilterTools {
   ///while all other entries should be empty.
   ///The reason why it's a list of lists is
   ///to split it into different intervals within each function.
-  final List<List<SensorDataMock>> _buffer = List.empty(growable: true);
+  final List<List<SensorData>> _buffer = List.empty(growable: true);
   late final int _precision;
 
   ///Splits the fist entry of [_buffer] into equal [interval]s
@@ -43,7 +43,7 @@ class FilterTools {
     if (interval.compareTo(Duration.zero) == 0) {
       return;
     }
-    var tmpList = List<SensorDataMock>.from(_buffer[0]);
+    var tmpList = List<SensorData>.from(_buffer[0]);
     _buffer
       ..clear()
       ..add([]);
@@ -60,7 +60,15 @@ class FilterTools {
         _buffer[bufferCounter].add(tmpList[i]);
         intervalCount += interval;
       }
-      tmpDuration += tmpList[i + 1].dateTime.difference(tmpList[i].dateTime);
+      tmpDuration += DateTime.fromMicrosecondsSinceEpoch(
+        tmpList[i + 1].timestampInMicroseconds,
+        isUtc: true,
+      ).difference(
+        DateTime.fromMicrosecondsSinceEpoch(
+          tmpList[i].timestampInMicroseconds,
+          isUtc: true,
+        ),
+      );
     }
     //Is used for the last entry in the list.
     if (tmpDuration < intervalCount) {
@@ -100,10 +108,10 @@ class FilterTools {
   void getMax({Duration interval = Duration.zero, int axis = 0}) {
     _splitBuffer(interval);
     for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
-      _buffer[currinterval] = <SensorDataMock>[
+      _buffer[currinterval] = <SensorData>[
         _buffer[currinterval].reduce(
           (current, next) =>
-              (current.data[axis] > next.data[axis]) ? current : next,
+              (current.data[axis]! > next.data[axis]!) ? current : next,
         ),
       ];
     }
@@ -114,10 +122,10 @@ class FilterTools {
   void getMin({Duration interval = Duration.zero, int axis = 0}) {
     _splitBuffer(interval);
     for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
-      _buffer[currinterval] = <SensorDataMock>[
+      _buffer[currinterval] = <SensorData>[
         _buffer[currinterval].reduce(
           (current, next) =>
-              (current.data[axis] < next.data[axis]) ? current : next,
+              (current.data[axis]! < next.data[axis]!) ? current : next,
         ),
       ];
     }
@@ -135,7 +143,7 @@ class FilterTools {
           currEntry < _buffer[currinterval].length;
           currEntry++) {
         for (var r = 0; r < axisAmount; r++) {
-          avgData[r] += _buffer[currinterval][currEntry].data[r];
+          avgData[r] += _buffer[currinterval][currEntry].data[r]!;
         }
       }
       for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
@@ -144,11 +152,11 @@ class FilterTools {
         );
       }
       var lastEntry = _buffer[currinterval].last;
-      var avgEntry = SensorDataMock(
+      var avgEntry = SensorData(
         data: avgData,
         maxPrecision: lastEntry.maxPrecision,
-        sensorID: lastEntry.sensorID,
-        setTime: lastEntry.dateTime,
+        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
+        unit: lastEntry.unit,
       );
       _buffer[currinterval]
         ..clear()
@@ -165,18 +173,18 @@ class FilterTools {
       var sumData = List<double>.generate(axisAmount, (index) => 0);
       for (var j = 0; j < _buffer[i].length; j++) {
         for (var r = 0; r < axisAmount; r++) {
-          sumData[r] += _buffer[i][j].data[r];
+          sumData[r] += _buffer[i][j].data[r]!;
         }
       }
       for (var r = 0; r < axisAmount; r++) {
         sumData[r] = double.parse(sumData[r].toStringAsFixed(_precision));
       }
       var lastEntry = _buffer[i].last;
-      var sumEntry = SensorDataMock(
+      var sumEntry = SensorData(
         data: sumData,
         maxPrecision: lastEntry.maxPrecision,
-        sensorID: lastEntry.sensorID,
-        setTime: lastEntry.dateTime,
+        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
+        unit: lastEntry.unit,
       );
       _buffer[i]
         ..clear()
@@ -201,7 +209,7 @@ class FilterTools {
   void getMode({Duration interval = Duration.zero, int axis = 0}) {
     _splitBuffer(interval);
     var maxCount = 0;
-    var modeData = <double>[];
+    var modeData = <double?>[];
     for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       for (var currEntry = 0;
           currEntry < _buffer[currinterval].length;
@@ -221,11 +229,11 @@ class FilterTools {
         }
       }
       var lastEntry = _buffer[currinterval].last;
-      var modeEntry = SensorDataMock(
+      var modeEntry = SensorData(
         data: modeData,
         maxPrecision: lastEntry.maxPrecision,
-        sensorID: lastEntry.sensorID,
-        setTime: lastEntry.dateTime,
+        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
+        unit: lastEntry.unit,
       );
       _buffer[currinterval]
         ..clear()
@@ -249,12 +257,14 @@ class FilterTools {
           currEntry++) {
         for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
           if (maxData[currAxis] <
-              _buffer[currinterval][currEntry].data[currAxis]) {
-            maxData[currAxis] = _buffer[currinterval][currEntry].data[currAxis];
+              _buffer[currinterval][currEntry].data[currAxis]!) {
+            maxData[currAxis] =
+                _buffer[currinterval][currEntry].data[currAxis]!;
           }
           if (minData[currAxis] >
-              _buffer[currinterval][currEntry].data[currAxis]) {
-            minData[currAxis] = _buffer[currinterval][currEntry].data[currAxis];
+              _buffer[currinterval][currEntry].data[currAxis]!) {
+            minData[currAxis] =
+                _buffer[currinterval][currEntry].data[currAxis]!;
           }
         }
       }
@@ -265,11 +275,11 @@ class FilterTools {
         );
       }
       var lastEntry = _buffer[currinterval].last;
-      var rangeEntry = SensorDataMock(
+      var rangeEntry = SensorData(
         data: rangeData,
         maxPrecision: lastEntry.maxPrecision,
-        sensorID: lastEntry.sensorID,
-        setTime: lastEntry.dateTime,
+        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
+        unit: lastEntry.unit,
       );
       _buffer[currinterval]
         ..clear()
@@ -288,16 +298,16 @@ class FilterTools {
       for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
         var tmpAxisData = <double>[];
         for (var currEntry = 0; currEntry < tmpList.length; currEntry++) {
-          tmpAxisData.add(tmpList[currEntry].data[currAxis]);
+          tmpAxisData.add(tmpList[currEntry].data[currAxis]!);
         }
         medianData.add(_calculateMedian(tmpAxisData));
       }
       var lastEntry = _buffer[currinterval].last;
-      var medianEntry = SensorDataMock(
+      var medianEntry = SensorData(
         data: medianData,
         maxPrecision: lastEntry.maxPrecision,
-        sensorID: lastEntry.sensorID,
-        setTime: lastEntry.dateTime,
+        unit: lastEntry.unit,
+        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
       );
       _buffer[currinterval]
         ..clear()
@@ -321,8 +331,8 @@ class FilterTools {
         for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
           varianceList[currAxis] += (1 / _buffer[currinterval].length) *
               pow(
-                averageData[currAxis] -
-                    _buffer[currinterval][currEntry].data[currAxis],
+                averageData[currAxis]! -
+                    _buffer[currinterval][currEntry].data[currAxis]!,
                 2,
               );
         }
@@ -333,11 +343,11 @@ class FilterTools {
         ),
       );
       var lastEntry = _buffer[currinterval].last;
-      var sdEntry = SensorDataMock(
+      var sdEntry = SensorData(
         data: sdData.toList(),
         maxPrecision: lastEntry.maxPrecision,
-        sensorID: lastEntry.sensorID,
-        setTime: lastEntry.dateTime,
+        unit: lastEntry.unit,
+        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
       );
       _buffer[currinterval]
         ..clear()
@@ -347,5 +357,5 @@ class FilterTools {
   }
 
   ///Returns result of querry.
-  List<SensorDataMock> result() => _buffer[0];
+  List<SensorData> result() => _buffer[0];
 }

@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:6244136084561409203",
-      "lastPropertyId": "5:4945270714076906575",
+      "lastPropertyId": "6:2292311947347465684",
       "name": "SensorDataDTO",
       "properties": [
         {
@@ -33,6 +33,11 @@
           "id": "5:4945270714076906575",
           "name": "dateTime",
           "type": 10
+        },
+        {
+          "id": "6:2292311947347465684",
+          "name": "unit",
+          "type": 6
         }
       ],
       "relations": []

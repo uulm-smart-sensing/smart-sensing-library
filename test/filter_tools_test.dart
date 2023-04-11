@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/filter_tools.dart';
-import 'package:smart_sensing_library/sensor_data_mock.dart';
 
 void main() {
   var randomTestDataset = createRandomTestData();
@@ -18,7 +17,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getMax(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getMin in interval with random data", () {
@@ -28,7 +27,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getMin(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getAvg in interval with random data", () {
@@ -38,7 +37,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getAvg(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getCount in interval with random data", () {
@@ -58,7 +57,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getMedian(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getMode in interval with random data", () {
@@ -68,7 +67,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getMode(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getRange in interval with random data", () {
@@ -78,7 +77,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getRange(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getSum in interval with random data", () {
@@ -88,7 +87,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getSum(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
 
     test("Test getSD in interval with random data", () {
@@ -98,7 +97,7 @@ void main() {
       var filterTest = FilterTools(randomTestDataset)
         ..getSD(interval: const Duration(days: 30));
 
-      expect(filter.result(), containsAllInOrder(filterTest.result()));
+      expect(filter.result(), SensorDataMatcher(filterTest.result()));
     });
   });
 
@@ -249,80 +248,86 @@ void main() {
   });
 }
 
-List<SensorDataMock> createRandomTestData() {
-  var testData = <SensorDataMock>[];
+List<SensorData> createRandomTestData() {
+  var testData = <SensorData>[];
   for (var i = 0; i < 30; i++) {
     testData.add(
-      SensorDataMock(
+      SensorData(
         data: [
           Random().nextDouble() * 360,
           Random().nextDouble() * 360,
           Random().nextDouble() * 360,
         ],
         maxPrecision: 1,
-        sensorID: SensorId.accelerometer,
-        setTime: DateTime(
+        timestampInMicroseconds: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ),
+        ).microsecondsSinceEpoch,
+        unit: Unit.bar,
       ),
     );
   }
   testData.sort(
-    (a, b) => a.dateTime.compareTo(b.dateTime),
+    (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
+        .compareTo(
+      DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
+    ),
   );
   return testData;
 }
 
-List<SensorDataMock> createDeterminedTestData() {
-  var testData = <SensorDataMock>[];
+List<SensorData> createDeterminedTestData() {
+  var testData = <SensorData>[];
   for (var i = 0; i < 30; i++) {
     testData.add(
-      SensorDataMock(
+      SensorData(
         data: [
           i + 0.1,
           i + 10.2,
           i + 100.3,
         ],
         maxPrecision: 1,
-        sensorID: SensorId.accelerometer,
-        setTime: DateTime(
+        unit: Unit.bar,
+        timestampInMicroseconds: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ),
+        ).microsecondsSinceEpoch,
       ),
     );
   }
   testData
     ..add(
-      SensorDataMock(
+      SensorData(
         data: const [
           0.1,
           10.2,
           100.3,
         ],
         maxPrecision: 1,
-        sensorID: SensorId.accelerometer,
-        setTime: DateTime(
+        unit: Unit.bar,
+        timestampInMicroseconds: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ),
+        ).microsecondsSinceEpoch,
       ),
     )
     ..sort(
-      (a, b) => a.dateTime.compareTo(b.dateTime),
+      (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
+          .compareTo(
+        DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
+      ),
     );
   return testData;
 }
 
-List<SensorDataMock> createDataForSplitting() {
-  var testData = <SensorDataMock>[];
+List<SensorData> createDataForSplitting() {
+  var testData = <SensorData>[];
   for (var month = 1; month < 13; month++) {
     for (var day = 1; day < 32; day++) {
       for (var hour = 0; hour < 24; hour++) {
@@ -334,21 +339,21 @@ List<SensorDataMock> createDataForSplitting() {
             continue;
           }
           testData.add(
-            SensorDataMock(
+            SensorData(
               data: [
                 month.toDouble(),
                 day.toDouble(),
                 hour.toDouble(),
               ],
               maxPrecision: 1,
-              sensorID: SensorId.accelerometer,
-              setTime: DateTime.utc(
+              unit: Unit.celsius,
+              timestampInMicroseconds: DateTime.utc(
                 2023,
                 month,
                 day,
                 hour,
                 minute,
-              ),
+              ).microsecondsSinceEpoch,
             ),
           );
         }
@@ -356,8 +361,41 @@ List<SensorDataMock> createDataForSplitting() {
     }
   }
   testData.sort(
-    (a, b) => a.dateTime.compareTo(b.dateTime),
+    (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
+        .compareTo(
+      DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
+    ),
   );
 
   return testData;
+}
+
+class SensorDataMatcher extends Matcher {
+  final List<SensorData> _thisList;
+
+  SensorDataMatcher(this._thisList);
+
+  @override
+  Description describe(Description description) =>
+      description.add("The same sensor data.");
+
+  @override
+  bool matches(dynamic item, Map matchState) {
+    var matchList = item as List<SensorData>;
+    if (matchList.length != _thisList.length) {
+      return false;
+    }
+    for (var i = 0; i < _thisList.length; i++) {
+      if (!_isSameSensorData(matchList[i], _thisList[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _isSameSensorData(SensorData a, SensorData b) =>
+      containsAllInOrder(a.data).matches(b.data, {}) &&
+      a.maxPrecision == b.maxPrecision &&
+      a.timestampInMicroseconds == b.timestampInMicroseconds &&
+      a.unit == b.unit;
 }
