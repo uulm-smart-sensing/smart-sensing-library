@@ -19,7 +19,9 @@ class UnitSelectionButton extends Container {
   }) : super(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 23, 27, 137),
+            color: isSelected
+                ? const Color.fromARGB(255, 218, 188, 255)
+                : const Color.fromARGB(255, 23, 27, 137),
             borderRadius: BorderRadius.circular(20),
           ),
           child: SelectionButton(

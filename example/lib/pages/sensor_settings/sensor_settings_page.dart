@@ -62,7 +62,12 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
 
     var applyButton = Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
-      child: CustomTextButton(text: "Apply", onPressed: () {}),
+      child: CustomTextButton(
+        text: "Apply",
+        onPressed: () {
+          // TODO: Apply settings
+        },
+      ),
     );
 
     return SmartSensingAppBar(
