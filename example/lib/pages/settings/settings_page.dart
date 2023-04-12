@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../home/device_widget.dart';
+import '../home/home_page.dart';
 import '../import_export/import_export_page.dart';
 import '../information/information_page.dart';
 import '../sensor_search/sensor_search_page.dart';
 import 'settings_widget.dart';
 
+///Page provide an overview of all possible settings and further information.
+///
+///This [SettingsPage] is reachable through the [HomePage].
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -15,6 +19,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  /// This List contains all possible Settings which the User can navigate
   List<SettingsWidget> settings = [
     const SettingsWidget(
       title: 'Sensors',
@@ -42,6 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
     ),
   ];
 
+  /// Widget that display the list of Settings on the Page
   @override
   Widget build(BuildContext context) {
     Widget body = ListView.builder(
