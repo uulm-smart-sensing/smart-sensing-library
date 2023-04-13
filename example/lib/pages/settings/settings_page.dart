@@ -23,12 +23,6 @@ class SettingsPage extends StatelessWidget {
       direction: SensorSearchPage(),
     ),
     const SettingsWidget(
-      title: 'Devices',
-      subtitle: 'overview of all usable devices',
-      icon: Icons.devices_other,
-      direction: DeviceWidget(),
-    ),
-    const SettingsWidget(
       title: 'Import/Export',
       subtitle: 'import & export of Sensor Data',
       icon: Icons.ios_share_outlined,
