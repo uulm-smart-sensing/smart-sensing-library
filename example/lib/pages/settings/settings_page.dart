@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../general_widgets/smart_sensing_appbar.dart';
-import '../home/device_widget.dart';
+import '../../theme.dart';
 import '../home/home_page.dart';
 import '../import_export/import_export_page.dart';
 import '../information/information_page.dart';
@@ -49,20 +49,19 @@ class SettingsPage extends StatelessWidget {
               settings[index].title,
               style: const TextStyle(
                 fontSize: 24,
-                color: Color.fromARGB(255, 255, 255, 255),
               ),
             ),
             subtitle: Text(
               settings[index].subtitle,
               style: const TextStyle(
                 fontSize: 14,
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: Colors.white,
               ),
             ),
             leading: Icon(
               settings[index].icon,
               size: 35,
-              color: const Color.fromARGB(255, 255, 255, 255),
+              color: Colors.white,
             ),
             onTap: () {
               Navigator.of(context).push(
