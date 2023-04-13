@@ -11,16 +11,11 @@ import 'settings_widget.dart';
 ///Page provide an overview of all possible settings and further information.
 ///
 ///This [SettingsPage] is reachable through the [HomePage].
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+class SettingsPage extends StatelessWidget {
+  SettingsPage({super.key});
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
   /// This List contains all possible Settings which the User can navigate
-  List<SettingsWidget> settings = [
+  final List<SettingsWidget> settings = [
     const SettingsWidget(
       title: 'Sensors',
       subtitle: 'overview of all Sensors',
