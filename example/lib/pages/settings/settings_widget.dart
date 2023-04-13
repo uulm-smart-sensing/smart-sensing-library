@@ -41,6 +41,7 @@ class SettingsWidget extends StatelessWidget {
     required this.direction,
   });
 
+  /// Widget that display the list of Settings on the Page
   @override
   Widget build(BuildContext context) => Column(
         children: [
