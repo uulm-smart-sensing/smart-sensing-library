@@ -5,6 +5,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../general_widgets/custom_datetime_picker_widget.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
+import 'import_export_page.dart';
 
 class ManualExportPage extends StatefulWidget {
   /// The selected [SensorId] of the sensors, whose data should be exported.
@@ -135,5 +136,14 @@ class _ManualExportPageState extends State<ManualExportPage> {
       // TODO: call smart sensing library with 'selectedDirectory'
       // and 'selectedSensorIdForExport' and the dates
     }
+
+    // Return to "Import / Export" page
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ImportExportPage(),
+      ),
+    );
   }
 }
