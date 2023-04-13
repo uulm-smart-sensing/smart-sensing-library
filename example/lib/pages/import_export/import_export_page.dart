@@ -41,9 +41,6 @@ class _ImportExportPageState extends State<ImportExportPage> {
   SensorId? _selectedSensorIdForExport;
   bool _exportForAllSensorIds = false;
 
-  DateTime? _startDateTimeForExport;
-  DateTime? _endDateTimeForExport;
-
   /// Setter methods for defining the state of this page by the
   /// 'Import' and 'Export' widgets.
 
@@ -68,18 +65,6 @@ class _ImportExportPageState extends State<ImportExportPage> {
   void _setExportForAllSensorIds(bool exportForAllSensorIds) {
     setState(() {
       _exportForAllSensorIds = exportForAllSensorIds;
-    });
-  }
-
-  void _setStartDateForExport(DateTime startDateTimeForExport) {
-    setState(() {
-      _startDateTimeForExport = startDateTimeForExport;
-    });
-  }
-
-  void _setEndDateForExport(DateTime endDateTimeForExport) {
-    setState(() {
-      _endDateTimeForExport = endDateTimeForExport;
     });
   }
 
@@ -141,8 +126,8 @@ class _ImportExportPageState extends State<ImportExportPage> {
       context,
       MaterialPageRoute(
         builder: (context) => ManualExportPage(
-          setStartDatetime: _setStartDateForExport,
-          setEndDatetime: _setEndDateForExport,
+          selectedSensorIdForExport: _selectedSensorIdForExport!,
+          exportForAllSensorIds: _exportForAllSensorIds,
         ),
       ),
     );
@@ -211,8 +196,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
             // TODO: delete or restructure as soon as call to smart sensing
             // library is realized and datetimes are used
             child: Text(
-              """
-time interval:       $_startDateTimeForExport - $_endDateTimeForExport""",
+              "time interval:",
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
