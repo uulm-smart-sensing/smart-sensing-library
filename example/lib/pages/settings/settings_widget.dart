@@ -12,7 +12,7 @@ import 'settings_page.dart';
 ///
 /// This [SettingsWidget] can be used on the [SettingsPage] to display a
 /// Settings.
-class SettingsWidget {
+class SettingsWidget extends StatelessWidget {
   /// The title of the page
   ///
   /// For example 'Sensors'
@@ -34,9 +34,44 @@ class SettingsWidget {
   final Widget direction;
 
   const SettingsWidget({
+    super.key,
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.direction,
   });
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          ListTile(
+            title: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 24,
+              ),
+            ),
+            subtitle: Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
+            leading: Icon(
+              icon,
+              size: 35,
+              color: Colors.white,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => direction,
+                ),
+              );
+            },
+          ),
+          const Divider(),
+        ],
+      );
 }
