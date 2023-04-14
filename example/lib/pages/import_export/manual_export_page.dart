@@ -7,6 +7,16 @@ import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import 'import_export_page.dart';
 
+/// Page for manually set the timeinterval for exporting sensor data the smart
+/// sensing library.
+///
+/// Therefor this [ManualExportPage] shows two [CustomDatetimePickerWidget]s
+/// combined with the information, whether the selector is for the start or
+/// the end [DateTime].
+/// These picker allows the user to specify the time interval at which the
+/// sensor data will be exported.
+///
+/// This [ManualExportPage] is reachable through the [ImportExportPage].
 class ManualExportPage extends StatefulWidget {
   /// The selected [SensorId] of the sensors, whose data should be exported.
   final SensorId selectedSensorIdForExport;
@@ -26,8 +36,10 @@ class ManualExportPage extends StatefulWidget {
 }
 
 class _ManualExportPageState extends State<ManualExportPage> {
+  /// The currently set start [DateTime] for the export.
   DateTime startDatetime = DateTime.now();
 
+  /// The currently set end [DateTime] for the export.
   DateTime endDatetime = DateTime.now();
 
   /// Setter methods for defining the state of this page by the
@@ -98,6 +110,8 @@ class _ManualExportPageState extends State<ManualExportPage> {
     );
   }
 
+  /// Creates a time selector widget with additional information
+  /// based on the [CustomDatetimePickerWidget].
   Widget _getTimeSelector(
     String name,
     BuildContext context,
@@ -124,6 +138,16 @@ class _ManualExportPageState extends State<ManualExportPage> {
         ),
       );
 
+  /// Exports all sensor data of a specified sensor into a generated file, which
+  /// will be located in the picked "selectedDirectory".
+  ///
+  /// Therefor a directory picker is opened, where the user can select the
+  /// directory, where the sensor data should be exported to. If the
+  /// selected directory is valid it is delegated to the 'Import / Export'
+  /// module in the smart sensing library combined with the set start and end
+  /// datetime for the export.
+  ///
+  /// Afterwards the user will be navigated back to the [ImportExportPage].
   Future<void> _exportWithCustomTimeInterval() async {
     var selectedDirectory = await FilePicker.platform.getDirectoryPath();
 

@@ -121,6 +121,8 @@ class _ImportExportPageState extends State<ImportExportPage> {
     }
   }
 
+  /// Opens the [ManualExportPage] so the user can manually select the time
+  /// interval for the export of sensor data.
   void selectTimeIntervalForExport() {
     Navigator.push(
       context,
