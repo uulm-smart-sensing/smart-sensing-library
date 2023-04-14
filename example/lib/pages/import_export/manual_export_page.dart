@@ -139,11 +139,6 @@ class _ManualExportPageState extends State<ManualExportPage> {
 
     // Return to "Import / Export" page
 
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ImportExportPage(),
-      ),
-    );
+    Navigator.pop(context);
   }
 }
