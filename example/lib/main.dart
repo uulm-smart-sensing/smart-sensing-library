@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'pages/home/home_page.dart';
-import 'pages/import_export/import_export_page.dart';
 import 'theme.dart';
 
 void main() async {
@@ -21,6 +20,6 @@ class SmartSensingLibraryDemoApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Smart Sensing Library Demo',
         theme: theme,
-        home: const ImportExportPage(),
+        home: const HomePage(),
       );
 }
