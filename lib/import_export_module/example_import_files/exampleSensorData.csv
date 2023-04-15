@@ -1,0 +1,3 @@
+sensorId;Unit;maxPrecision;timestampInMicroseconds;data;;
+linearAcceleration;metersPerSquareSecond;5;1681561948;1,4;0;9,81
+linearAcceleration;gravitationalForce;5;1681562008;0,2;0;1
