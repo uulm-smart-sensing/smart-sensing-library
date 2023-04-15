@@ -7,7 +7,7 @@
                 0,
                 9.81
             ],
-            "unit": "metersPerSquareSecond",
+            "unit": "metersPerSecondSquared",
             "maxPrecision": 5,
             "timestampInMicroseconds": 1681561948
         },
