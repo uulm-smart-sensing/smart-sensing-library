@@ -51,6 +51,36 @@ enum SupportedFileFormats {
   /// |-------------|---------|------------|------------|----|------|------|
   /// |accelerometer|meters...|2           |1681561948  |0.1 |0.15  |0.6   |
   /// |accelerometer|meters...|2           |1681561949  |0.1 |0.15  |      |
-
   csv,
+
+  /// Using the `xlsx` file format (so using a Excel spreadsheet) means, the
+  /// sensor data need to be / are encoded in the following way in the table:
+  ///
+  /// |SensorId     |Unit     |maxPrecision|timestamp...|Data           |
+  /// |-------------|---------|------------|------------|---------------|
+  /// |accelerometer|meters...|2           |1681561948  |0.1, 0.15, 0.6 |
+  /// |accelerometer|meters...|2           |1681561949  |0.1, 0.15 |
+  ///
+  /// The array of datapoints is encoded as ', ' (whitespace!) seperated list
+  /// in one cell, so similar as described for the `csv` file format, but with
+  /// only **one** cell for the data array and not multiple.
+  xlsx,
+
+  /// Using the `xml` file format means, the sensor data need to be / are
+  /// encoded in the following way (example values!):
+  ///
+  /// ```xml
+  /// <root>
+  /// <sensorId>sensorId (in camelCase), e. g. accelerometer</sensorId>
+  /// <sensorData>
+  ///  <data>0</data>
+  ///  <data>0.1</data>
+  ///  <data>1.3</data>
+  ///  <unit>unit (in camelCase, e. g. metersPerSecondSquared</unit>
+  ///  <maxPrecision>2</maxPrecision>
+  ///  <timestampInMicroseconds>1681560654</timestampInMicroseconds>
+  /// </sensorData>
+  /// </root>
+  /// ```
+  // xml,
 }
