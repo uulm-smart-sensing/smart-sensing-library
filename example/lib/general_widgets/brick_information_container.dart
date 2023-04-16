@@ -1,44 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import 'stylized_container.dart';
 
-class BrickContainer extends StatefulWidget{
+class BrickContainer extends StatelessWidget {
   final String headLine;
   final Icon icon;
-  String mainData;
-  int lastUpdate;
+  final double? width;
+  final double? height;
+  final Stream<SensorData> dataStream;
   final Function() onClick;
-  BrickContainer({super.key, required this.headLine, required this.icon,
-  required this.mainData, required this.lastUpdate, required this.onClick,});
+  const BrickContainer({
+    super.key,
+    required this.headLine,
+    required this.icon,
+    required this.onClick,
+    this.height = 100,
+    this.width = 100,
+    required this.dataStream,
+  });
 
   @override
-  State<BrickContainer> createState() => _BrickContainerState();
-
+  Widget build(BuildContext context) => InkWell(
+        onTap: onClick,
+        child: StylizedContainer(
+          alignment: Alignment.center,
+          width: width,
+          height: height,
+          child: _BrickInformation(
+            headLine: headLine,
+            icon: icon,
+            dataStream: dataStream,
+          ),
+        ),
+      );
 }
 
-class _BrickContainerState extends State<BrickContainer>{
-  @override
-  Widget build(BuildContext context) =>
-  StylizedContainer(alignment: Alignment.center,
-  width: 100 ,height: 100, child: _BrickInformation(),);
+class _BrickInformation extends StatefulWidget {
+  final String headLine;
+  final Icon icon;
+  final Stream<SensorData> dataStream;
 
-}
-
-class _BrickInformation extends StatefulWidget{
-
+  const _BrickInformation({
+    required this.headLine,
+    required this.icon,
+    required this.dataStream,
+  });
 
   @override
   State<_BrickInformation> createState() => _BrickInformationState();
-
 }
 
-class _BrickInformationState extends State<_BrickInformation>{
+class _BrickInformationState extends State<_BrickInformation> {
+  Duration lastUpdate = Duration.zero;
+  DateTime lastTimeStamp = DateTime.now().toUtc();
+  List<double?> mainData = [];
+  _BrickInformationState() {
+    widget.dataStream.listen((event) {
+      setState(() {
+        var tmpDateTime =
+            DateTime.fromMicrosecondsSinceEpoch(event.timestampInMicroseconds);
+        lastUpdate = tmpDateTime.difference(lastTimeStamp);
+        lastTimeStamp = tmpDateTime;
+        mainData = event.data;
+      });
+    }, onDone: () => {
+      ///DO Done stuff
+    });
+  }
+
   @override
-  Widget build(BuildContext context)
-    => Column(children: const [
-       Text("Test"),
-    ],)
-  ;
+  Widget build(BuildContext context) => Column(
+        children: [
+          Row(
+            children: [Text(widget.headLine), widget.icon],
+          ),
+          Text(_fromData(mainData)),
+          const Text("Latest update:"),
+          Text(lastUpdate.toString()),
+        ],
+      );
+}
 
-
+String _fromData(List<double?> data){
+  var result = "";
+  for (var element in data) {
+   result += element?.toString() ?? "";
+  }
+  return result;
 }
