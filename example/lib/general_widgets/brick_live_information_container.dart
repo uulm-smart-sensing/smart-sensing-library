@@ -131,9 +131,9 @@ String _fromData(List<double?> data, Unit unit) {
 String _unitConverter(Unit unit) {
   switch (unit) {
     case Unit.metersPerSecondSquared:
-      return "m/s";
+      return "m/s²";
     case Unit.gravitationalForce:
-      return "m/s^2";
+      return "N";
     case Unit.radiansPerSecond:
       return "rad/s";
     case Unit.degreesPerSecond:
