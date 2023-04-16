@@ -3,14 +3,16 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import 'stylized_container.dart';
 
-class BrickContainer extends StatelessWidget {
+class BrickLiveInformationContainer extends StatelessWidget {
   final String headLine;
   final Icon icon;
   final double? width;
   final double? height;
   final Stream<SensorData> dataStream;
   final Function() onClick;
-  const BrickContainer({
+  final Function()? onDone;
+
+  const BrickLiveInformationContainer({
     super.key,
     required this.headLine,
     required this.icon,
@@ -18,6 +20,7 @@ class BrickContainer extends StatelessWidget {
     this.height = 100,
     this.width = 100,
     required this.dataStream,
+    this.onDone,
   });
 
   @override
@@ -27,35 +30,37 @@ class BrickContainer extends StatelessWidget {
           alignment: Alignment.center,
           width: width,
           height: height,
-          child: _BrickInformation(
+          child: _BrickLiveInformation(
             headLine: headLine,
             icon: icon,
             dataStream: dataStream,
+            onDone: onDone,
           ),
         ),
       );
 }
 
-class _BrickInformation extends StatefulWidget {
+class _BrickLiveInformation extends StatefulWidget {
   final String headLine;
   final Icon icon;
   final Stream<SensorData> dataStream;
-
-  const _BrickInformation({
+  final Function()? onDone;
+  const _BrickLiveInformation({
     required this.headLine,
     required this.icon,
     required this.dataStream,
+    this.onDone,
   });
 
   @override
-  State<_BrickInformation> createState() => _BrickInformationState();
+  State<_BrickLiveInformation> createState() => _BrickLiveInformationState();
 }
 
-class _BrickInformationState extends State<_BrickInformation> {
+class _BrickLiveInformationState extends State<_BrickLiveInformation> {
   Duration lastUpdate = Duration.zero;
   DateTime lastTimeStamp = DateTime.now().toUtc();
   List<double?> mainData = [];
-  _BrickInformationState() {
+  _BrickLiveInformationState() {
     widget.dataStream.listen((event) {
       setState(() {
         var tmpDateTime =
@@ -64,9 +69,8 @@ class _BrickInformationState extends State<_BrickInformation> {
         lastTimeStamp = tmpDateTime;
         mainData = event.data;
       });
-    }, onDone: () => {
-      ///DO Done stuff
-    });
+    }, onDone: widget.onDone,
+    );
   }
 
   @override
