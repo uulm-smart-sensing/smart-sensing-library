@@ -8,19 +8,17 @@ class BrickLiveInformationContainer extends StatelessWidget {
   final Icon icon;
   final double? width;
   final double? height;
-  final Stream<SensorData> dataStream;
+  final Stream<SensorData>? dataStream;
   final Function() onClick;
-  final Function()? onDone;
 
   const BrickLiveInformationContainer({
     super.key,
     required this.headLine,
     required this.icon,
     required this.onClick,
-    this.height = 100,
-    this.width = 100,
+    this.height = 150,
+    this.width = 150,
     required this.dataStream,
-    this.onDone,
   });
 
   @override
@@ -34,7 +32,6 @@ class BrickLiveInformationContainer extends StatelessWidget {
             headLine: headLine,
             icon: icon,
             dataStream: dataStream,
-            onDone: onDone,
           ),
         ),
       );
@@ -43,13 +40,11 @@ class BrickLiveInformationContainer extends StatelessWidget {
 class _BrickLiveInformation extends StatefulWidget {
   final String headLine;
   final Icon icon;
-  final Stream<SensorData> dataStream;
-  final Function()? onDone;
+  final Stream<SensorData>? dataStream;
   const _BrickLiveInformation({
     required this.headLine,
     required this.icon,
     required this.dataStream,
-    this.onDone,
   });
 
   @override
@@ -60,36 +55,68 @@ class _BrickLiveInformationState extends State<_BrickLiveInformation> {
   Duration lastUpdate = Duration.zero;
   DateTime lastTimeStamp = DateTime.now().toUtc();
   List<double?> mainData = [];
-  _BrickLiveInformationState() {
-    widget.dataStream.listen((event) {
-      setState(() {
-        var tmpDateTime =
-            DateTime.fromMicrosecondsSinceEpoch(event.timestampInMicroseconds);
-        lastUpdate = tmpDateTime.difference(lastTimeStamp);
-        lastTimeStamp = tmpDateTime;
-        mainData = event.data;
-      });
-    }, onDone: widget.onDone,
+  @override
+  void initState() {
+    super.initState();
+    widget.dataStream?.listen(
+      (event) {
+        setState(() {
+          var tmpDateTime = DateTime.fromMicrosecondsSinceEpoch(
+              event.timestampInMicroseconds);
+          lastUpdate = tmpDateTime.difference(lastTimeStamp);
+          lastTimeStamp = tmpDateTime;
+          mainData = event.data;
+        });
+      },
     );
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          Row(
-            children: [Text(widget.headLine), widget.icon],
-          ),
-          Text(_fromData(mainData)),
-          const Text("Latest update:"),
-          Text(lastUpdate.toString()),
-        ],
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(left: 16, right: 11, top: 14),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  widget.headLine,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    fontFamily: "Ubuntu",
+                  ),
+                ),
+                const Spacer(),
+                widget.icon,
+              ],
+            ),
+            Text(_fromData(mainData)),
+            const Text(
+              "Latest update:",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                fontFamily: "Ubuntu",
+              ),
+            ),
+            Text(
+              lastUpdate.toString(),
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                fontFamily: "Ubuntu",
+              ),
+            ),
+          ],
+        ),
       );
 }
 
-String _fromData(List<double?> data){
+String _fromData(List<double?> data) {
   var result = "";
   for (var element in data) {
-   result += element?.toString() ?? "";
+    result += element?.toString() ?? "";
   }
   return result;
 }
