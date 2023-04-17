@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../date_formatter.dart';
@@ -42,9 +44,7 @@ class _CustomDatetimePickerWidgetState
         onPressed: () async {
           selectedDateTime = (await DatePicker.showDateTimePicker(
             context,
-
-            /// TODO: figure out a way to get the locale of the device
-            locale: LocaleType.de,
+            locale: getLocaleTypeFromSystemLocale(),
             onChanged: (time) => {
               setState(
                 () {
@@ -77,4 +77,22 @@ class _CustomDatetimePickerWidgetState
       "${formatDate(dateTime: selectedDateTime, extendWithDayName: true)}  "
       " ${selectedDateTime.hour.toString().padLeft(2, "0")} : "
       " ${selectedDateTime.minute.toString().padLeft(2, "0")}";
+
+  /// Converts the system locale to a LocaleType.
+  ///
+  /// The system locale is determined with the `Platform.locale` (type: String)
+  /// and the localeType (type: LocaleType) is used by the `DatePicker` package.
+  ///
+  /// The default return value is _LocaleType.de_, because LocaleType don't
+  /// support all locales that are theoretically possible and could be get
+  /// by `Platform.localeName`.
+  LocaleType getLocaleTypeFromSystemLocale() {
+    var systemLocale = Platform.localeName.split("_")[0];
+    var localeType = LocaleType.values.firstWhere(
+      (element) => element.toString() == systemLocale,
+      orElse: () => LocaleType.de,
+    );
+
+    return localeType;
+  }
 }
