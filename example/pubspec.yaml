@@ -32,6 +32,7 @@ dependencies:
     path: ../
   intl: ^0.18.0
   file_picker: ^5.2.7
+  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:

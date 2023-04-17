@@ -7,7 +7,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../date_formatter.dart';
 import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';
-import '../../utils.dart';
+import '../../text_formatter.dart';
 import 'historic_view_page.dart';
 import 'time_selection_button.dart';
 import 'visualization_selection_button.dart';
