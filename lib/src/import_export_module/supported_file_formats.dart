@@ -57,8 +57,7 @@ enum SupportedFileFormat {
   /// |accelerometer|meters...|2           |1681561949  |0.1, 0.15 |
   ///
   /// The array of datapoints is encoded as ', ' (whitespace!) seperated list
-  /// in one cell, so similar as described for the `csv` file format, but with
-  /// only **one** cell for the data array and not multiple.
+  /// in one cell.
   ///
   /// The data will be stored in only one sheet named 'sensor_data' and so
   /// eventually contain the sensor data of multiple sensors.
