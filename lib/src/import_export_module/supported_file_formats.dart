@@ -86,5 +86,5 @@ enum SupportedFileFormat {
   /// </sensorData>
   /// </root>
   /// ```
-  // xml,
+  xml,
 }
