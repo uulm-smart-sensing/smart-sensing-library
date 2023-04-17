@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../date_formatter.dart';
+import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';
 import '../../utils.dart';
 import 'historic_view_page.dart';
@@ -39,7 +40,7 @@ class HistoricViewPageBody extends StatefulWidget {
 }
 
 class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
-  var selectedFilter = _Filter.noFilter;
+  _Filter? selectedFilter;
   var selectedDuration = const Duration(minutes: 5);
   var selectedVisualization = _Visualization.table;
   late Map<int, TableColumnWidth> columnWidths;
@@ -127,42 +128,27 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
 
     // Selection between different filters
     // When filter is selected, new filter will be applied to table/graph
-    var filterSelectionDropdown = StylizedContainer(
-      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 15),
-      width: double.infinity,
-      child: DropdownButton(
-        isExpanded: true,
-        isDense: true,
-        iconSize: 30,
-        icon: const Icon(Icons.keyboard_arrow_down_rounded),
-        iconEnabledColor: Colors.white,
-        underline: const SizedBox.shrink(),
-        value: selectedFilter,
-        dropdownColor: Theme.of(context).cardColor,
-        items: [
-          const DropdownMenuItem(
-            enabled: false,
-            value: _Filter.noFilter,
-            child: Text("Please select a filter"),
-          ),
-          // Create the rest of the filters automatically
-          ..._Filter.values.where((value) => value != _Filter.noFilter).map(
-                (value) => DropdownMenuItem(
-                  value: value,
-                  child: Text(formatPascalCase(value.name)),
-                ),
-              ),
-        ],
-        onChanged: (newFilter) {
-          if (newFilter == null) {
-            return;
-          }
+    var filterSelectionDropdown = CustomDropdownButton(
+      hint: "Please select a filter",
+      value: selectedFilter,
+      isDense: true,
+      items: _Filter.values
+          .map(
+            (value) => DropdownMenuItem(
+              value: value,
+              child: Text(formatPascalCase(value.name)),
+            ),
+          )
+          .toList(),
+      onChanged: (newFilter) {
+        if (newFilter == null) {
+          return;
+        }
 
-          setState(() {
-            selectedFilter = newFilter;
-          });
-        },
-      ),
+        setState(() {
+          selectedFilter = newFilter;
+        });
+      },
     );
 
     // Selection between different visualizations (graph and table)
