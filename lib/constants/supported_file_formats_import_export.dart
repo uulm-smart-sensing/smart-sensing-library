@@ -41,8 +41,8 @@ enum SupportedFileFormat {
   /// ```
   ///
   /// The `Data` column is the last, because depending on how many different
-  /// data points the sensor produce, these additional data points can be added
-  /// (sperated with _;_) at the end.
+  /// data points the sensor produces, these additional data points can be added
+  /// (seperated with _;_) at the end.
   ///
   /// So opening the sensor data encoded in `csv` in a spreadsheet program,
   /// would like this (example values!):
