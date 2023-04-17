@@ -15,13 +15,13 @@ enum SupportedFileFormat {
   ///
   /// ```json
   /// {
-  /// 	"sensorId": "<sensorId in camelCase>, e. g. 'accelerometer'",
-  /// 	"sensorData": [{
+  ///   "sensorId": "<sensorId in camelCase>, e. g. 'accelerometer'",
+  ///   "sensorData": [{
   ///      "data": [0, 0.1, 1.3],
   ///      "unit": "<unit in camelCase>, e. g. 'metersPerSecondSquared'",
-  /// 		 "maxPrecision": 2,
-  /// 		 "timestampInMicroseconds": 1681560654,
-  /// 	}]
+  ///      "maxPrecision": 2,
+  ///      "timestampInMicroseconds": 1681560654,
+  ///   }]
   /// }
   /// ```
   ///
