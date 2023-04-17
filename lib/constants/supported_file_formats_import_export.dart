@@ -70,14 +70,16 @@ enum SupportedFileFormat {
   ///
   /// ```xml
   /// <root>
-  /// <sensorId>sensorId (in camelCase), e. g. accelerometer</sensorId>
+  /// <sensorId>sensorId (in camelCase), e. g. linearAcceleration</sensorId>
   /// <sensorData>
-  ///  <data>0</data>
-  ///  <data>0.1</data>
-  ///  <data>1.3</data>
+  ///  <data>
+  ///    <dataPoint>1.4</dataPoint>
+  ///    <dataPoint>0.0</dataPoint>
+  ///    <dataPoint>9.81</dataPoint>
+  ///  </data>
   ///  <unit>unit (in camelCase, e. g. metersPerSecondSquared</unit>
-  ///  <maxPrecision>2</maxPrecision>
-  ///  <timestampInMicroseconds>1681560654</timestampInMicroseconds>
+  ///  <maxPrecision>5</maxPrecision>
+  ///  <timestampInMicroseconds>1681561948</timestampInMicroseconds>
   /// </sensorData>
   /// </root>
   /// ```
