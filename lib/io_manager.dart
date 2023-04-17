@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import 'buffer_manager.dart';
+import 'constants/supported_file_formats_import_export.dart';
 import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
+import 'import_export_module/export_tool.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
 
@@ -338,5 +341,55 @@ class IOManager {
                 ),
               ),
         )).build().removeAsync();
+  }
+
+  /// Exports the sensor data of a sensor or different sensors, considering a
+  /// certain [format] and optional a certain time interval.
+  ///
+  /// The time interval ranges from [startTime] to [endTime], where the
+  /// following default values are used, if the user do not specify either or
+  /// both of them:
+  /// * startTime = DateTime.fromMicrosecondsSinceEpoch(0), so the furthest back
+  /// in time
+  /// * endTime = DateTime.now(), so the latest moment in time, where sensor
+  /// data could exist.
+  ///
+  /// The sensor data will be exported into a file with the following naming
+  /// pattern:
+  /// _<sensorId>\_<startTime>\_<endTime>_
+  /// and be saved in the directory with the given [directoryName].
+  Future<bool> exportSensorDataToFile(
+    String directoryName,
+    SupportedFileFormat format,
+    List<SensorId> sensorIds, [
+    DateTime? startTime,
+    DateTime? endTime,
+  ]) async {
+    // check, that the directory exists
+    var directoryExists = await Directory(directoryName).exists();
+    if (!directoryExists) {
+      return false;
+    }
+
+    // set the start and end time, if not specified by the user to
+    // furthest back in time and most recent time.
+    startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
+    endTime ??= DateTime.now();
+
+    // fetch the data for the sensors in the time interval
+    for (var sensor in sensorIds) {
+      // create the filename
+      var fileName = directoryName + createFileName(sensor, startTime, endTime);
+
+      var formattedData = "";
+      await _getFromDatabase(startTime, endTime, sensor).then(
+        (sensorData) =>
+            {formattedData = formatDataIntoJson(sensor, sensorData)},
+      );
+
+      writeFormattedData(fileName, format, formattedData);
+    }
+
+    return directoryExists;
   }
 }
