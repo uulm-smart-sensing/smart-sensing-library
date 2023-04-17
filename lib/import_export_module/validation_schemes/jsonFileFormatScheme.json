@@ -16,61 +16,52 @@
         },
         "sensorData": {
             "type": "array",
-            "items": [
-                {
-                    "type": "object",
-                    "properties": {
-                        "data": {
-                            "type": "array",
-                            "items": [
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "number"
-                                }
-                            ]
-                        },
-                        "unit": {
-                            "type": "string",
-                            "enum": [
-                                "metersPerSecondSquared",
-                                "gravitationalForce",
-                                "radiansPerSecond",
-                                "degreesPerSecond",
-                                "microTeslas",
-                                "radians",
-                                "degrees",
-                                "hectoPascal",
-                                "kiloPascal",
-                                "bar",
-                                "celsius",
-                                "fahrenheit",
-                                "kelvin",
-                                "unitless"
-                            ]
-                        },
-                        "maxPrecision": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 9
-                        },
-                        "timestampInMicroseconds": {
-                            "type": "integer",
-                            "minimum": 0
+            "items": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "number"
                         }
                     },
-                    "required": [
-                        "data",
-                        "unit",
-                        "maxPrecision",
-                        "timestampInMicroseconds"
-                    ]
-                }
-            ]
+                    "unit": {
+                        "type": "string",
+                        "enum": [
+                            "metersPerSecondSquared",
+                            "gravitationalForce",
+                            "radiansPerSecond",
+                            "degreesPerSecond",
+                            "microTeslas",
+                            "radians",
+                            "degrees",
+                            "hectoPascal",
+                            "kiloPascal",
+                            "bar",
+                            "celsius",
+                            "fahrenheit",
+                            "kelvin",
+                            "unitless"
+                        ]
+                    },
+                    "maxPrecision": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9
+                    },
+                    "timestampInMicroseconds": {
+                        "type": "integer",
+                        "minimum": 0
+                    }
+                },
+                "required": [
+                    "data",
+                    "unit",
+                    "maxPrecision",
+                    "timestampInMicroseconds"
+                ]
+            }
         }
     },
     "required": [
