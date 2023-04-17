@@ -49,6 +49,10 @@ var theme = ThemeData(
       fontSize: 18,
       color: Colors.white,
     ),
+    // Style used for small text in Import/Export page
+    bodySmall: TextStyle(
+      color: Colors.white,
+    ),
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
