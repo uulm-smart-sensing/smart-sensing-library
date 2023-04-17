@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/stylized_container.dart';
-import '../../utils.dart';
+import '../../text_formatter.dart';
 import 'historic_view_page.dart';
 
 /// This widget is used to display the [SensorInfo] of the according sensor with

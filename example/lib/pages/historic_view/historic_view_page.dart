@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/app_bar_with_header.dart';
-import '../../utils.dart';
+import '../../text_formatter.dart';
 import 'historic_view_page_body.dart';
 import 'sensor_info_tooltip.dart';
 
