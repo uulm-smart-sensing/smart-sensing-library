@@ -1,7 +1,7 @@
 /// The supported file formats (or filename extensions) for importing or
 /// exporting files into / from the smart sensing library.
 ///
-/// So the enum [SupportedFileFormats] contains all file formats in which the
+/// So the enum [SupportedFileFormat] contains all file formats in which the
 /// sensor data can be exported (for more detailed description, how the data is
 /// encoded, see the documentation of the particular file formats).
 /// Likewise all of the listed file formats are supported for importing sensor
@@ -9,7 +9,7 @@
 /// sensing library. But the files do not only need to match the filename
 /// extension but also the correct syntax (see the documentation of the
 /// particular file formats for more detailed information).
-enum SupportedFileFormats {
+enum SupportedFileFormat {
   /// Using the `json` file format means, the sensor data need to be / are
   /// encoded in the following way (example values!):
   ///
@@ -21,7 +21,6 @@ enum SupportedFileFormats {
   ///      "unit": "<unit in camelCase>, e. g. 'metersPerSecondSquared'",
   /// 		 "maxPrecision": 2,
   /// 		 "timestampInMicroseconds": 1681560654,
-  ///
   /// 	}]
   /// }
   /// ```
