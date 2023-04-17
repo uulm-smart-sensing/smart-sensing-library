@@ -35,9 +35,9 @@ enum SupportedFileFormat {
   /// encoded in the following way:
   ///
   /// ```csv
-  /// SensorId;Unit;maxPrecision;timestampInMicroSeconds;Data;;
-  /// accelerometer;metersPerSquareSecond;2;1681561948;0.1;0.15;0.6
-  /// accelerometer;metersPerSquareSecond;2;1681561949;0.1;0.15;
+  /// sensorId,unit,maxPrecision,timestampInMicroseconds,data,
+  /// linearAcceleration,metersPerSquareSecond,5,1681561948,"1.4,0,9.81"
+  /// linearAcceleration,gravitationalForce,5,1681562008,"0.2,0,1"
   /// ```
   ///
   /// The `Data` column is the last, because depending on how many different
