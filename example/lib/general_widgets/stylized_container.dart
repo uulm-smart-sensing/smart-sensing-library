@@ -40,9 +40,8 @@ class StylizedContainer extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         alignment: alignment,
         padding: padding,
-        color: color,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 34, 0, 77),
+          color: color ?? const Color.fromARGB(255, 34, 0, 77),
           borderRadius: BorderRadius.circular(20),
         ),
         foregroundDecoration: foregroundDecoration,
