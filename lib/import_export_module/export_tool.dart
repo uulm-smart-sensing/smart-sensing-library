@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:excel/excel.dart';
 import 'package:intl/intl.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:xml/xml.dart';
@@ -12,7 +13,7 @@ import 'sensor_data_collection.dart';
 /// Formats a list of sensor data (points) into the given [format].
 ///
 /// Therefor the appropiate specific formatter is called.
-String formatData(
+List<int> formatData(
   SensorId sensorId,
   List<SensorData> data,
   SupportedFileFormat format,
@@ -20,7 +21,7 @@ String formatData(
   if (data.isEmpty) {
     /// TODO: check for a better way to handle the case, nothing exists for the
     /// export
-    return "";
+    return "".codeUnits;
   }
 
   switch (format) {
@@ -29,7 +30,7 @@ String formatData(
     case SupportedFileFormat.csv:
       return formatDataIntoCSV(sensorId, data);
     case SupportedFileFormat.xlsx:
-      return "";
+      return formatDataIntoXLSX(sensorId, data);
     case SupportedFileFormat.xml:
       return formatDataIntoXML(sensorId, data);
   }
@@ -37,13 +38,13 @@ String formatData(
 
 /// Formats a list of sensor data (points) into the corresponding json string
 /// following the format described in [SupportedFileFormat].
-String formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
+List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
   var sensorDataCollection = SensorDataCollection(sensorId, data);
 
   // use indentation for make it look prettier
   var encoder = const JsonEncoder.withIndent("  ");
 
-  return encoder.convert(sensorDataCollection);
+  return encoder.convert(sensorDataCollection).codeUnits;
 }
 
 /// Formats a list of sensor data (points) into the corresponding csv string
@@ -51,7 +52,7 @@ String formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
 ///
 /// Therefor a [ListToCsvConverter] is used to enforce the RFC conforming
 /// format.
-String formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
+List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
   // create first row
   var headerRow = [
     "sensorId",
@@ -75,12 +76,42 @@ String formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
     csvData.add(sensorDataRow);
   }
 
-  return const ListToCsvConverter().convert(csvData);
+  return const ListToCsvConverter().convert(csvData).codeUnits;
+}
+
+/// Formats a list of sensor data (points) into the corresponding xlsx string
+/// following the format described in [SupportedFileFormat].
+List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
+  var excel = Excel.createExcel();
+  excel.rename(excel.getDefaultSheet().toString(), "sensor_data");
+
+  var sheet = excel["sensor_data"]
+    ..appendRow([
+      "sensorId",
+      "unit",
+      "maxPrecision",
+      "timestampInMicroseconds",
+      "data",
+    ]);
+
+  for (var sensorData in data) {
+    var sensorDataRow = [
+      sensorId.name,
+      sensorData.unit.name,
+      sensorData.maxPrecision,
+      sensorData.timestampInMicroseconds,
+      sensorData.data.map((e) => e.toString()).toList().join(", "),
+    ];
+    sheet.appendRow(sensorDataRow);
+  }
+
+  // encode excel file as string
+  return excel.save()!;
 }
 
 /// Formats a list of sensor data (points) into the corresponding xml string
 /// following the format described in [SupportedFileFormat].
-String formatDataIntoXML(SensorId sensorId, List<SensorData> data) {
+List<int> formatDataIntoXML(SensorId sensorId, List<SensorData> data) {
   // create and define builder for xml document
   var builder = XmlBuilder();
   builder
@@ -98,7 +129,7 @@ String formatDataIntoXML(SensorId sensorId, List<SensorData> data) {
   // build xml document
   var xmlDocument = builder.buildDocument();
 
-  return xmlDocument.toXmlString(pretty: true, indent: "\t");
+  return xmlDocument.toXmlString(pretty: true, indent: "\t").codeUnits;
 }
 
 void _buildSensorData(XmlBuilder builder, SensorData data) {
@@ -110,7 +141,7 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
           'data',
           nest: () {
             for (var datapoint in data.data) {
-              builder.element('datapoint', nest: datapoint);
+              builder.element('dataPoint', nest: datapoint);
             }
           },
         )
@@ -131,9 +162,9 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
 void writeFormattedData(
   String filepath,
   SupportedFileFormat format,
-  String formattedData,
+  List<int> formattedData,
 ) {
-  File("$filepath.${format.name}").writeAsStringSync(formattedData);
+  File("$filepath.${format.name}").writeAsBytesSync(formattedData);
 }
 
 /// Creates the filename for the export of the sensor data for the sensor

@@ -386,13 +386,13 @@ class IOManager {
     for (var sensor in sensorIds) {
       var fileName = directoryName + createFileName(sensor, startTime, endTime);
 
-      var formattedData = "";
+      var formattedData = "".codeUnits;
       await _getFromDatabase(startTime, endTime, sensor).then(
         (sensorData) =>
             {formattedData = formatData(sensor, sensorData, format)},
       );
 
-      if (formattedData == "") return false;
+      if (formattedData == "".codeUnits) return false;
 
       writeFormattedData(fileName, format, formattedData);
     }
