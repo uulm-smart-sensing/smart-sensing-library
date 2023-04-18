@@ -25,7 +25,6 @@ class LiveDataInformation extends StatefulWidget {
 }
 
 class _LiveDataInformationState extends State<LiveDataInformation> {
-
   Duration lastUpdate = Duration.zero;
   DateTime lastTimeStamp = DateTime.now().toUtc();
   List<double?> mainData = [];
@@ -185,9 +184,7 @@ Widget _updateText(Duration lastUpdate) => Align(
       child: RichText(
         text: TextSpan(
           text:
-              "Last update: \n   ${
-                lastUpdate.toString()
-                .substring(2, lastUpdate.toString().length - 3)}",
+              "Last update: \n   ${lastUpdate.toString().substring(2, lastUpdate.toString().length - 3)}",
           style: const TextStyle(
             fontSize: 10,
             color: Colors.black,
