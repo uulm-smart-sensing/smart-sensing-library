@@ -18,30 +18,37 @@ const sensorIdToIcon = {
   SensorId.accelerometer: FaIcon(
     FontAwesomeIcons.arrowsToDot,
     color: Colors.black,
+    size: 14,
   ),
   SensorId.gyroscope: FaIcon(
     FontAwesomeIcons.groupArrowsRotate,
     color: Colors.black,
+    size: 14,
   ),
   SensorId.magnetometer: FaIcon(
     FontAwesomeIcons.magnet,
     color: Colors.black,
+    size: 14,
   ),
   SensorId.orientation: FaIcon(
     FontAwesomeIcons.compass,
     color: Colors.black,
+    size: 14,
   ),
   SensorId.linearAcceleration: FaIcon(
     FontAwesomeIcons.gaugeHigh,
     color: Colors.black,
+    size: 14,
   ),
   SensorId.barometer: FaIcon(
     FontAwesomeIcons.fireExtinguisher,
     color: Colors.black,
+    size: 14,
   ),
   SensorId.thermometer: FaIcon(
     FontAwesomeIcons.temperatureHalf,
     color: Colors.black,
+    size: 14,
   ),
 };
 
