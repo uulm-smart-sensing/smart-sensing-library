@@ -365,20 +365,18 @@ class IOManager {
     DateTime? startTime,
     DateTime? endTime,
   ]) async {
-    // check, that the directory exists
-    var directoryExists = await Directory(directoryName).exists();
-    if (!directoryExists) {
-      return false;
-    }
+    if (!await Directory(directoryName).exists()) return false;
 
-    // set the start and end time, if not specified by the user to
-    // furthest back in time and most recent time.
+    // Set the start and end time, if not specified by the user to
+    // furthest back in time and latest time.
     startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
     endTime ??= DateTime.now();
 
-    // fetch the data for the sensors in the time interval
+    if (sensorIds.isEmpty) return false;
+
+    // Fetch the data for all sensors, format them and save the result in a new
+    // file.
     for (var sensor in sensorIds) {
-      // create the filename
       var fileName = directoryName + createFileName(sensor, startTime, endTime);
 
       var formattedData = "";
@@ -387,9 +385,11 @@ class IOManager {
             {formattedData = formatDataIntoJson(sensor, sensorData)},
       );
 
+      if (formattedData == "") return false;
+
       writeFormattedData(fileName, format, formattedData);
     }
 
-    return directoryExists;
+    return true;
   }
 }
