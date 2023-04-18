@@ -20,10 +20,10 @@ class _PrecisionSliderState extends State<PrecisionSlider> {
   @override
   Widget build(BuildContext context) => Slider(
         min: 0,
-        max: 10,
+        max: 9,
         value: sliderValue.toDouble(),
         label: sliderValue.toString(),
-        divisions: 10,
+        divisions: 9,
         onChanged: (newValue) {
           setState(() {
             sliderValue = newValue.toInt();
