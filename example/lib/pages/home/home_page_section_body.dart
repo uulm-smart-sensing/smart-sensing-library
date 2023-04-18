@@ -43,7 +43,9 @@ class HomePageSectionBody extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       scrollDirection: scrollDirection,
-      child: Row(children: bodyElements),
+      child: scrollDirection == Axis.horizontal
+          ? Row(children: bodyElements)
+          : Column(children: bodyElements),
     );
   }
 }
