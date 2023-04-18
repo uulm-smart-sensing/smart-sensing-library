@@ -21,7 +21,7 @@ dependencies:
   device_info_plus: ^8.1.0
   disk_space: ^0.2.1
   mockito: ^5.4.0
-  intl: ^0.17.0
+  intl: ^0.18.0
   csv: ^5.0.1
   xml: ^5.4.1
   excel: ^2.1.0
