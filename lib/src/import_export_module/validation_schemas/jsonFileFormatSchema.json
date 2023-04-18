@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "sensorId": {
+            "type": "string",
+            "enum": [
+                "accelerometer",
+                "gyroscope",
+                "magnetometer",
+                "orientation",
+                "linearAcceleration",
+                "barometer",
+                "thermometer"
+            ]
+        },
+        "sensorData": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "unit": {
+                        "type": "string",
+                        "enum": [
+                            "metersPerSecondSquared",
+                            "gravitationalForce",
+                            "radiansPerSecond",
+                            "degreesPerSecond",
+                            "microTeslas",
+                            "radians",
+                            "degrees",
+                            "hectoPascal",
+                            "kiloPascal",
+                            "bar",
+                            "celsius",
+                            "fahrenheit",
+                            "kelvin",
+                            "unitless"
+                        ]
+                    },
+                    "maxPrecision": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9
+                    },
+                    "timestampInMicroseconds": {
+                        "type": "integer",
+                        "minimum": 0
+                    }
+                },
+                "required": [
+                    "data",
+                    "unit",
+                    "maxPrecision",
+                    "timestampInMicroseconds"
+                ]
+            }
+        }
+    },
+    "required": [
+        "sensorId",
+        "sensorData"
+    ]
+}

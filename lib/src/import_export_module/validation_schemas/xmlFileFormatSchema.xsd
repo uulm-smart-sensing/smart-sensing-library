@@ -1,0 +1,74 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="sensorIds">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="accelerometer" />
+            <xs:enumeration value="gyroscope" />
+            <xs:enumeration value="magnetometer" />
+            <xs:enumeration value="orientation" />
+            <xs:enumeration value="linearAcceleration" />
+            <xs:enumeration value="barometer" />
+            <xs:enumeration value="thermometer" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="units">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="metersPerSecondSquared" />
+            <xs:enumeration value="gravitationalForce" />
+            <xs:enumeration value="radiansPerSecond" />
+            <xs:enumeration value="degreesPerSecond" />
+            <xs:enumeration value="microTeslas" />
+            <xs:enumeration value="radians" />
+            <xs:enumeration value="degrees" />
+            <xs:enumeration value="hectoPascal" />
+            <xs:enumeration value="kiloPascal" />
+            <xs:enumeration value="bar" />
+            <xs:enumeration value="celsius" />
+            <xs:enumeration value="fahrenheit" />
+            <xs:enumeration value="kelvin" />
+            <xs:enumeration value="unitless" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="possibleMaxPrecision">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0" />
+            <xs:maxInclusive value="9" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="possibleTimestamp">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0" />
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:element name="root">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="sensorIds" name="sensorId" />
+                <xs:element maxOccurs="unbounded" name="sensorData">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="data">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element minOccurs="1" maxOccurs="unbounded"
+                                            type="xs:float" name="dataPoint" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element type="units" name="unit" />
+
+                            <xs:element type="possibleMaxPrecision" name="maxPrecision" />
+
+                            <xs:element type="possibleTimestamp" name="timestampInMicroseconds" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
