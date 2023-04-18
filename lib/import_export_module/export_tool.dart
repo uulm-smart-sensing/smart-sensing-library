@@ -39,7 +39,10 @@ String formatData(
 String formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
   var sensorDataCollection = SensorDataCollection(sensorId, data);
 
-  return json.encode(sensorDataCollection);
+  // use indentation for make it look prettier
+  var encoder = const JsonEncoder.withIndent("  ");
+
+  return encoder.convert(sensorDataCollection);
 }
 
 /// Formats a list of sensor data (points) into the corresponding csv string
