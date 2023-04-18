@@ -12,7 +12,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting(Platform.localeName);
   await IOManager().openDatabase();
-  await IOManager().addSensor(SensorId.accelerometer, 1000);
   runApp(const SmartSensingLibraryDemoApp());
 }
 
