@@ -8,6 +8,9 @@ import '../../formatter/date_formatter.dart';
 import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';
+import '../../text_formatter.dart';
+import '../../utils.dart';
+import 'graph_view_page.dart';
 import 'historic_view_page.dart';
 import 'time_selection_button.dart';
 import 'visualization_selection_button.dart';
@@ -193,6 +196,19 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       numberOfDataPoints = 3;
     }
 
+    //
+    var visualizationGraph = AspectRatio(
+      aspectRatio: 1.7,
+      child: Column(
+        children: [
+          visualizationSelection,
+          const Expanded(
+            child: GraphView(),
+          ),
+        ],
+      ),
+    );
+
     // Table that visualizes sensor data
     var visualizationTable = Table(
       columnWidths: columnWidths,
@@ -233,7 +249,9 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         const SizedBox(height: 15),
         filterSelectionDropdown,
         const SizedBox(height: 20),
-        visualizationTable,
+        selectedVisualization == _Visualization.table
+            ? visualizationTable
+            : visualizationGraph,
       ],
     );
   }
@@ -295,30 +313,9 @@ List<Widget> _getTableElementsFromSensorId(
     case SensorId.linearAcceleration:
       // Axes are colored when graph is selected
       elements = [
-        Text(
-          "X",
-          style: TextStyle(
-            color: selectedVisualization == _Visualization.graph
-                ? Colors.red
-                : null,
-          ),
-        ),
-        Text(
-          "Y",
-          style: TextStyle(
-            color: selectedVisualization == _Visualization.graph
-                ? Colors.green
-                : null,
-          ),
-        ),
-        Text(
-          "Z",
-          style: TextStyle(
-            color: selectedVisualization == _Visualization.graph
-                ? Colors.lightBlue
-                : null,
-          ),
-        ),
+        const Text("X"),
+        const Text("Y"),
+        const Text("Z"),
       ];
       break;
     case SensorId.barometer:
