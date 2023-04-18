@@ -23,6 +23,7 @@ dependencies:
   mockito: ^5.4.0
   intl: ^0.17.0
   csv: ^5.0.1
+  xml: ^5.4.1
 
 
 dev_dependencies:

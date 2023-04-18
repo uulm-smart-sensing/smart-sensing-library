@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
+import 'package:xml/xml.dart';
 
 import '../constants/supported_file_formats_import_export.dart';
 import 'sensor_data_collection.dart';
@@ -30,7 +31,7 @@ String formatData(
     case SupportedFileFormat.xlsx:
       return "";
     case SupportedFileFormat.xml:
-      return "";
+      return formatDataIntoXML(sensorId, data);
   }
 }
 
@@ -75,6 +76,52 @@ String formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
   }
 
   return const ListToCsvConverter().convert(csvData);
+}
+
+/// Formats a list of sensor data (points) into the corresponding xml string
+/// following the format described in [SupportedFileFormat].
+String formatDataIntoXML(SensorId sensorId, List<SensorData> data) {
+  // create and define builder for xml document
+  var builder = XmlBuilder();
+  builder
+    ..processing("xml", "version=\"1.0\" encoding=\"UTF-8\"")
+    ..element(
+      'root',
+      nest: () {
+        builder.element('sensorId', nest: sensorId.name);
+        for (var sensorData in data) {
+          _buildSensorData(builder, sensorData);
+        }
+      },
+    );
+
+  // build xml document
+  var xmlDocument = builder.buildDocument();
+
+  return xmlDocument.toXmlString(pretty: true, indent: "\t");
+}
+
+void _buildSensorData(XmlBuilder builder, SensorData data) {
+  builder.element(
+    'sensorData',
+    nest: () {
+      builder
+        ..element(
+          'data',
+          nest: () {
+            for (var datapoint in data.data) {
+              builder.element('datapoint', nest: datapoint);
+            }
+          },
+        )
+        ..element('unit', nest: data.unit.name)
+        ..element('maxPrecision', nest: data.maxPrecision)
+        ..element(
+          'timestampInMicroseconds',
+          nest: data.timestampInMicroseconds,
+        );
+    },
+  );
 }
 
 /// Creates a new file at [filepath] and writes the formatted data
