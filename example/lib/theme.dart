@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 /// Unique [Color] for each [SensorId].
@@ -10,6 +11,38 @@ const sensorIdToColor = {
   SensorId.linearAcceleration: Color.fromARGB(255, 252, 220, 107),
   SensorId.barometer: Color.fromARGB(255, 252, 107, 168),
   SensorId.thermometer: Color.fromARGB(255, 252, 168, 107),
+};
+
+/// Unique [Icon] for each [SensorId].
+const sensorIdToIcon = {
+  SensorId.accelerometer: FaIcon(
+    FontAwesomeIcons.arrowsToDot,
+    color: Colors.black,
+  ),
+  SensorId.gyroscope: FaIcon(
+    FontAwesomeIcons.groupArrowsRotate,
+    color: Colors.black,
+  ),
+  SensorId.magnetometer: FaIcon(
+    FontAwesomeIcons.magnet,
+    color: Colors.black,
+  ),
+  SensorId.orientation: FaIcon(
+    FontAwesomeIcons.compass,
+    color: Colors.black,
+  ),
+  SensorId.linearAcceleration: FaIcon(
+    FontAwesomeIcons.gaugeHigh,
+    color: Colors.black,
+  ),
+  SensorId.barometer: FaIcon(
+    FontAwesomeIcons.fireExtinguisher,
+    color: Colors.black,
+  ),
+  SensorId.thermometer: FaIcon(
+    FontAwesomeIcons.temperatureHalf,
+    color: Colors.black,
+  ),
 };
 
 const primaryColorHex = 0xFF00072F;
