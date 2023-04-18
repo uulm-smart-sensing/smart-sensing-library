@@ -4,6 +4,9 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../general_widgets/selection_button.dart';
 import '../../unit_string_representation.dart';
 
+/// [SelectionButton] to select the target unit of a sensors output data.
+///
+/// If the button is selected the color will change and the text is underlined.
 class UnitSelectionButton extends Container {
   final void Function() onPressed;
   final Unit unit;

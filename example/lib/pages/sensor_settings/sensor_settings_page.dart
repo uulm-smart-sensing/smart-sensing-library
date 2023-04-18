@@ -11,6 +11,12 @@ import 'precision_slider.dart';
 import 'time_interval_selection_button.dart';
 import 'unit_selection_button.dart';
 
+/// Page to configure the sensor with the passed [sensorId].
+///
+/// The settings which can be configured are:
+/// * target unit of sensor data
+/// * target precision of sensor data
+/// * time interval of sensor update events
 class SensorSettingsPage extends StatefulWidget {
   final SensorId sensorId;
 
@@ -78,6 +84,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
       child: CustomTextButton(
         text: "Apply",
         onPressed: () {
+          // TODO: Validate settings
           // TODO: Apply settings
         },
       ),

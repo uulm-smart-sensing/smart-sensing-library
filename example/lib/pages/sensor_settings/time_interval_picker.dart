@@ -1,5 +1,9 @@
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
+/// Time picker to pick the time interval of a sensor.
+///
+/// The user can picks a time interval between 10 ms and 59 minutes, 59 seconds
+/// and 999 milliseconds (=3599999 ms) (both inclusive).
 class TimeIntervalPicker extends CommonPickerModel {
   String digits(int value, int length) => '$value'.padLeft(length, "0");
 
