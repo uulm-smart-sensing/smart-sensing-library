@@ -1,57 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import 'stylized_container.dart';
-
-class BrickLiveInformationContainer extends StatelessWidget {
-  final String headLine;
-  final Icon icon;
-  final double? width;
-  final double? height;
-  final Stream<SensorData>? dataStream;
-  final Function() onClick;
-
-  const BrickLiveInformationContainer({
-    super.key,
-    required this.headLine,
-    required this.icon,
-    required this.onClick,
-    this.height = 150,
-    this.width = 150,
-    required this.dataStream,
-  });
+class _LiveDataInformation extends StatefulWidget {
+  final SensorId id;
+  const _LiveDataInformation({
+   required this.id,
+   });
 
   @override
-  Widget build(BuildContext context) => InkWell(
-        onTap: onClick,
-        child: StylizedContainer(
-          alignment: Alignment.center,
-          width: width,
-          height: height,
-          child: _BrickLiveInformation(
-            headLine: headLine,
-            icon: icon,
-            dataStream: dataStream,
-          ),
-        ),
-      );
+  State<_LiveDataInformation> createState() => _LiveDataInformationState();
 }
 
-class _BrickLiveInformation extends StatefulWidget {
-  final String headLine;
-  final Icon icon;
-  final Stream<SensorData>? dataStream;
-  const _BrickLiveInformation({
-    required this.headLine,
-    required this.icon,
-    required this.dataStream,
-  });
-
-  @override
-  State<_BrickLiveInformation> createState() => _BrickLiveInformationState();
-}
-
-class _BrickLiveInformationState extends State<_BrickLiveInformation> {
+class _LiveDataInformationState extends State<_LiveDataInformation> {
   var style = const TextStyle(
     fontWeight: FontWeight.w500,
     fontSize: 14,
@@ -65,7 +25,7 @@ class _BrickLiveInformationState extends State<_BrickLiveInformation> {
   @override
   void initState() {
     super.initState();
-    widget.dataStream?.listen(
+    IOManager().getSensorStream(widget.id)?.listen(
       (event) {
         setState(() {
           var tmpDateTime = DateTime.fromMicrosecondsSinceEpoch(
@@ -89,11 +49,11 @@ class _BrickLiveInformationState extends State<_BrickLiveInformation> {
             Row(
               children: [
                 Text(
-                  widget.headLine,
+                  widget.id.toString(),
                   style: style,
                 ),
                 const Spacer(),
-                widget.icon,
+                const Icon(Icons.abc) //TODO Stuff,
               ],
             ),
             Text(
