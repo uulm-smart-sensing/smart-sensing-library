@@ -24,9 +24,18 @@ class SensorSettingsPage extends StatefulWidget {
 }
 
 class _SensorSettingsPageState extends State<SensorSettingsPage> {
-  var selectedPrecision = 2;
-  late int selectedTimeInterval;
-  Unit? selectedUnit;
+  late int selectedPrecision;
+  late int selectedTimeIntervalInMilliseconds;
+  late Unit selectedUnit;
+
+  @override
+  void initState() {
+    // TODO: Make call to smart sensing library to initialize values
+    selectedPrecision = 2;
+    selectedTimeIntervalInMilliseconds = 100;
+    selectedUnit = _getUnitsFromSensorId(widget.sensorId).first;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +59,16 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
       },
     );
 
-    var timeIntervalHeader = SectionHeader("Time Interval (m:s:ms)");
+    var timeIntervalHeader = SectionHeader(
+      "Time Interval ($selectedTimeIntervalInMilliseconds ms)",
+    );
     var timeIntervalSelection = Center(
       child: TimeIntervalSelectionButton(
-        sensorId: widget.sensorId,
+        timeIntervalInMilliseconds: selectedTimeIntervalInMilliseconds,
         onChanged: (newValue) {
-          selectedTimeInterval = newValue;
+          setState(() {
+            selectedTimeIntervalInMilliseconds = newValue;
+          });
         },
       ),
     );
@@ -82,8 +95,10 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
               children: [
                 unitHeader,
                 unitSelection,
+                const SizedBox(height: 20),
                 precisionHeader,
                 precisionSelection,
+                const SizedBox(height: 20),
                 timeIntervalHeader,
                 timeIntervalSelection,
               ],

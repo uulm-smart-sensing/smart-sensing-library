@@ -36,7 +36,7 @@ class TimeIntervalPicker extends CommonPickerModel {
     // Configuring the available options is weird
     // Step sizes don't seem to be supported
     if (index >= 10 && index < 1000) {
-      return digits(index, 4);
+      return digits(index, 3);
     } else {
       return null;
     }
