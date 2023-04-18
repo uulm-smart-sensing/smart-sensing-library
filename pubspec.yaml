@@ -22,6 +22,7 @@ dependencies:
   disk_space: ^0.2.1
   mockito: ^5.4.0
   intl: ^0.17.0
+  csv: ^5.0.1
 
 
 dev_dependencies:

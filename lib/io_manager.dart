@@ -358,6 +358,13 @@ class IOManager {
   /// pattern:
   /// _<sensorId>\_<startTime>\_<endTime>_
   /// and be saved in the directory with the given [directoryName].
+  ///
+  /// Returns false, if
+  /// * there exist no directory with the [directoryName]
+  /// * the list of [sensorIds] is empty, so acutally no export is requested.
+  /// * there exist no data (for one of the sensors, eventually in the
+  /// time interval from [startTime] to [endTime]), otherwise it will return
+  /// true.
   Future<bool> exportSensorDataToFile(
     String directoryName,
     SupportedFileFormat format,
@@ -382,7 +389,7 @@ class IOManager {
       var formattedData = "";
       await _getFromDatabase(startTime, endTime, sensor).then(
         (sensorData) =>
-            {formattedData = formatDataIntoJson(sensor, sensorData)},
+            {formattedData = formatData(sensor, sensorData, format)},
       );
 
       if (formattedData == "") return false;

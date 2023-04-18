@@ -1,1 +1,14 @@
-enum SupportedFileFormat { json, csv, xlsx, xml }
+///
+enum SupportedFileFormat {
+  ///
+  json,
+
+  ///
+  csv,
+
+  ///
+  xlsx,
+
+  ///
+  xml,
+}

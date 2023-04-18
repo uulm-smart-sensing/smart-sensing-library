@@ -1,24 +1,77 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import '../constants/supported_file_formats_import_export.dart';
 import 'sensor_data_collection.dart';
 
-/// Formats a list of sensor data (points) into the corresponding json string
-/// following the format described in [SupportedFileFormat].
-String formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
+/// Formats a list of sensor data (points) into the given [format].
+///
+/// Therefor the appropiate specific formatter is called.
+String formatData(
+  SensorId sensorId,
+  List<SensorData> data,
+  SupportedFileFormat format,
+) {
   if (data.isEmpty) {
     /// TODO: check for a better way to handle the case, nothing exists for the
     /// export
     return "";
   }
 
+  switch (format) {
+    case SupportedFileFormat.json:
+      return formatDataIntoJson(sensorId, data);
+    case SupportedFileFormat.csv:
+      return formatDataIntoCSV(sensorId, data);
+    case SupportedFileFormat.xlsx:
+      return "";
+    case SupportedFileFormat.xml:
+      return "";
+  }
+}
+
+/// Formats a list of sensor data (points) into the corresponding json string
+/// following the format described in [SupportedFileFormat].
+String formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
   var sensorDataCollection = SensorDataCollection(sensorId, data);
 
   return json.encode(sensorDataCollection);
+}
+
+/// Formats a list of sensor data (points) into the corresponding csv string
+/// following the format described in [SupportedFileFormat].
+///
+/// Therefor a [ListToCsvConverter] is used to enforce the RFC conforming
+/// format.
+String formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
+  // create first row
+  var headerRow = [
+    "sensorId",
+    "unit",
+    "maxPrecision",
+    "timestampInMicroseconds",
+    "data"
+  ];
+
+  var csvData = <List<dynamic>>[headerRow];
+
+  // create sensor data rows
+  for (var sensorData in data) {
+    var sensorDataRow = [
+      sensorId.name,
+      sensorData.unit.name,
+      sensorData.maxPrecision,
+      sensorData.timestampInMicroseconds,
+      sensorData.data.map((e) => e.toString()).toList().join(", "),
+    ];
+    csvData.add(sensorDataRow);
+  }
+
+  return const ListToCsvConverter().convert(csvData);
 }
 
 /// Creates a new file at [filepath] and writes the formatted data
