@@ -82,11 +82,11 @@ class HomePage extends StatelessWidget {
       },
     );
     var liveViewSectionBody = HomePageSectionBody(
-      children: [
-        SensorId.accelerometer,
-        SensorId.gyroscope,
-        SensorId.thermometer,
-      ].map((id) => DemoSensorWidget(sensorId: id)).toList(),
+      // TODO: Replace with call to smart sensing library
+      children: SensorId.values
+          .take(3)
+          .map((id) => DemoSensorWidget(sensorId: id))
+          .toList(),
     );
 
     var sensorsSectionHeader = HomePageSectionHeader(
@@ -101,11 +101,8 @@ class HomePage extends StatelessWidget {
       },
     );
     var sensorsSectionBody = HomePageSectionBody(
-      children: [
-        SensorId.accelerometer,
-        SensorId.gyroscope,
-        SensorId.thermometer,
-      ].map((id) => DemoSensorWidget(sensorId: id)).toList(),
+      children:
+          SensorId.values.map((id) => DemoSensorWidget(sensorId: id)).toList(),
     );
 
     var devicesSectionHeader = Container(
