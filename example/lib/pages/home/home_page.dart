@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../date_formatter.dart';
 import '../live_view/live_view_page.dart';
 import '../settings/settings_page.dart';
 import '../statistics/statistics_page.dart';
+import 'demo_sensor_widget.dart';
 import 'device_widget.dart';
 import 'home_page_section_body.dart';
 import 'home_page_section_header.dart';
@@ -68,8 +70,8 @@ class HomePage extends StatelessWidget {
       ),
     );
 
-    var livePreviewSectionHeader = HomePageSectionHeader(
-      title: "live preview",
+    var liveViewSectionHeader = HomePageSectionHeader(
+      title: "live view",
       onPressed: () {
         Navigator.push(
           context,
@@ -79,22 +81,11 @@ class HomePage extends StatelessWidget {
         );
       },
     );
-    var livePreviewSectionBody = HomePageSectionBody(
-      scrollDirection: Axis.horizontal,
-      spaceBetweenChildren: 20,
-      hasFixedSize: true,
-      size: 80,
-      children: ["Temperature", "Gyroscope", "Light"]
-          .map(
-            (e) => SizedBox(
-              width: 150,
-              height: 80,
-              child: Placeholder(
-                color: Colors.red,
-                child: Text(e),
-              ),
-            ),
-          )
+    var liveViewSectionBody = HomePageSectionBody(
+      // TODO: Replace with call to smart sensing library
+      children: SensorId.values
+          .take(3)
+          .map((id) => DemoSensorWidget(sensorId: id))
           .toList(),
     );
 
@@ -110,22 +101,8 @@ class HomePage extends StatelessWidget {
       },
     );
     var sensorsSectionBody = HomePageSectionBody(
-      scrollDirection: Axis.horizontal,
-      spaceBetweenChildren: 20,
-      hasFixedSize: true,
-      size: 80,
-      children: ["Temperature", "Gyroscope", "Light"]
-          .map(
-            (e) => SizedBox(
-              width: 150,
-              height: 80,
-              child: Placeholder(
-                color: Colors.red,
-                child: Text(e),
-              ),
-            ),
-          )
-          .toList(),
+      children:
+          SensorId.values.map((id) => DemoSensorWidget(sensorId: id)).toList(),
     );
 
     var devicesSectionHeader = Container(
@@ -157,8 +134,8 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
           children: [
-            livePreviewSectionHeader,
-            livePreviewSectionBody,
+            liveViewSectionHeader,
+            liveViewSectionBody,
             sensorsSectionHeader,
             sensorsSectionBody,
             devicesSectionHeader,
