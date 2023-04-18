@@ -17,7 +17,9 @@ class BrickContainer extends StatelessWidget {
     this.size = 150,
     this.child,
     this.padding,
-    this.color, this.alignment, this.margin,
+    this.color,
+    this.alignment,
+    this.margin,
   });
 
   @override

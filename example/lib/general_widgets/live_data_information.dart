@@ -110,6 +110,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
         ),
       );
 }
+
 ///Converts the main data to a readable string for the widget.
 String _fromData(List<double?> data, Unit unit) {
   var result = "";
@@ -121,6 +122,7 @@ String _fromData(List<double?> data, Unit unit) {
   }
   return result.substring(0, result.length - 2);
 }
+
 ///Converts the [Unit] enum to the corresponing unit string.
 String _unitConverter(Unit unit) {
   switch (unit) {
@@ -155,6 +157,7 @@ String _unitConverter(Unit unit) {
       return "";
   }
 }
+
 ///Converts the [SensorId] enum to the corresponing name string.
 String _sensorIdConverter(SensorId id) {
   switch (id) {
