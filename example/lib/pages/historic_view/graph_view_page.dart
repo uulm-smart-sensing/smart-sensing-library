@@ -7,16 +7,13 @@ class GraphView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text("Sensor settings"),
-        ),
         body: AspectRatio(
           aspectRatio: 1.7,
           child: Padding(
             padding: const EdgeInsets.only(
-              left: 20,
+              left: 10,
               right: 18,
-              top: 40,
+              top: 20,
               bottom: 4,
             ),
             child: LineChart(
