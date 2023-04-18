@@ -8,6 +8,7 @@ import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../theme.dart';
 import '../historic_view/historic_view_page.dart';
 
+/// Page that displays sensor widgets for each sensor that is being tracked.
 class LiveViewPage extends StatelessWidget {
   const LiveViewPage({super.key});
 
