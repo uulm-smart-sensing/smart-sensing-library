@@ -7,8 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:xml/xml.dart';
 
-import '../constants/supported_file_formats_import_export.dart';
 import 'sensor_data_collection.dart';
+import 'supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the given [format].
 ///
