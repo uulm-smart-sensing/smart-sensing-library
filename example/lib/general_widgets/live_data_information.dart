@@ -5,21 +5,19 @@ import '../theme.dart';
 
 ///This widget shows live sensor data with form the given [SensorId].
 ///
-///Data is shown in a [Column] with a correspoing Icon on the top left.
-///This widget shows the live data and the time since the last update.
-///Padding can be ajusted between Items and for the [Column] itself.
-///Internal Text can be ajusted with [style]
+///Data is shown in a [Column] with a correspoing Icon on the top right.
+///[padding] is the outside padding of the widget.
+///Base padding is
+///```dart
+///EdgeInsets.symmetric(vertical: 10, horizontal: 15)
+///```
 class LiveDataInformation extends StatefulWidget {
   final SensorId id;
-  final TextStyle? style;
   final EdgeInsets? padding;
-  final EdgeInsets? paddingBetweenitems;
   const LiveDataInformation({
     super.key,
     required this.id,
-    this.style,
     this.padding,
-    this.paddingBetweenitems,
   });
 
   @override
@@ -27,11 +25,6 @@ class LiveDataInformation extends StatefulWidget {
 }
 
 class _LiveDataInformationState extends State<LiveDataInformation> {
-  var style = const TextStyle(
-    fontWeight: FontWeight.w500,
-    fontSize: 10,
-    color: Colors.black,
-  );
 
   Duration lastUpdate = Duration.zero;
   DateTime lastTimeStamp = DateTime.now().toUtc();
@@ -59,54 +52,36 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: widget.padding ?? EdgeInsets.zero,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  _sensorIdConverter(widget.id),
-                  style: widget.style ?? style,
-                ),
-                const Spacer(),
-                sensorIdToIcon[widget.id]!,
-              ],
-            ),
-            Text(
-              () {
-                var string = _fromData(mainData, unit ?? Unit.unitless);
-                if (string.isNotEmpty) {
-                  return string;
-                }
-                return "No Data";
-              }(),
-              style: widget.style ?? style,
-              textAlign: TextAlign.left,
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Latest update:",
-                style: widget.style ?? style,
-                textAlign: TextAlign.left,
+  Widget build(BuildContext context) => Expanded(
+        child: Padding(
+          padding: widget.padding ??
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    _sensorIdConverter(widget.id),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Spacer(),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: sensorIdToIcon[widget.id],
+                  ),
+                ],
               ),
-            ),
-            Text(
-              lastUpdate
-                  .toString()
-                  .substring(3, lastUpdate.toString().length - 3),
-              style: widget.style ?? style,
-            ),
-          ]
-              .map(
-                (e) => Padding(
-                  padding: widget.paddingBetweenitems ?? EdgeInsets.zero,
-                  child: e,
-                ),
-              )
-              .toList(),
+              Expanded(
+                child: _mainDataText(mainData, unit),
+              ),
+              _updateText(lastUpdate),
+            ],
+          ),
         ),
       );
 }
@@ -115,12 +90,12 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
 String _fromData(List<double?> data, Unit unit) {
   var result = "";
   for (var element in data) {
-    result += "${element?.toStringAsFixed(3) ?? ""} ${_unitConverter(unit)}\n";
+    result += "${element?.toStringAsFixed(0) ?? ""} ${_unitConverter(unit)}\n";
   }
   if (result.isEmpty) {
-    return result;
+    return "No Data";
   }
-  return result.substring(0, result.length - 2);
+  return result.substring(0, result.length - 1);
 }
 
 ///Converts the [Unit] enum to the corresponing unit string.
@@ -179,3 +154,45 @@ String _sensorIdConverter(SensorId id) {
       return "Not Implemented yet";
   }
 }
+
+double _mainDataSize(int rows) {
+  if (rows > 1) {
+    return 10;
+  }
+  return 16;
+}
+
+///Creates the [Text] widget for the main data block.
+///Is responsive if there is only one data Point or many.
+Widget _mainDataText(List<double?> data, Unit? unit) => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Align(
+        alignment: Alignment.center,
+        child: Text(
+          _fromData(data, unit ?? Unit.unitless),
+          style: TextStyle(
+            fontSize: _mainDataSize(data.length),
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+
+///Creates the [Text] widget for the update block.
+Widget _updateText(Duration lastUpdate) => Align(
+      alignment: Alignment.centerLeft,
+      child: RichText(
+        text: TextSpan(
+          text:
+              "Last update: \n   ${
+                lastUpdate.toString()
+                .substring(2, lastUpdate.toString().length - 3)}",
+          style: const TextStyle(
+            fontSize: 10,
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
