@@ -183,8 +183,10 @@ Widget _updateText(Duration lastUpdate) => Align(
       alignment: Alignment.centerLeft,
       child: RichText(
         text: TextSpan(
-          text:
-              "Last update: \n   ${lastUpdate.toString().substring(2, lastUpdate.toString().length - 3)}",
+          text: "Last update: \n   ${lastUpdate.toString().substring(
+                2,
+                lastUpdate.toString().length - 3,
+              )}",
           style: const TextStyle(
             fontSize: 10,
             color: Colors.black,
