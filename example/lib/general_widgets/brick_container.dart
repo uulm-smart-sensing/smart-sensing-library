@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-
 import 'stylized_container.dart';
 
+///This is a specialized square clickable [StylizedContainer].
 class BrickContainer extends StatelessWidget {
-  final double? width;
-  final double? height;
+  final AlignmentGeometry? alignment;
+  final EdgeInsetsGeometry? margin;
+  final double? size;
   final Function()? onClick;
   final Widget? child;
   final EdgeInsets? padding;
+  final Color? color;
 
   const BrickContainer({
     super.key,
     this.onClick,
-    this.height = 150,
-    this.width = 150,
-    this.child, this.padding,
+    this.size = 150,
+    this.child,
+    this.padding,
+    this.color, this.alignment, this.margin,
   });
 
   @override
@@ -22,12 +25,12 @@ class BrickContainer extends StatelessWidget {
         onTap: onClick,
         child: StylizedContainer(
           padding: padding,
-          alignment: Alignment.center,
-          width: width,
-          height: height,
+          alignment: alignment ?? Alignment.center,
+          margin: margin,
+          width: size,
+          height: size,
+          color: color,
           child: child,
         ),
       );
 }
-
-

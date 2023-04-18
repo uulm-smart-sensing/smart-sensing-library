@@ -1,27 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-class _LiveDataInformation extends StatefulWidget {
+import '../theme.dart';
+
+///This widget shows live sensor data with form the given [SensorId].
+///
+///Data is shown in a [Column] with a correspoing Icon on the top left.
+///This widget shows the live data and the time since the last update.
+///Padding can be ajusted between Items and for the [Column] itself.
+///Internal Text can be ajusted with [style]
+class LiveDataInformation extends StatefulWidget {
   final SensorId id;
-  const _LiveDataInformation({
-   required this.id,
-   });
+  final TextStyle? style;
+  final EdgeInsets? padding;
+  final EdgeInsets? paddingBetweenitems;
+  const LiveDataInformation({
+    super.key,
+    required this.id,
+    this.style,
+    this.padding,
+    this.paddingBetweenitems,
+  });
 
   @override
-  State<_LiveDataInformation> createState() => _LiveDataInformationState();
+  State<LiveDataInformation> createState() => _LiveDataInformationState();
 }
 
-class _LiveDataInformationState extends State<_LiveDataInformation> {
+class _LiveDataInformationState extends State<LiveDataInformation> {
   var style = const TextStyle(
     fontWeight: FontWeight.w500,
-    fontSize: 14,
-    fontFamily: "Ubuntu",
+    fontSize: 10,
+    color: Colors.black,
   );
 
   Duration lastUpdate = Duration.zero;
   DateTime lastTimeStamp = DateTime.now().toUtc();
   List<double?> mainData = [];
   Unit? unit;
+
+  ///Gets the corresponding data stream of [SensorId]
+  ///and updates the internal data.
   @override
   void initState() {
     super.initState();
@@ -42,18 +60,18 @@ class _LiveDataInformationState extends State<_LiveDataInformation> {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 16, right: 11, top: 14),
+        padding: widget.padding ?? EdgeInsets.zero,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
               children: [
                 Text(
-                  widget.id.toString(),
-                  style: style,
+                  _sensorIdConverter(widget.id),
+                  style: widget.style ?? style,
                 ),
                 const Spacer(),
-                const Icon(Icons.abc) //TODO Stuff,
+                sensorIdToIcon[widget.id]!,
               ],
             ),
             Text(
@@ -64,30 +82,46 @@ class _LiveDataInformationState extends State<_LiveDataInformation> {
                 }
                 return "No Data";
               }(),
-              style: style,
+              style: widget.style ?? style,
+              textAlign: TextAlign.left,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Latest update:",
+                style: widget.style ?? style,
+                textAlign: TextAlign.left,
+              ),
             ),
             Text(
-              "Latest update:",
-              style: style,
+              lastUpdate
+                  .toString()
+                  .substring(3, lastUpdate.toString().length - 3),
+              style: widget.style ?? style,
             ),
-            Text(
-              lastUpdate.toString(),
-              style: style,
-            ),
-          ],
+          ]
+              .map(
+                (e) => Padding(
+                  padding: widget.paddingBetweenitems ?? EdgeInsets.zero,
+                  child: e,
+                ),
+              )
+              .toList(),
         ),
       );
 }
-
+///Converts the main data to a readable string for the widget.
 String _fromData(List<double?> data, Unit unit) {
   var result = "";
   for (var element in data) {
-    result +=
-        ": ${element?.toStringAsFixed(3) ?? ""} ${_unitConverter(unit)}\n";
+    result += "${element?.toStringAsFixed(3) ?? ""} ${_unitConverter(unit)}\n";
   }
-  return result;
+  if (result.isEmpty) {
+    return result;
+  }
+  return result.substring(0, result.length - 2);
 }
-
+///Converts the [Unit] enum to the corresponing unit string.
 String _unitConverter(Unit unit) {
   switch (unit) {
     case Unit.metersPerSecondSquared:
@@ -117,6 +151,28 @@ String _unitConverter(Unit unit) {
     case Unit.kelvin:
       return "K";
     case Unit.unitless:
+    default:
       return "";
+  }
+}
+///Converts the [SensorId] enum to the corresponing name string.
+String _sensorIdConverter(SensorId id) {
+  switch (id) {
+    case SensorId.accelerometer:
+      return "Accelerometer";
+    case SensorId.gyroscope:
+      return "Gyroscope";
+    case SensorId.magnetometer:
+      return "Magnetometer";
+    case SensorId.orientation:
+      return "Orientation";
+    case SensorId.linearAcceleration:
+      return "LinearAcceleration";
+    case SensorId.barometer:
+      return "Barometer";
+    case SensorId.thermometer:
+      return "Thermometer";
+    default:
+      return "Not Implemented yet";
   }
 }
