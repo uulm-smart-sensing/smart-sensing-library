@@ -111,11 +111,17 @@ class _ImportExportPageState extends State<ImportExportPage> {
     if (selectedDirectory == null) return;
 
     if (_exportForAllSensorIds) {
-      // TODO: call smart sensing library with 'selectedDirectory'
-      // and 'SensorId.values'
+      await IOManager().exportSensorDataToFile(
+        selectedDirectory,
+        SupportedFileFormat.json,
+        SensorId.values,
+      );
     } else if (_selectedSensorIdForExport != null) {
-      // TODO: call smart sensing library with 'selectedDirectory'
-      // and 'selectedSensorIdForExport!'
+      await IOManager().exportSensorDataToFile(
+        selectedDirectory,
+        SupportedFileFormat.json,
+        [_selectedSensorIdForExport!],
+      );
     } else {
       // TODO: provide hint, that user need to select sensorId
     }

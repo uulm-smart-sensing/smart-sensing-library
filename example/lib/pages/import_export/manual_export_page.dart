@@ -93,13 +93,16 @@ class _ManualExportPageState extends State<ManualExportPage> {
             Center(
               child: SizedBox(
                 width: 120,
-                child: endDatetime.isAfter(startDatetime)
+                child: endDatetime.isAfter(startDatetime) &&
+                        startDatetime.isBefore(DateTime.now()) &&
+                        endDatetime.isBefore(DateTime.now())
                     ? CustomTextButton(
                         text: "Export",
                         onPressed: _exportWithCustomTimeInterval,
                       )
                     : const Text(
-                        "End time must be after start time!",
+                        "End time must be after start time and times can not"
+                        "be in the future!",
                         style: TextStyle(color: Colors.red, fontSize: 14),
                       ),
               ),
@@ -154,15 +157,25 @@ class _ManualExportPageState extends State<ManualExportPage> {
     if (selectedDirectory == null) return;
 
     if (widget.exportForAllSensorIds) {
-      // TODO: call smart sensing library with 'selectedDirectory'
-      // and 'SensorId.values' and the dates
+      await IOManager().exportSensorDataToFile(
+        selectedDirectory,
+        SupportedFileFormat.json,
+        SensorId.values,
+        startDatetime,
+        endDatetime,
+      );
     } else {
-      // TODO: call smart sensing library with 'selectedDirectory'
-      // and 'selectedSensorIdForExport' and the dates
+      await IOManager().exportSensorDataToFile(
+        selectedDirectory,
+        SupportedFileFormat.json,
+        [widget.selectedSensorIdForExport],
+        startDatetime,
+        endDatetime,
+      );
     }
 
     // Return to "Import / Export" page
-
+    if (!mounted) return;
     Navigator.pop(context);
   }
 }
