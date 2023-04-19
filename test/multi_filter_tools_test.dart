@@ -1,14 +1,11 @@
 import 'dart:collection';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
-import 'package:smart_sensing_library/filter_tools.dart';
+import 'package:smart_sensing_library/multi_filter_tools.dart';
 
 import 'filter_tools_test.dart';
 
 void main() {
-  var randomTestDataset = createRandomTestData();
-  var determinedTestDataSet = createDeterminedTestData();
-  var splittingTestDataSet = createDataForSplitting();
   var randomMultiTestDataset = createRandomMultiTestData();
   var determinedMultiTestDataSet = createDeterminedMultiTestData();
   var splittingMultiTestDataSet = createMultiDataForSplitting();
