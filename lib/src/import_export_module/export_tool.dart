@@ -12,7 +12,9 @@ import 'supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the given [format].
 ///
-/// Therefor the appropiate specific formatter is called.
+/// Therefor the appropiate specific formatter is called and the sensor data
+/// encoded as byte array is returned, which can be used to write the data
+/// into a file.
 List<int> formatData(
   SensorId sensorId,
   List<SensorData> data,
@@ -37,7 +39,7 @@ List<int> formatData(
 }
 
 /// Formats a list of sensor data (points) into the corresponding json string
-/// following the format described in [SupportedFileFormat].
+/// following the format described in [SupportedFileFormat.json].
 List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
   var sensorDataCollection = SensorDataCollection(sensorId, data);
 
@@ -48,7 +50,7 @@ List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Formats a list of sensor data (points) into the corresponding csv string
-/// following the format described in [SupportedFileFormat].
+/// following the format described in [SupportedFileFormat.csv].
 ///
 /// Therefor a [ListToCsvConverter] is used to enforce the RFC conforming
 /// format.
@@ -80,7 +82,7 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Formats a list of sensor data (points) into the corresponding xlsx string
-/// following the format described in [SupportedFileFormat].
+/// following the format described in [SupportedFileFormat.xlsx].
 List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
   var excel = Excel.createExcel();
   excel.rename(excel.getDefaultSheet().toString(), "sensor_data");
@@ -110,7 +112,7 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Formats a list of sensor data (points) into the corresponding xml string
-/// following the format described in [SupportedFileFormat].
+/// following the format described in [SupportedFileFormat.xml].
 List<int> formatDataIntoXML(SensorId sensorId, List<SensorData> data) {
   // create and define builder for xml document
   var builder = XmlBuilder();
