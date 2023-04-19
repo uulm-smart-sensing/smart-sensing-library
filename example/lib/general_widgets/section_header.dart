@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Header element of a section of a page.
 class SectionHeader extends Container {
   final String title;
 
