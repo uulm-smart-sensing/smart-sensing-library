@@ -83,7 +83,12 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     var applyButton = Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: CustomTextButton(
-        text: "Apply",
+        isDense: false,
+        width: 200,
+        text: "Apply settings",
+        style: const TextStyle(
+          fontSize: 24,
+        ),
         onPressed: () {
           // TODO: Validate settings
           // TODO: Apply settings

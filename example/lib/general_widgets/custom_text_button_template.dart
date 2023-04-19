@@ -15,12 +15,24 @@ class CustomTextButtonTemplate extends Container {
   /// Called when this [CustomTextButtonTemplate] is pressed.
   final void Function()? onPressed;
 
+  /// Optional width of this [CustomTextButtonTemplate].
+  ///
+  /// If not provided, the widget will take as much width as required.
+  final double? width;
+
+  /// If true the height is fixed to `40`, otherwise the widget will take as
+  /// much height as required.
+  final bool isDense;
+
   CustomTextButtonTemplate({
     super.key,
     required this.textButtonChild,
     required this.onPressed,
+    this.width,
+    this.isDense = true,
   }) : super(
-          height: 40,
+          width: width,
+          height: isDense ? 40 : null,
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 23, 27, 137),

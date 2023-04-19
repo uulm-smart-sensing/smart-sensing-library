@@ -6,25 +6,29 @@ import 'custom_text_button_template.dart';
 ///
 /// This [CustomTextButton] widget can be used as button in the entire app
 /// if an as button recognizable element is needed.
-class CustomTextButton extends StatelessWidget {
+class CustomTextButton extends CustomTextButtonTemplate {
   /// The [text] which is shown on the custom [TextButton]
   final String text;
 
-  /// Called when this [CustomTextButton] is pressed.
-  final void Function()? onPressed;
+  /// Custom [TextStyle] of this [CustomTextButton].
+  ///
+  /// If not provided, a default [TextStyle] will be used.
+  final TextStyle? style;
 
-  const CustomTextButton({
+  CustomTextButton({
     super.key,
+    super.onPressed,
+    super.width,
+    super.isDense,
     required this.text,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) => CustomTextButtonTemplate(
-        textButtonChild: Text(
-          text,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        onPressed: onPressed,
-      );
+    this.style,
+  }) : super(
+          textButtonChild: Text(
+            text,
+            style: style ??
+                const TextStyle(
+                  color: Colors.white,
+                ),
+          ),
+        );
 }
