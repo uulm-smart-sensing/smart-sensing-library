@@ -359,4 +359,3 @@ class FilterTools {
   ///Returns result of querry.
   List<SensorData> result() => _buffer[0];
 }
-
