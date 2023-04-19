@@ -355,4 +355,3 @@ class FilterTools {
     return _buffer.map((interValList) => interValList.first).toList();
   }
 }
-
