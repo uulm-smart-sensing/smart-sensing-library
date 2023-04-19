@@ -144,7 +144,7 @@ class IOManager {
     if (_subscriptions[id] == null) {
       return SensorTaskResult.notTrackingSensor;
     }
-    
+
     _sensorThreadLock = true;
     return _sensorManager.stopSensorTracking(id);
   }
