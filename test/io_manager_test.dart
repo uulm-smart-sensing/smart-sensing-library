@@ -14,6 +14,12 @@ Future<void> main() async {
     throw Exception("Database connection failed!");
   }
 
+  const exampleConfig = SensorConfig(
+    targetUnit: Unit.celsius,
+    targetPrecision: 2,
+    timeInterval: Duration(milliseconds: 1000),
+  );
+
   setUp(() async {
     await ioManager.removeData(SensorId.accelerometer);
     await ioManager.removeSensor(SensorId.accelerometer);
@@ -22,13 +28,19 @@ Future<void> main() async {
   ///The fakeSensorManager cancles the Stream after 10 seconds,
   ///so after 15 seconds all data is saved in the database.
   test("Add sensor and get from database", () async {
-    await ioManager.addSensor(SensorId.accelerometer, 1000);
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
     await Future.delayed(const Duration(seconds: 15));
     var test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
   });
   test("Add sensor and get from buffer", () async {
-    await ioManager.addSensor(SensorId.accelerometer, 1000);
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
     await Future.delayed(const Duration(seconds: 5));
     var test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
@@ -36,7 +48,10 @@ Future<void> main() async {
 
   test("Manual save to database", () async {
     var from = DateTime.now().toUtc();
-    await ioManager.addSensor(SensorId.accelerometer, 1000);
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
     await Future.delayed(const Duration(seconds: 3));
     var to = DateTime.now().toUtc();
     await ioManager.flushToDatabase(SensorId.accelerometer);
@@ -49,8 +64,11 @@ Future<void> main() async {
     expect(test?.result().isNotEmpty, true);
   });
 
-  test("Remove data from databse", () async {
-    await ioManager.addSensor(SensorId.accelerometer, 1000);
+  test("Remove data from database", () async {
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
     await Future.delayed(const Duration(seconds: 15));
     await ioManager.removeData(SensorId.accelerometer);
     expect(
@@ -64,11 +82,15 @@ Future<void> main() async {
   ///Removes all data and tries again to add a sensor.
   ///Checks if new sensor add also created data.
   test("Remove sensor", () async {
-    await ioManager.addSensor(SensorId.accelerometer, 1000);
-    expect(
-      () => ioManager.addSensor(SensorId.accelerometer, 1000),
-      throwsException,
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
     );
+    var result = await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
+    expect(result, equals(SensorTaskResult.alreadyTrackingSensor));
 
     await Future.delayed(const Duration(seconds: 5));
     await ioManager.removeSensor(SensorId.accelerometer);
@@ -76,7 +98,10 @@ Future<void> main() async {
     expect(test?.result().isNotEmpty, true);
 
     await ioManager.removeData(SensorId.accelerometer);
-    await ioManager.addSensor(SensorId.accelerometer, 1000);
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
     await Future.delayed(const Duration(seconds: 5));
     await ioManager.removeSensor(SensorId.accelerometer);
     test = await ioManager.getFilterFrom(SensorId.accelerometer);
