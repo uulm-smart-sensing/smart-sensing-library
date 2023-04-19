@@ -1,14 +1,21 @@
 import 'dart:collection';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
+import 'package:smart_sensing_library/filter_tools.dart';
 import 'package:smart_sensing_library/multi_filter_tools.dart';
 
 import 'filter_tools_test.dart';
 
 void main() {
-  var randomMultiTestDataset = createRandomMultiTestData();
-  var determinedMultiTestDataSet = createDeterminedMultiTestData();
-  var splittingMultiTestDataSet = createMultiDataForSplitting();
+  var randomMultiTestDataset = <SensorId,FilterTools>{};
+  var determinedMultiTestDataSet  = <SensorId,FilterTools>{};
+  var splittingMultiTestDataSet  = <SensorId,FilterTools>{};
+
+  setUp(() {
+  randomMultiTestDataset = createRandomMultiTestData();
+  determinedMultiTestDataSet = createDeterminedMultiTestData();
+  splittingMultiTestDataSet = createMultiDataForSplitting();
+  });
 
   group("This group tests, that all filter (functions) work deterministic.",
       () {
@@ -364,26 +371,26 @@ void main() {
   });
 }
 
-Map<SensorId, List<SensorData>> createRandomMultiTestData() {
-  var testMap = HashMap<SensorId, List<SensorData>>();
-  testMap[SensorId.accelerometer] = createRandomTestData();
-  testMap[SensorId.barometer] = createRandomTestData();
-  testMap[SensorId.gyroscope] = createRandomTestData();
+Map<SensorId, FilterTools> createRandomMultiTestData() {
+  var testMap = HashMap<SensorId, FilterTools>();
+  testMap[SensorId.accelerometer] = FilterTools(createRandomTestData());
+  testMap[SensorId.barometer] = FilterTools(createRandomTestData());
+  testMap[SensorId.gyroscope] = FilterTools(createRandomTestData());
   return testMap;
 }
 
-Map<SensorId, List<SensorData>> createDeterminedMultiTestData() {
-  var testMap = HashMap<SensorId, List<SensorData>>();
-  testMap[SensorId.accelerometer] = createDeterminedTestData();
-  testMap[SensorId.barometer] = createDeterminedTestData();
-  testMap[SensorId.gyroscope] = createDeterminedTestData();
+Map<SensorId, FilterTools> createDeterminedMultiTestData() {
+  var testMap = HashMap<SensorId, FilterTools>();
+  testMap[SensorId.accelerometer] = FilterTools(createDeterminedTestData());
+  testMap[SensorId.barometer] = FilterTools(createDeterminedTestData());
+  testMap[SensorId.gyroscope] = FilterTools(createDeterminedTestData());
   return testMap;
 }
 
-Map<SensorId, List<SensorData>> createMultiDataForSplitting() {
-  var testMap = HashMap<SensorId, List<SensorData>>();
-  testMap[SensorId.accelerometer] = createDataForSplitting();
-  testMap[SensorId.barometer] = createDataForSplitting();
-  testMap[SensorId.gyroscope] = createDataForSplitting();
+Map<SensorId, FilterTools> createMultiDataForSplitting() {
+  var testMap = HashMap<SensorId, FilterTools>();
+  testMap[SensorId.accelerometer] = FilterTools(createDataForSplitting());
+  testMap[SensorId.barometer] = FilterTools(createDataForSplitting());
+  testMap[SensorId.gyroscope] = FilterTools(createDataForSplitting());
   return testMap;
 }
