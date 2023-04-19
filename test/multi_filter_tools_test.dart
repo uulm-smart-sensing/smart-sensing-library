@@ -163,7 +163,7 @@ void main() {
         "Test getMax in single interval with predetermined data axis 1",
         () {
           var filter = MultiFilterTools(determinedMultiTestDataSet)
-          ..getMax(axis: 1);
+            ..getMax(axis: 1);
 
           for (var element in filter.result().keys) {
             expect(
@@ -191,7 +191,7 @@ void main() {
         "Test getMin in single interval with predetermined data axis 1",
         () {
           var filter = MultiFilterTools(determinedMultiTestDataSet)
-          ..getMin(axis: 1);
+            ..getMin(axis: 1);
 
           for (var element in filter.result().keys) {
             expect(
@@ -220,7 +220,7 @@ void main() {
         "Test getMedian in single interval with predetermined data",
         () {
           var filter = MultiFilterTools(determinedMultiTestDataSet)
-          ..getMedian();
+            ..getMedian();
 
           for (var element in filter.result().keys) {
             expect(
@@ -312,11 +312,11 @@ void main() {
           ..getMax(interval: const Duration(days: 31));
 
         for (var element in filter.result().keys) {
-            expect(
-              filter.result()[element]!.length,
-              12,
-            );
-          }
+          expect(
+            filter.result()[element]!.length,
+            12,
+          );
+        }
       },
     );
 
@@ -326,11 +326,11 @@ void main() {
         var filter = MultiFilterTools(splittingMultiTestDataSet)
           ..getMax(interval: const Duration(days: 1));
         for (var element in filter.result().keys) {
-            expect(
-              filter.result()[element]!.length,
-              365,
-            );
-          }
+          expect(
+            filter.result()[element]!.length,
+            365,
+          );
+        }
       },
     );
 
@@ -340,11 +340,11 @@ void main() {
         var filter = MultiFilterTools(splittingMultiTestDataSet)
           ..getMax(interval: const Duration(hours: 1));
         for (var element in filter.result().keys) {
-            expect(
-              filter.result()[element]!.length,
-              8760,
-            );
-          }
+          expect(
+            filter.result()[element]!.length,
+            8760,
+          );
+        }
       },
     );
 
@@ -354,11 +354,11 @@ void main() {
         var filter = MultiFilterTools(splittingMultiTestDataSet)
           ..getMax(interval: const Duration(minutes: 1));
         for (var element in filter.result().keys) {
-            expect(
-              filter.result()[element]!.length,
-              525600,
-            );
-          }
+          expect(
+            filter.result()[element]!.length,
+            525600,
+          );
+        }
       },
     );
   });
