@@ -75,56 +75,78 @@ class IOManager {
   Future<List<SensorId>> getUsedSensors() async =>
       _sensorManager.getUsedSensors();
 
-  ///Adds a Sensor with [id].
+  /// Adds a Sensor with the passed [id].
   ///
-  ///Throws exception if a database connection is not established.
-  Future<void> addSensor(SensorId id, int timeIntervalInMilliseconds) async {
+  /// The returned [SensorTaskResult] indicates whether the operation was
+  /// successful ([SensorTaskResult.success]) or not. The sensor is subscribed
+  /// and data is collected only if the operation was successful.
+  ///
+  /// The passed [config] is used to specify the sensor time interval and the
+  /// properties of the sensor output data.
+  ///
+  /// Throws an exception if the database connection is not established.
+  Future<SensorTaskResult> addSensor({
+    required SensorId id,
+    required SensorConfig config,
+  }) async {
+    SensorTaskResult result;
     try {
       if (_objectStore == null) {
-        throw Exception("Database connection is not established!"
-            "Please first established to use the IOManager!");
+        throw Exception("Database connection is not established. "
+            "Establish connection first to use the IOManager.");
       }
+
       while (_sensorThreadLock) {
         await Future.delayed(Duration.zero);
       }
+
       if (_subscriptions[id] != null) {
-        throw Exception("Sensor already added!");
+        return SensorTaskResult.alreadyTrackingSensor;
       }
+
       _sensorThreadLock = true;
       _bufferManager.addBuffer(id);
-      var result = await _sensorManager.startSensorTracking(
-        id,
-        timeIntervalInMilliseconds,
+
+      result = await _sensorManager.startSensorTracking(
+        id: id,
+        config: config,
       );
+
       if (result == SensorTaskResult.success) {
         _subscriptions[id] = _sensorManager.getSensorStream(id)!.listen(
-              (e) => _processSensorData(e, id),
+              (sensorData) => _processSensorData(sensorData, id),
               onDone: () async => _onDataDone(id),
             );
-      } else {
-        throw Exception("Failed with $result");
       }
     } finally {
       _sensorThreadLock = false;
     }
+    return result;
   }
 
-  ///Removes a Sensor with [id].
+  /// Removes a Sensor with the passed [id].
   ///
-  ///Throws exception if a database connection is not established.
-  Future<void> removeSensor(SensorId id) async {
+  /// The returned [SensorTaskResult] indicates whether the operation was
+  /// successful ([SensorTaskResult.success]) or not. The sensor is unsubscribed
+  /// only if the operation was successful.
+  ///
+  /// Throws an exception if the database connection is not established.
+  Future<SensorTaskResult> removeSensor(SensorId id) async {
     if (_objectStore == null) {
-      throw Exception("Database connection is not established!"
-          "Please first established to use the IOManager!");
+      throw Exception("Database connection is not established. "
+          "Establish connection first to use the IOManager.");
     }
+
     while (_sensorThreadLock) {
       await Future.delayed(Duration.zero);
     }
+
     if (_subscriptions[id] == null) {
-      return;
+      return SensorTaskResult.notTrackingSensor;
     }
+
     _sensorThreadLock = true;
-    await _sensorManager.stopSensorTracking(id);
+    return _sensorManager.stopSensorTracking(id);
   }
 
   ///Gets Data from Database

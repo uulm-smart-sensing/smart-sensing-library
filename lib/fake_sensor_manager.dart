@@ -54,10 +54,10 @@ class FakeSensorManager extends Fake implements SensorManager {
 
   ///Starts the tracking of a sensor.
   @override
-  Future<SensorTaskResult> startSensorTracking(
-    SensorId id,
-    int timeIntervalInMilliseconds,
-  ) {
+  Future<SensorTaskResult> startSensorTracking({
+    required SensorId id,
+    required SensorConfig config,
+  }) {
     if (!_sensorAvailableMap[id]!) {
       return Future(() => SensorTaskResult.sensorNotAvailable);
     }
@@ -65,7 +65,7 @@ class FakeSensorManager extends Fake implements SensorManager {
       return Future(() => SensorTaskResult.alreadyTrackingSensor);
     }
     if (_platformCallResult == SensorTaskResult.success) {
-      _createStream(Duration(milliseconds: timeIntervalInMilliseconds), id);
+      _createStream(config.timeInterval, id);
     }
     return Future(() => _platformCallResult);
   }
