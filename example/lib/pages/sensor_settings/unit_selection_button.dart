@@ -33,6 +33,7 @@ class UnitSelectionButton extends Container {
             onPressed: onPressed,
             title: unitToUnitStringRepresentation[unit]!,
             isSelected: isSelected,
+            underlineTitleWhenSelected: false,
           ),
         );
 }
