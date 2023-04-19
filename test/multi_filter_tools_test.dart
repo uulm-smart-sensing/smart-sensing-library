@@ -7,14 +7,14 @@ import 'package:smart_sensing_library/multi_filter_tools.dart';
 import 'filter_tools_test.dart';
 
 void main() {
-  var randomMultiTestDataset = <SensorId,FilterTools>{};
-  var determinedMultiTestDataSet  = <SensorId,FilterTools>{};
-  var splittingMultiTestDataSet  = <SensorId,FilterTools>{};
+  var randomMultiTestDataset = <SensorId, FilterTools>{};
+  var determinedMultiTestDataSet = <SensorId, FilterTools>{};
+  var splittingMultiTestDataSet = <SensorId, FilterTools>{};
 
   setUp(() {
-  randomMultiTestDataset = createRandomMultiTestData();
-  determinedMultiTestDataSet = createDeterminedMultiTestData();
-  splittingMultiTestDataSet = createMultiDataForSplitting();
+    randomMultiTestDataset = createRandomMultiTestData();
+    determinedMultiTestDataSet = createDeterminedMultiTestData();
+    splittingMultiTestDataSet = createMultiDataForSplitting();
   });
 
   group("This group tests, that all filter (functions) work deterministic.",
