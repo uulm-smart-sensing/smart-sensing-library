@@ -306,12 +306,15 @@ class IOManager {
     DateTime? from,
     DateTime? to,
   }) async {
-    var filterMap = <SensorId, FilterTools?>{};
+    var filterMap = <SensorId,FilterTools?>{};
     for (var id in idList) {
-      filterMap[id] = await getFilterFrom(id, from: from, to: to);
+       filterMap[id] = await getFilterFrom(id,from: from, to: to);
     }
     return MultiFilterTools(filterMap);
   }
+
+
+
 
   ///Splits a partial list from [buffer] between [from] and [to].
   List<SensorData> _splitWithDateTime(
