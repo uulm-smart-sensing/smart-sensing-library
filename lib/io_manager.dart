@@ -392,7 +392,7 @@ class IOManager {
             {formattedData = formatData(sensor, sensorData, format)},
       );
 
-      if (formattedData == "".codeUnits) return false;
+      if (formattedData.isEmpty) return false;
 
       writeFormattedData(fileName, format, formattedData);
     }
