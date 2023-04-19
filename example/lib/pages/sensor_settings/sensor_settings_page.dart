@@ -6,6 +6,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/section_header.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
+import '../../sensor_units.dart';
 import '../../text_formatter.dart';
 import 'precision_slider.dart';
 import 'time_interval_selection_button.dart';
@@ -39,7 +40,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     // TODO: Make call to smart sensing library to initialize values
     selectedPrecision = 2;
     selectedTimeIntervalInMilliseconds = 100;
-    selectedUnit = _getUnitsFromSensorId(widget.sensorId).first;
+    selectedUnit = getUnitsFromSensorId(widget.sensorId).first;
     super.initState();
   }
 
@@ -48,7 +49,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     var unitHeader = SectionHeader("Unit");
 
     var totalWidth = MediaQuery.of(context).size.width;
-    var units = _getUnitsFromSensorId(widget.sensorId);
+    var units = getUnitsFromSensorId(widget.sensorId);
     var buttonWidth = _getButtonWidth(totalWidth, units.length);
     var unitSelection = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -128,43 +129,6 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         isSelected: selectedUnit == unit,
         width: width,
       );
-}
-
-List<Unit> _getUnitsFromSensorId(SensorId sensorId) {
-  switch (sensorId) {
-    case SensorId.accelerometer:
-    case SensorId.linearAcceleration:
-      return [
-        Unit.gravitationalForce,
-        Unit.metersPerSecondSquared,
-      ];
-    case SensorId.gyroscope:
-      return [
-        Unit.degreesPerSecond,
-        Unit.radiansPerSecond,
-      ];
-    case SensorId.magnetometer:
-      return [
-        Unit.microTeslas,
-      ];
-    case SensorId.orientation:
-      return [
-        Unit.degrees,
-        Unit.radians,
-      ];
-    case SensorId.barometer:
-      return [
-        Unit.bar,
-        Unit.hectoPascal,
-        Unit.kiloPascal,
-      ];
-    case SensorId.thermometer:
-      return [
-        Unit.celsius,
-        Unit.fahrenheit,
-        Unit.kelvin,
-      ];
-  }
 }
 
 double _getButtonWidth(double totalWidth, int numberOfWidgets) =>
