@@ -48,8 +48,8 @@ class MultiFilterTools {
   }
 
   ///Maps amount of entries in each [List] in given [interval].
-  Map<SensorId,List<int>> getCount({Duration interval = Duration.zero}) {
-    var countMap = HashMap<SensorId,List<int>>();
+  Map<SensorId, List<int>> getCount({Duration interval = Duration.zero}) {
+    var countMap = HashMap<SensorId, List<int>>();
     for (var key in _querryMap.keys) {
       countMap[key] = _querryMap[key]!.getCount(interval: interval);
     }
