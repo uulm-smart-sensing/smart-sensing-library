@@ -132,7 +132,6 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         },
         unit: unit,
         isSelected: selectedUnit == unit,
-        width: width,
       );
 }
 

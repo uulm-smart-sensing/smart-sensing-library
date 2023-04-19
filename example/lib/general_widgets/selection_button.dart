@@ -26,13 +26,13 @@ class SelectionButton extends SizedBox {
   final bool underlineTitleWhenSelected;
 
   SelectionButton({
-    required super.width,
-    required super.height,
     required this.onPressed,
     required this.title,
     required this.isSelected,
     this.selectedColor,
     this.underlineTitleWhenSelected = true,
+    super.width,
+    super.height,
     super.key,
   }) : super(
           child: TextButton(
