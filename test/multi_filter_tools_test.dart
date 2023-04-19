@@ -2,20 +2,16 @@ import 'dart:collection';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/filter_tools.dart';
-import 'package:smart_sensing_library/multi_filter_tools.dart';
 
 import 'filter_tools_test.dart';
 
 void main() {
-  var randomMultiTestDataset = <SensorId, FilterTools>{};
-  var determinedMultiTestDataSet = <SensorId, FilterTools>{};
-  var splittingMultiTestDataSet = <SensorId, FilterTools>{};
-
-  setUp(() {
-    randomMultiTestDataset = createRandomMultiTestData();
-    determinedMultiTestDataSet = createDeterminedMultiTestData();
-    splittingMultiTestDataSet = createMultiDataForSplitting();
-  });
+  var randomTestDataset = createRandomTestData();
+  var determinedTestDataSet = createDeterminedTestData();
+  var splittingTestDataSet = createDataForSplitting();
+  var randomMultiTestDataset = createRandomMultiTestData();
+  var determinedMultiTestDataSet = createDeterminedMultiTestData();
+  var splittingMultiTestDataSet = createMultiDataForSplitting();
 
   group("This group tests, that all filter (functions) work deterministic.",
       () {
@@ -170,7 +166,7 @@ void main() {
         "Test getMax in single interval with predetermined data axis 1",
         () {
           var filter = MultiFilterTools(determinedMultiTestDataSet)
-            ..getMax(axis: 1);
+          ..getMax(axis: 1);
 
           for (var element in filter.result().keys) {
             expect(
@@ -198,7 +194,7 @@ void main() {
         "Test getMin in single interval with predetermined data axis 1",
         () {
           var filter = MultiFilterTools(determinedMultiTestDataSet)
-            ..getMin(axis: 1);
+          ..getMin(axis: 1);
 
           for (var element in filter.result().keys) {
             expect(
@@ -227,7 +223,7 @@ void main() {
         "Test getMedian in single interval with predetermined data",
         () {
           var filter = MultiFilterTools(determinedMultiTestDataSet)
-            ..getMedian();
+          ..getMedian();
 
           for (var element in filter.result().keys) {
             expect(
@@ -319,11 +315,11 @@ void main() {
           ..getMax(interval: const Duration(days: 31));
 
         for (var element in filter.result().keys) {
-          expect(
-            filter.result()[element]!.length,
-            12,
-          );
-        }
+            expect(
+              filter.result()[element]!.length,
+              12,
+            );
+          }
       },
     );
 
@@ -333,11 +329,11 @@ void main() {
         var filter = MultiFilterTools(splittingMultiTestDataSet)
           ..getMax(interval: const Duration(days: 1));
         for (var element in filter.result().keys) {
-          expect(
-            filter.result()[element]!.length,
-            365,
-          );
-        }
+            expect(
+              filter.result()[element]!.length,
+              365,
+            );
+          }
       },
     );
 
@@ -347,11 +343,11 @@ void main() {
         var filter = MultiFilterTools(splittingMultiTestDataSet)
           ..getMax(interval: const Duration(hours: 1));
         for (var element in filter.result().keys) {
-          expect(
-            filter.result()[element]!.length,
-            8760,
-          );
-        }
+            expect(
+              filter.result()[element]!.length,
+              8760,
+            );
+          }
       },
     );
 
@@ -361,36 +357,36 @@ void main() {
         var filter = MultiFilterTools(splittingMultiTestDataSet)
           ..getMax(interval: const Duration(minutes: 1));
         for (var element in filter.result().keys) {
-          expect(
-            filter.result()[element]!.length,
-            525600,
-          );
-        }
+            expect(
+              filter.result()[element]!.length,
+              525600,
+            );
+          }
       },
     );
   });
 }
 
-Map<SensorId, FilterTools> createRandomMultiTestData() {
-  var testMap = HashMap<SensorId, FilterTools>();
-  testMap[SensorId.accelerometer] = FilterTools(createRandomTestData());
-  testMap[SensorId.barometer] = FilterTools(createRandomTestData());
-  testMap[SensorId.gyroscope] = FilterTools(createRandomTestData());
+Map<SensorId, List<SensorData>> createRandomMultiTestData() {
+  var testMap = HashMap<SensorId, List<SensorData>>();
+  testMap[SensorId.accelerometer] = createRandomTestData();
+  testMap[SensorId.barometer] = createRandomTestData();
+  testMap[SensorId.gyroscope] = createRandomTestData();
   return testMap;
 }
 
-Map<SensorId, FilterTools> createDeterminedMultiTestData() {
-  var testMap = HashMap<SensorId, FilterTools>();
-  testMap[SensorId.accelerometer] = FilterTools(createDeterminedTestData());
-  testMap[SensorId.barometer] = FilterTools(createDeterminedTestData());
-  testMap[SensorId.gyroscope] = FilterTools(createDeterminedTestData());
+Map<SensorId, List<SensorData>> createDeterminedMultiTestData() {
+  var testMap = HashMap<SensorId, List<SensorData>>();
+  testMap[SensorId.accelerometer] = createDeterminedTestData();
+  testMap[SensorId.barometer] = createDeterminedTestData();
+  testMap[SensorId.gyroscope] = createDeterminedTestData();
   return testMap;
 }
 
-Map<SensorId, FilterTools> createMultiDataForSplitting() {
-  var testMap = HashMap<SensorId, FilterTools>();
-  testMap[SensorId.accelerometer] = FilterTools(createDataForSplitting());
-  testMap[SensorId.barometer] = FilterTools(createDataForSplitting());
-  testMap[SensorId.gyroscope] = FilterTools(createDataForSplitting());
+Map<SensorId, List<SensorData>> createMultiDataForSplitting() {
+  var testMap = HashMap<SensorId, List<SensorData>>();
+  testMap[SensorId.accelerometer] = createDataForSplitting();
+  testMap[SensorId.barometer] = createDataForSplitting();
+  testMap[SensorId.gyroscope] = createDataForSplitting();
   return testMap;
 }
