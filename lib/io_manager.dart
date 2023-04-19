@@ -124,22 +124,29 @@ class IOManager {
     return result;
   }
 
-  ///Removes a Sensor with [id].
+  /// Removes a Sensor with the passed [id].
   ///
-  ///Throws exception if a database connection is not established.
-  Future<void> removeSensor(SensorId id) async {
+  /// The returned [SensorTaskResult] indicates whether the operation was
+  /// successful ([SensorTaskResult.success]) or not. The sensor is unsubscribed
+  /// only if the operation was successful.
+  ///
+  /// Throws an exception if the database connection is not established.
+  Future<SensorTaskResult> removeSensor(SensorId id) async {
     if (_objectStore == null) {
-      throw Exception("Database connection is not established!"
-          "Please first established to use the IOManager!");
+      throw Exception("Database connection is not established. "
+          "Establish connection first to use the IOManager.");
     }
+
     while (_sensorThreadLock) {
       await Future.delayed(Duration.zero);
     }
+
     if (_subscriptions[id] == null) {
-      return;
+      return SensorTaskResult.notTrackingSensor;
     }
+    
     _sensorThreadLock = true;
-    await _sensorManager.stopSensorTracking(id);
+    return _sensorManager.stopSensorTracking(id);
   }
 
   ///Gets Data from Database
