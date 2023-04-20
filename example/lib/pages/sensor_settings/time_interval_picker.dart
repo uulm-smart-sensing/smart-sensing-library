@@ -59,7 +59,7 @@ class TimeIntervalPicker extends CommonPickerModel {
   String rightDivider() => ":";
 
   @override
-  List<int> layoutProportions() => [1, 1, 2];
+  List<int> layoutProportions() => [2, 2, 3];
 
   @override
   DateTime finalTime() => currentTime.isUtc

@@ -28,7 +28,7 @@ class UnitSelectionButton extends Expanded {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: SelectionButton(
-                height: 60,
+                height: 50,
                 onPressed: onPressed,
                 title: unitToUnitStringRepresentation[unit]!,
                 isSelected: isSelected,
