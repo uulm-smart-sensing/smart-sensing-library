@@ -4,14 +4,21 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../text_formatter.dart';
 import '../theme.dart';
 
-/// This widget shows live sensor data with form the given [SensorId].
+/// This widget shows live sensor data with for the given [SensorId].
 ///
-/// Data is shown in a [Column] with a correspoing Icon on the top right.
-/// [padding] is the outside padding of the widget.
+/// Shows the name, main data and the time since the last update.
+/// A short version is available if [shortFormat] is set true.
+/// By default the long version is returned.
 /// Widget should be wrapped e.g. by a [Container].
-/// Base padding is
+/// An example implementation would be:
 /// ```dart
-/// EdgeInsets.symmetric(vertical: 15, horizontal: 15)
+/// BrickContainer(
+///            color: sensorIdToColor[SensorId.accelerometer],
+///            child: const LiveDataInformation(
+///              id: SensorId.accelerometer,
+///              headLineFontSize: 15,
+///            ),
+///          );
 /// ```
 class LiveDataInformation extends StatefulWidget {
   final SensorId id;
@@ -20,6 +27,15 @@ class LiveDataInformation extends StatefulWidget {
   final double headLineFontSize;
   final double timeFontSize;
   final bool shortFormat;
+
+  ///  - Base [padding] is:
+  /// ```dart
+  /// EdgeInsets.symmetric(vertical: 15, horizontal: 15)
+  /// ```
+  /// - Base [mainDataFontSize] is 14
+  /// - Base [headLineFontSize] is 14
+  /// - Base [timeFontSize] is 13
+
   const LiveDataInformation({
     super.key,
     required this.id,
@@ -27,7 +43,7 @@ class LiveDataInformation extends StatefulWidget {
     this.mainDataFontSize = 14,
     this.headLineFontSize = 15,
     this.timeFontSize = 13,
-    this.shortFormat = true,
+    this.shortFormat = false,
   });
 
   @override
