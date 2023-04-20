@@ -19,6 +19,7 @@ class LiveDataInformation extends StatefulWidget {
   final double mainDataFontSize;
   final double headLineFontSize;
   final double timeFontSize;
+  final bool shortFormat;
   const LiveDataInformation({
     super.key,
     required this.id,
@@ -26,6 +27,7 @@ class LiveDataInformation extends StatefulWidget {
     this.mainDataFontSize = 14,
     this.headLineFontSize = 15,
     this.timeFontSize = 13,
+    this.shortFormat = true,
   });
 
   @override
@@ -84,6 +86,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
                     ),
                   ),
                   Expanded(
+                    flex: 2,
                     child: _mainDataText(
                       mainData,
                       unit,
@@ -91,7 +94,9 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
                       widget.mainDataFontSize,
                     ),
                   ),
-                  _updateText(lastUpdate, widget.timeFontSize),
+                  !widget.shortFormat
+                      ? _updateText(lastUpdate, widget.timeFontSize)
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
