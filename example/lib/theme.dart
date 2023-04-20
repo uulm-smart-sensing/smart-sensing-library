@@ -15,41 +15,13 @@ const sensorIdToColor = {
 
 /// Unique [Icon] for each [SensorId].
 const sensorIdToIcon = {
-  SensorId.accelerometer: FaIcon(
-    FontAwesomeIcons.arrowsToDot,
-    color: Colors.black,
-    size: 14,
-  ),
-  SensorId.gyroscope: FaIcon(
-    FontAwesomeIcons.groupArrowsRotate,
-    color: Colors.black,
-    size: 14,
-  ),
-  SensorId.magnetometer: FaIcon(
-    FontAwesomeIcons.magnet,
-    color: Colors.black,
-    size: 14,
-  ),
-  SensorId.orientation: FaIcon(
-    FontAwesomeIcons.compass,
-    color: Colors.black,
-    size: 14,
-  ),
-  SensorId.linearAcceleration: FaIcon(
-    FontAwesomeIcons.gaugeHigh,
-    color: Colors.black,
-    size: 14,
-  ),
-  SensorId.barometer: FaIcon(
-    FontAwesomeIcons.fireExtinguisher,
-    color: Colors.black,
-    size: 14,
-  ),
-  SensorId.thermometer: FaIcon(
-    FontAwesomeIcons.temperatureHalf,
-    color: Colors.black,
-    size: 14,
-  ),
+  SensorId.accelerometer: FontAwesomeIcons.arrowsToDot,
+  SensorId.gyroscope: FontAwesomeIcons.groupArrowsRotate,
+  SensorId.magnetometer: FontAwesomeIcons.magnet,
+  SensorId.orientation: FontAwesomeIcons.compass,
+  SensorId.linearAcceleration: FontAwesomeIcons.gaugeHigh,
+  SensorId.barometer: FontAwesomeIcons.fireExtinguisher,
+  SensorId.thermometer: FontAwesomeIcons.temperatureHalf,
 };
 
 const primaryColorHex = 0xFF00072F;
