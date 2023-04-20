@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../text_formatter.dart';
 import '../theme.dart';
 
 /// This widget shows live sensor data with form the given [SensorId].
@@ -10,15 +11,21 @@ import '../theme.dart';
 /// Widget should be wrapped e.g. by a [Container].
 /// Base padding is
 /// ```dart
-/// EdgeInsets.symmetric(vertical: 10, horizontal: 15)
+/// EdgeInsets.symmetric(vertical: 15, horizontal: 15)
 /// ```
 class LiveDataInformation extends StatefulWidget {
   final SensorId id;
   final EdgeInsets? padding;
+  final double mainDataFontSize;
+  final double headLineFontSize;
+  final double timeFontSize;
   const LiveDataInformation({
     super.key,
     required this.id,
     this.padding,
+    this.mainDataFontSize = 14,
+    this.headLineFontSize = 15,
+    this.timeFontSize = 13,
   });
 
   @override
@@ -28,6 +35,7 @@ class LiveDataInformation extends StatefulWidget {
 class _LiveDataInformationState extends State<LiveDataInformation> {
   Duration lastUpdate = Duration.zero;
   DateTime lastTimeStamp = DateTime.now().toUtc();
+  final double? mainDataSize = null;
   List<double?> mainData = [];
   Unit? unit;
 
@@ -52,36 +60,47 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
   }
 
   @override
-  Widget build(BuildContext context) => Expanded(
-        child: Padding(
-          padding: widget.padding ??
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
+  Widget build(BuildContext context) => Padding(
+        padding: widget.padding ??
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    _sensorIdConverter(widget.id),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: Text(
+                      formatPascalCase(widget.id.name),
+                      style: TextStyle(
+                        fontSize: widget.headLineFontSize,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                  const Spacer(),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: sensorIdToIcon[widget.id],
+                  Expanded(
+                    child: _mainDataText(
+                      mainData,
+                      unit,
+                      widget.mainDataFontSize,
+                    ),
                   ),
+                  _updateText(lastUpdate, widget.timeFontSize),
                 ],
               ),
-              Expanded(
-                child: _mainDataText(mainData, unit),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Icon(
+                sensorIdToIcon[widget.id],
+                size: widget.headLineFontSize,
+                color: Colors.black,
               ),
-              _updateText(lastUpdate),
-            ],
-          ),
+            ),
+          ],
         ),
       );
 }
@@ -90,7 +109,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
 String _fromData(List<double?> data, Unit unit) {
   var result = "";
   for (var element in data) {
-    result += "${element?.toStringAsFixed(0) ?? ""} ${_unitConverter(unit)}\n";
+    result += "${element?.toStringAsFixed(3) ?? ""} ${_unitConverter(unit)}\n";
   }
   if (result.isEmpty) {
     return "No Data";
@@ -133,45 +152,17 @@ String _unitConverter(Unit unit) {
   }
 }
 
-/// Converts the [SensorId] enum to the corresponing name string.
-String _sensorIdConverter(SensorId id) {
-  switch (id) {
-    case SensorId.accelerometer:
-      return "Accelerometer";
-    case SensorId.gyroscope:
-      return "Gyroscope";
-    case SensorId.magnetometer:
-      return "Magnetometer";
-    case SensorId.orientation:
-      return "Orientation";
-    case SensorId.linearAcceleration:
-      return "LinearAcceleration";
-    case SensorId.barometer:
-      return "Barometer";
-    case SensorId.thermometer:
-      return "Thermometer";
-    default:
-      return "Not Implemented yet";
-  }
-}
-
-double _mainDataSize(int rows) {
-  if (rows > 1) {
-    return 10;
-  }
-  return 16;
-}
-
 /// Creates the [Text] widget for the main data block.
 /// Is responsive if there is only one data Point or many.
-Widget _mainDataText(List<double?> data, Unit? unit) => Padding(
+Widget _mainDataText(List<double?> data, Unit? unit, double size) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Align(
         alignment: Alignment.center,
         child: Text(
           _fromData(data, unit ?? Unit.unitless),
+          textAlign: TextAlign.right,
           style: TextStyle(
-            fontSize: _mainDataSize(data.length),
+            fontSize: size,
             color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
@@ -180,19 +171,30 @@ Widget _mainDataText(List<double?> data, Unit? unit) => Padding(
     );
 
 /// Creates the [Text] widget for the update block.
-Widget _updateText(Duration lastUpdate) => Align(
+Widget _updateText(Duration lastUpdate, double size) => Align(
       alignment: Alignment.centerLeft,
       child: RichText(
         text: TextSpan(
-          text: "Last update: \n   ${lastUpdate.toString().substring(
-                2,
-                lastUpdate.toString().length - 3,
-              )}",
-          style: const TextStyle(
-            fontSize: 10,
+          text: "Last update: \n   ${_formatDuration(lastUpdate)}",
+          style: TextStyle(
+            fontSize: size,
             color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
       ),
     );
+
+/// Creates a [String] corresponding to the best time unit.
+String _formatDuration(Duration lastUpdate) {
+  if (lastUpdate.inMilliseconds < 1000) {
+    return "${lastUpdate.inMilliseconds} ms ago";
+  }
+  if (lastUpdate.inSeconds < 60) {
+    return "${lastUpdate.inSeconds} sec ago";
+  }
+  if (lastUpdate.inMinutes < 60) {
+    return "${lastUpdate.inMinutes} min ago";
+  }
+  return "${lastUpdate.inHours} h ago";
+}
