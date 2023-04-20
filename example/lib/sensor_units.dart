@@ -1,5 +1,6 @@
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+// TODO: Remove as new unit type system is implemented
 List<Unit> getUnitsFromSensorId(SensorId sensorId) {
   switch (sensorId) {
     case SensorId.accelerometer:
