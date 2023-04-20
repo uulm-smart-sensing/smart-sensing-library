@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'stylized_container.dart';
 
-///This is a specialized square clickable [StylizedContainer].
+/// This is a specialized square clickable [StylizedContainer].
 class BrickContainer extends StatelessWidget {
   final AlignmentGeometry? alignment;
   final EdgeInsetsGeometry? margin;
