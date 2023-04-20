@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'stylized_container.dart';
 
 /// This is a specialized clickable [StylizedContainer].
+/// Basesize is 150.
 class BrickContainer extends StatelessWidget {
   final AlignmentGeometry? alignment;
   final EdgeInsetsGeometry? margin;
