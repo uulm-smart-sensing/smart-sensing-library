@@ -3,15 +3,15 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../theme.dart';
 
-///This widget shows live sensor data with form the given [SensorId].
+/// This widget shows live sensor data with form the given [SensorId].
 ///
-///Data is shown in a [Column] with a correspoing Icon on the top right.
-///[padding] is the outside padding of the widget.
-///Widget should be wrapped e.g. by a [Container].
-///Base padding is
-///```dart
-///EdgeInsets.symmetric(vertical: 10, horizontal: 15)
-///```
+/// Data is shown in a [Column] with a correspoing Icon on the top right.
+/// [padding] is the outside padding of the widget.
+/// Widget should be wrapped e.g. by a [Container].
+/// Base padding is
+/// ```dart
+/// EdgeInsets.symmetric(vertical: 10, horizontal: 15)
+/// ```
 class LiveDataInformation extends StatefulWidget {
   final SensorId id;
   final EdgeInsets? padding;
@@ -31,8 +31,8 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
   List<double?> mainData = [];
   Unit? unit;
 
-  ///Gets the corresponding data stream of [SensorId]
-  ///and updates the internal data.
+  /// Gets the corresponding data stream of [SensorId]
+  /// and updates the internal data.
   @override
   void initState() {
     super.initState();
@@ -86,7 +86,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
       );
 }
 
-///Converts the main data to a readable string for the widget.
+/// Converts the main data to a readable string for the widget.
 String _fromData(List<double?> data, Unit unit) {
   var result = "";
   for (var element in data) {
@@ -98,7 +98,7 @@ String _fromData(List<double?> data, Unit unit) {
   return result.substring(0, result.length - 1);
 }
 
-///Converts the [Unit] enum to the corresponing unit string.
+/// Converts the [Unit] enum to the corresponing unit string.
 String _unitConverter(Unit unit) {
   switch (unit) {
     case Unit.metersPerSecondSquared:
@@ -133,7 +133,7 @@ String _unitConverter(Unit unit) {
   }
 }
 
-///Converts the [SensorId] enum to the corresponing name string.
+/// Converts the [SensorId] enum to the corresponing name string.
 String _sensorIdConverter(SensorId id) {
   switch (id) {
     case SensorId.accelerometer:
@@ -162,8 +162,8 @@ double _mainDataSize(int rows) {
   return 16;
 }
 
-///Creates the [Text] widget for the main data block.
-///Is responsive if there is only one data Point or many.
+/// Creates the [Text] widget for the main data block.
+/// Is responsive if there is only one data Point or many.
 Widget _mainDataText(List<double?> data, Unit? unit) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Align(
@@ -179,7 +179,7 @@ Widget _mainDataText(List<double?> data, Unit? unit) => Padding(
       ),
     );
 
-///Creates the [Text] widget for the update block.
+/// Creates the [Text] widget for the update block.
 Widget _updateText(Duration lastUpdate) => Align(
       alignment: Alignment.centerLeft,
       child: RichText(
