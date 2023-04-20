@@ -8,8 +8,9 @@ import 'pages/home/home_page.dart';
 import 'theme.dart';
 
 void main() async {
-  // Initialize date formatting for configured locale
+  // Is needed for Objectbox initialization.
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize date formatting for configured locale
   await initializeDateFormatting(Platform.localeName);
   await IOManager().openDatabase();
   runApp(const SmartSensingLibraryDemoApp());
