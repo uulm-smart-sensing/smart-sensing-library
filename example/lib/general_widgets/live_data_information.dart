@@ -7,6 +7,7 @@ import '../theme.dart';
 ///
 ///Data is shown in a [Column] with a correspoing Icon on the top right.
 ///[padding] is the outside padding of the widget.
+///Widget should be wrapped e.g. by a [Container].
 ///Base padding is
 ///```dart
 ///EdgeInsets.symmetric(vertical: 10, horizontal: 15)
