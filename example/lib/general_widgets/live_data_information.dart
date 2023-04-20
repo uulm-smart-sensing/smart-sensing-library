@@ -38,6 +38,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
   final double? mainDataSize = null;
   List<double?> mainData = [];
   Unit? unit;
+  int? maxPrecision;
 
   /// Gets the corresponding data stream of [SensorId]
   /// and updates the internal data.
@@ -54,6 +55,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
           lastTimeStamp = tmpDateTime;
           mainData = event.data;
           unit ??= event.unit;
+          maxPrecision ??= event.maxPrecision;
         });
       },
     );
@@ -85,6 +87,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
                     child: _mainDataText(
                       mainData,
                       unit,
+                      maxPrecision ?? 3,
                       widget.mainDataFontSize,
                     ),
                   ),
@@ -106,10 +109,12 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
 }
 
 /// Converts the main data to a readable string for the widget.
-String _fromData(List<double?> data, Unit unit) {
+String _fromData(List<double?> data, Unit unit, int maxPrecision) {
   var result = "";
   for (var element in data) {
-    result += "${element?.toStringAsFixed(3) ?? ""} ${_unitConverter(unit)}\n";
+    result += "${element?.toStringAsFixed(
+          3 > maxPrecision ? maxPrecision : 3,
+        ) ?? ""} ${_unitConverter(unit)}\n";
   }
   if (result.isEmpty) {
     return "No Data";
@@ -154,12 +159,18 @@ String _unitConverter(Unit unit) {
 
 /// Creates the [Text] widget for the main data block.
 /// Is responsive if there is only one data Point or many.
-Widget _mainDataText(List<double?> data, Unit? unit, double size) => Padding(
+Widget _mainDataText(
+  List<double?> data,
+  Unit? unit,
+  int maxPrecision,
+  double size,
+) =>
+    Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Align(
         alignment: Alignment.center,
         child: Text(
-          _fromData(data, unit ?? Unit.unitless),
+          _fromData(data, unit ?? Unit.unitless, maxPrecision),
           textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: size,
