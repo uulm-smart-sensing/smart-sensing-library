@@ -12,6 +12,7 @@ import '../../text_formatter.dart';
 import '../../utils.dart';
 import 'graph_view_page.dart';
 import 'historic_view_page.dart';
+import 'sensor_data.dart';
 import 'time_selection_button.dart';
 import 'visualization_selection_button.dart';
 
@@ -26,6 +27,8 @@ enum _Visualization {
   table,
   graph,
 }
+
+const int test = 0;
 
 /// This is the widget representing the body of the [HistoricViewPage].
 ///
@@ -47,13 +50,21 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   var selectedDuration = const Duration(minutes: 5);
   var selectedVisualization = _Visualization.table;
   late Map<int, TableColumnWidth> columnWidths;
+  late int numberOfDataPoints;
 
   @override
   void initState() {
     columnWidths = _getColumnWidthsFromSensorId(widget.sensorId);
     super.initState();
+    if (widget.sensorId == SensorId.thermometer ||
+        widget.sensorId == SensorId.barometer) {
+      numberOfDataPoints = 1;
+    } else {
+      numberOfDataPoints = 3;
+    }
   }
 
+  int getNumberOfDataPoints() => numberOfDataPoints;
   @override
   Widget build(BuildContext context) {
     var divider = const VerticalDivider(
@@ -187,24 +198,29 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     // between to serve as padding.
     var paddingRow = _getPaddingRow(widget.sensorId);
 
-    // TODO: Remove when using real values
-    int numberOfDataPoints;
-    if (widget.sensorId == SensorId.thermometer ||
-        widget.sensorId == SensorId.barometer) {
-      numberOfDataPoints = 1;
-    } else {
-      numberOfDataPoints = 3;
-    }
-
-    //
     var visualizationGraph = AspectRatio(
       aspectRatio: 1.7,
       child: Column(
         children: [
           visualizationSelection,
-          const Expanded(
-            child: GraphView(),
+          const Padding(
+            padding: EdgeInsets.only(
+              left: 50,
+              right: 0,
+              top: 20,
+              bottom: 4,
+            ),
           ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 6,
+                right: 16,
+                bottom: 4,
+              ),
+              child: GraphView(lineData: numberOfDataPoints),
+            ),
+          )
         ],
       ),
     );
@@ -225,19 +241,9 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         paddingRow,
         // TODO: Add data row using call to smart sensing library
         // and _getTableRowFromSensorData add padding with paddingRow
+
         _getTableRowFromSensorData(
-          DateTime.fromMillisecondsSinceEpoch(1234567890123),
-          [1.0, 2.0, 3.0].take(numberOfDataPoints).toList(),
-        ),
-        paddingRow,
-        _getTableRowFromSensorData(
-          DateTime.fromMillisecondsSinceEpoch(9876543210987),
-          [3.0, 2.0, 1.0].take(numberOfDataPoints).toList(),
-        ),
-        paddingRow,
-        _getTableRowFromSensorData(
-          DateTime.fromMillisecondsSinceEpoch(5555555555555),
-          [69.0, 42.0, 666.0].take(numberOfDataPoints).toList(),
+          threeAxes.take(numberOfDataPoints).toList(),
         ),
         paddingRow,
       ],
@@ -313,9 +319,30 @@ List<Widget> _getTableElementsFromSensorId(
     case SensorId.linearAcceleration:
       // Axes are colored when graph is selected
       elements = [
-        const Text("X"),
-        const Text("Y"),
-        const Text("Z"),
+        Text(
+          "X",
+          style: TextStyle(
+            color: selectedVisualization == _Visualization.table
+                ? Colors.red
+                : null,
+          ),
+        ),
+        Text(
+          "Y",
+          style: TextStyle(
+            color: selectedVisualization == _Visualization.table
+                ? Colors.green
+                : null,
+          ),
+        ),
+        Text(
+          "Z",
+          style: TextStyle(
+            color: selectedVisualization == _Visualization.table
+                ? Colors.lightBlue
+                : null,
+          ),
+        ),
       ];
       break;
     case SensorId.barometer:
@@ -352,25 +379,71 @@ TableRow _getPaddingRow(SensorId sensorId) {
 }
 
 // ignore: unused_element
-TableRow _getTableRowFromSensorData(DateTime dateTime, List<double> data) {
-  var formattedDate = formatDate(
-    dateTime: dateTime,
-    shortenYear: true,
-    extendWithDayName: true,
-  );
-  var formattedTime = DateFormat.Hms(Platform.localeName).format(dateTime);
-
-  return TableRow(
-    children: [
-      Center(
-        child: Column(
-          children: [
-            Text(formattedDate),
-            Text(formattedTime),
-          ],
+TableRow _getTableRowFromSensorData(List<SData> data) => TableRow(
+      children: [
+        Center(
+          child: Column(
+            children: data
+                .map(
+                  (value) => Center(
+                    child: Text(
+                      '${formatDate(
+                        dateTime: convertToDate(value.timestamp),
+                        shortenYear: true,
+                        extendWithDayName: true,
+                      )}\n${DateFormat.Hms(
+                        Platform.localeName,
+                      ).format(convertToDate(value.timestamp))}',
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
         ),
-      ),
-      ...data.map((value) => Center(child: Text(value.toString()))),
-    ],
-  );
-}
+        ...data.map(
+          (value) => Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 16.0,
+                  width: double.infinity,
+                ),
+                Text(
+                  value.x.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                const SizedBox(
+                  height: 16.0,
+                  width: double.infinity,
+                ),
+                Text(
+                  value.y.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                const SizedBox(
+                  height: 16.0,
+                  width: double.infinity,
+                ),
+                Text(
+                  value.z.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
