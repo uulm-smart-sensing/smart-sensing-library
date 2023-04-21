@@ -1,3 +1,4 @@
+/// Class that stores Data for historic view page
 class SData {
   final double timestamp;
   final double x;
@@ -15,7 +16,8 @@ class SData {
   String toString() => '$x\n$y\n$z';
 }
 
-final List<SData> threeAxes = [
+/// Test data needed for testing
+final List<SData> testData = [
   SData(
     timestamp: DateTime(2023, 4, 17, 17, 30).millisecondsSinceEpoch.toDouble(),
     x: 3,
@@ -48,6 +50,7 @@ final List<SData> threeAxes = [
   ),
 ];
 
+/// Determines the maximum of a unit in a list and returns the maximum.
 double getMaxUnit(List<SData> value) {
   var maxUnit = value.map((data) => [data.x, data.y ?? 0, data.z ?? 0]).reduce(
         (a, b) => a.reduce((a1, b1) => a1 > b1 ? a1 : b1) >
@@ -58,12 +61,14 @@ double getMaxUnit(List<SData> value) {
   return maxUnit.reduce((a, b) => a > b ? a : b);
 }
 
+/// Determines the maximum of timestamp in a list and returns the maximum.
 double getMaxTimeStamp(List<SData> value) {
   var maxUnit =
       value.map((data) => data.timestamp).reduce((a, b) => a > b ? a : b);
   return maxUnit;
 }
 
+/// Determines the minimum of timestamp in a list and returns the maximum.
 double getMinTimeStamp(List<SData> value) {
   var maxUnit =
       value.map((data) => data.timestamp).reduce((a, b) => a < b ? a : b);

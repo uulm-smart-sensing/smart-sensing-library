@@ -28,8 +28,6 @@ enum _Visualization {
   graph,
 }
 
-const int test = 0;
-
 /// This is the widget representing the body of the [HistoricViewPage].
 ///
 /// It contains:
@@ -198,6 +196,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     // between to serve as padding.
     var paddingRow = _getPaddingRow(widget.sensorId);
 
+    // Graph that visualize sensor data
     var visualizationGraph = AspectRatio(
       aspectRatio: 1.7,
       child: Column(
@@ -243,7 +242,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         // and _getTableRowFromSensorData add padding with paddingRow
 
         _getTableRowFromSensorData(
-          threeAxes.take(numberOfDataPoints).toList(),
+          testData.take(numberOfDataPoints).toList(),
         ),
         paddingRow,
       ],
