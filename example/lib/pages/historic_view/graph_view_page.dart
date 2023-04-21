@@ -1,40 +1,34 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'sensor_data.dart';
 
 class GraphView extends StatelessWidget {
-  const GraphView({super.key});
+  final int lineData;
+  const GraphView({super.key, required this.lineData});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: AspectRatio(
-          aspectRatio: 1.7,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 18,
-              top: 20,
-              bottom: 4,
-            ),
-            child: LineChart(
-              chartData,
-            ),
-          ),
+  Widget build(BuildContext context) => LineChart(
+        LineChartData(
+          lineTouchData: lineTouchData,
+          gridData: gridData,
+          titlesData: titleData,
+          borderData: borderData,
+          lineBarsData: bardata(lineData),
+          minX: getMinTimeStamp(threeAxes),
+          maxX: getMaxTimeStamp(threeAxes),
+          minY: 0,
+          maxY: getMaxUnit(threeAxes) + 1,
         ),
       );
 }
 
-LineChartData get chartData => LineChartData(
-      lineTouchData: lineTouchData,
-      gridData: gridData,
-      titlesData: titleData,
-      borderData: borderData,
-      lineBarsData: lineBarsData,
-      minX: xData.first.timestamp,
-      maxX: xData.last.timestamp,
-      minY: 0,
-      maxY: 6,
-    );
+List<LineChartBarData> bardata(int quantity) {
+  if (quantity != 3) {
+    return [lineChartBarDataX];
+  }
+  return [lineChartBarDataX, lineChartBarDataY, lineChartBarDataZ];
+}
 
 FlGridData get gridData => FlGridData(show: false);
 FlBorderData get borderData => FlBorderData(
@@ -67,11 +61,7 @@ LineTouchData get lineTouchData => LineTouchData(
         }).toList(),
       ),
     );
-List<LineChartBarData> get lineBarsData => [
-      lineChartBarDataX,
-      lineChartBarDataY,
-      lineChartBarDataZ,
-    ];
+
 LineChartBarData get lineChartBarDataX => LineChartBarData(
       color: Colors.red,
       isStrokeCapRound: true,
@@ -79,7 +69,7 @@ LineChartBarData get lineChartBarDataX => LineChartBarData(
       belowBarData: BarAreaData(show: false),
       barWidth: 3,
       isCurved: true,
-      spots: xData.map((data) => FlSpot(data.timestamp, data.unit)).toList(),
+      spots: threeAxes.map((data) => FlSpot(data.timestamp, data.x)).toList(),
     );
 
 LineChartBarData get lineChartBarDataY => LineChartBarData(
@@ -89,7 +79,7 @@ LineChartBarData get lineChartBarDataY => LineChartBarData(
       belowBarData: BarAreaData(show: false),
       barWidth: 3,
       isCurved: true,
-      spots: yData.map((data) => FlSpot(data.timestamp, data.unit)).toList(),
+      spots: threeAxes.map((data) => FlSpot(data.timestamp, data.y!)).toList(),
     );
 
 LineChartBarData get lineChartBarDataZ => LineChartBarData(
@@ -99,29 +89,22 @@ LineChartBarData get lineChartBarDataZ => LineChartBarData(
       belowBarData: BarAreaData(show: false),
       barWidth: 3,
       isCurved: true,
-      spots: zData.map((data) => FlSpot(data.timestamp, data.unit)).toList(),
+      spots: threeAxes.map((data) => FlSpot(data.timestamp, data.z!)).toList(),
     );
 
 FlTitlesData get titleData => FlTitlesData(
       show: true,
-      bottomTitles:
-          AxisTitles(sideTitles: bottomTitles, drawBehindEverything: true),
-      leftTitles: AxisTitles(
-        sideTitles: leftTitles,
-      ),
-      rightTitles: AxisTitles(
-        sideTitles: SideTitles(showTitles: false),
-      ),
-      topTitles: AxisTitles(
-        sideTitles: SideTitles(showTitles: false),
-      ),
+      bottomTitles: AxisTitles(sideTitles: bottomTitles),
+      leftTitles: AxisTitles(sideTitles: leftTitles),
+      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
     );
 
 SideTitles get bottomTitles => SideTitles(
       showTitles: true,
       reservedSize: 30,
       getTitlesWidget: bottomTitleWidgets,
-      interval: (xData.last.timestamp - xData.first.timestamp) / 4,
+      interval: (getMaxTimeStamp(threeAxes) - getMinTimeStamp(threeAxes)) / 2,
     );
 
 Widget bottomTitleWidgets(double value, TitleMeta meta) {
@@ -143,9 +126,9 @@ Widget bottomTitleWidgets(double value, TitleMeta meta) {
 
 SideTitles get leftTitles => SideTitles(
       showTitles: true,
-      reservedSize: 35,
+      reservedSize: 40,
       getTitlesWidget: leftTitleWidgets,
-      interval: 1,
+      interval: getMaxUnit(threeAxes) / 2.5,
     );
 
 Widget leftTitleWidgets(double value, TitleMeta meta) {
@@ -154,103 +137,10 @@ Widget leftTitleWidgets(double value, TitleMeta meta) {
     fontWeight: FontWeight.bold,
     fontSize: 16,
   );
-  Widget text;
-  switch (value.toInt()) {
-    case 1:
-      text = const Text('1', style: style);
-      break;
-    case 3:
-      text = const Text('3', style: style);
-      break;
-    case 5:
-      text = const Text('5', style: style);
-      break;
-    default:
-      text = const Text('');
-      break;
-  }
-
+  var newValue = value.round();
   return SideTitleWidget(
     axisSide: meta.axisSide,
     space: 4,
-    child: text,
+    child: Text('$newValue', style: style),
   );
-}
-
-final List<TestData> xData = [
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 30).millisecondsSinceEpoch.toDouble(),
-    unit: 3,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 31).millisecondsSinceEpoch.toDouble(),
-    unit: 2,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 32).millisecondsSinceEpoch.toDouble(),
-    unit: 5,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 33).millisecondsSinceEpoch.toDouble(),
-    unit: 2.5,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 34).millisecondsSinceEpoch.toDouble(),
-    unit: 4,
-  ),
-];
-
-final List<TestData> yData = [
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 30).millisecondsSinceEpoch.toDouble(),
-    unit: 4,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 31).millisecondsSinceEpoch.toDouble(),
-    unit: 3,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 32).millisecondsSinceEpoch.toDouble(),
-    unit: 4.9,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 33).millisecondsSinceEpoch.toDouble(),
-    unit: 3,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 34).millisecondsSinceEpoch.toDouble(),
-    unit: 5,
-  ),
-];
-final List<TestData> zData = [
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 30).millisecondsSinceEpoch.toDouble(),
-    unit: 1,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 31).millisecondsSinceEpoch.toDouble(),
-    unit: 5,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 32).millisecondsSinceEpoch.toDouble(),
-    unit: 1,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 33).millisecondsSinceEpoch.toDouble(),
-    unit: 1,
-  ),
-  TestData(
-    timestamp: DateTime(2023, 4, 17, 17, 34).millisecondsSinceEpoch.toDouble(),
-    unit: 2,
-  ),
-];
-
-class TestData {
-  final double unit;
-  final double timestamp;
-
-  const TestData({
-    required this.timestamp,
-    required this.unit,
-  });
 }
