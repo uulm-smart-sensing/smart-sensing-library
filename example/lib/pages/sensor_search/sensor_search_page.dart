@@ -92,8 +92,8 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         fontSize: 24,
       ),
     );
-    // TODO: Replace with favorite sensors
 
+    /// show all Favorits
     var favoritesBody = _getSensorsListFromIds(
       sensorIds: provider.sensorList,
       containerFlex: provider.sensorList.length,
