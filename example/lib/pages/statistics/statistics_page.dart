@@ -2,9 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
-
+import 'package:provider/provider.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/text_formatter.dart';
+import '../../favorite_provider.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../general_widgets/stylized_container.dart';
 import '../historic_view/historic_view_page.dart';
@@ -22,14 +23,28 @@ class StatisticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<FavoriteProvider>(context);
+
     // The list containing the buttons for all implemented sensors
     // for navigation to the [HistoricViewPage]s.
     var sensorList = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       child: Column(
         children: [
-          // TODO: add some items like below with "Favorites"
-          // and filter only favorites in the ListView
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text("Favorite"),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Expanded(
+            child: ListView(
+              children: provider.sensorList
+                  .map((id) => _getSensorListItem(id, context))
+                  .toList(),
+            ),
+          ),
           const Align(
             alignment: Alignment.centerLeft,
             child: Text("All"),
@@ -40,6 +55,7 @@ class StatisticsPage extends StatelessWidget {
           Expanded(
             child: ListView(
               children: SensorId.values
+                  .where((sensorId) => !provider.sensorList.contains(sensorId))
                   .map((id) => _getSensorListItem(id, context))
                   .toList(),
             ),

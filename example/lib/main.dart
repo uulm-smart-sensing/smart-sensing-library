@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:smart_sensing_library/smart_sensing_library.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import 'favorite_provider.dart';
 import 'pages/home/home_page.dart';
