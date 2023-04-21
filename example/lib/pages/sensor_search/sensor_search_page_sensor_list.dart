@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../favorite_provider.dart';
+import '../../theme.dart';
 import 'sensor_toggle_list_element.dart';
 
 /// List element that wraps [SensorToggleListElement] in a [FutureBuilder].
 class SensorSearchPageSensorListElement extends StatefulWidget {
   final SensorId sensorId;
+  final FavoriteProvider provider;
 
-  const SensorSearchPageSensorListElement({super.key, required this.sensorId});
+  const SensorSearchPageSensorListElement({
+    super.key,
+    required this.sensorId,
+    required this.provider,
+  });
 
   @override
   State<SensorSearchPageSensorListElement> createState() =>
@@ -22,11 +30,35 @@ class _SensorSearchPageSensorListElementState
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             var state = snapshot.data!;
-            return SensorToggleListElement(
-              key: UniqueKey(),
-              sensorId: widget.sensorId,
-              isDisabled: !state.isAvailable,
-              isToggledOn: state.isCurrentlyBeingTracked,
+            return Slidable(
+              enabled: widget.provider.isSlidableEnabled(widget.sensorId),
+              endActionPane: ActionPane(
+                motion: const StretchMotion(),
+                extentRatio: 0.25,
+                children: [
+                  SlidableAction(
+                    borderRadius: BorderRadius.circular(20),
+                    backgroundColor:
+                        sensorIdToColor[widget.sensorId] ?? Colors.white,
+                    icon: widget.provider.isExist(widget.sensorId)
+                        ? Icons.favorite
+                        : Icons.favorite_outline,
+                    onPressed: (context) =>
+                        widget.provider.toggleFavorite(widget.sensorId),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  SensorToggleListElement(
+                    key: UniqueKey(),
+                    sensorId: widget.sensorId,
+                    isDisabled: !state.isAvailable,
+                    isToggledOn: state.isCurrentlyBeingTracked,
+                  ),
+                  const SizedBox(height: 6),
+                ],
+              ),
             );
           }
 
