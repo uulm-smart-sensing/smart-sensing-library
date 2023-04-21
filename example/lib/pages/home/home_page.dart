@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../favorite_provider.dart';
 import '../../formatter/date_formatter.dart';
 import '../live_view/live_view_page.dart';
 import '../live_view/live_view_sensor_widget.dart';
@@ -10,8 +12,6 @@ import 'demo_sensor_widget.dart';
 import 'device_widget.dart';
 import 'home_page_section_body.dart';
 import 'home_page_section_header.dart';
-import 'package:provider/provider.dart';
-import '../../favorite_provider.dart';
 
 /// Starting point of this demo app.
 ///
