@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'sensor_data.dart';
 
+/// Widget for displaying Graph in Historic View
 class GraphView extends StatelessWidget {
+  //variable that determines how many data points are needed
   final int lineData;
   const GraphView({super.key, required this.lineData});
 
@@ -14,16 +16,17 @@ class GraphView extends StatelessWidget {
           gridData: gridData,
           titlesData: titleData,
           borderData: borderData,
-          lineBarsData: bardata(lineData),
-          minX: getMinTimeStamp(threeAxes),
-          maxX: getMaxTimeStamp(threeAxes),
+          lineBarsData: chartData(lineData),
+          minX: getMinTimeStamp(testData),
+          maxX: getMaxTimeStamp(testData),
           minY: 0,
-          maxY: getMaxUnit(threeAxes) + 1,
+          maxY: getMaxUnit(testData) + 1,
         ),
       );
 }
 
-List<LineChartBarData> bardata(int quantity) {
+/// determines whether there will be 3 or 1 linechart depending on the parameter
+List<LineChartBarData> chartData(int quantity) {
   if (quantity != 3) {
     return [lineChartBarDataX];
   }
@@ -31,6 +34,8 @@ List<LineChartBarData> bardata(int quantity) {
 }
 
 FlGridData get gridData => FlGridData(show: false);
+
+/// changes border attribute for the graph
 FlBorderData get borderData => FlBorderData(
       show: true,
       border: Border.all(
@@ -38,6 +43,8 @@ FlBorderData get borderData => FlBorderData(
         width: 1,
       ),
     );
+
+/// handles the touch event from the graph
 LineTouchData get lineTouchData => LineTouchData(
       handleBuiltInTouches: true,
       getTouchLineStart: (data, index) => 0,
@@ -62,6 +69,7 @@ LineTouchData get lineTouchData => LineTouchData(
       ),
     );
 
+/// handles the data from Graph
 LineChartBarData get lineChartBarDataX => LineChartBarData(
       color: Colors.red,
       isStrokeCapRound: true,
@@ -69,7 +77,7 @@ LineChartBarData get lineChartBarDataX => LineChartBarData(
       belowBarData: BarAreaData(show: false),
       barWidth: 3,
       isCurved: true,
-      spots: threeAxes.map((data) => FlSpot(data.timestamp, data.x)).toList(),
+      spots: testData.map((data) => FlSpot(data.timestamp, data.x)).toList(),
     );
 
 LineChartBarData get lineChartBarDataY => LineChartBarData(
@@ -79,7 +87,7 @@ LineChartBarData get lineChartBarDataY => LineChartBarData(
       belowBarData: BarAreaData(show: false),
       barWidth: 3,
       isCurved: true,
-      spots: threeAxes.map((data) => FlSpot(data.timestamp, data.y!)).toList(),
+      spots: testData.map((data) => FlSpot(data.timestamp, data.y!)).toList(),
     );
 
 LineChartBarData get lineChartBarDataZ => LineChartBarData(
@@ -89,9 +97,10 @@ LineChartBarData get lineChartBarDataZ => LineChartBarData(
       belowBarData: BarAreaData(show: false),
       barWidth: 3,
       isCurved: true,
-      spots: threeAxes.map((data) => FlSpot(data.timestamp, data.z!)).toList(),
+      spots: testData.map((data) => FlSpot(data.timestamp, data.z!)).toList(),
     );
 
+/// handles the titles
 FlTitlesData get titleData => FlTitlesData(
       show: true,
       bottomTitles: AxisTitles(sideTitles: bottomTitles),
@@ -104,7 +113,7 @@ SideTitles get bottomTitles => SideTitles(
       showTitles: true,
       reservedSize: 30,
       getTitlesWidget: bottomTitleWidgets,
-      interval: (getMaxTimeStamp(threeAxes) - getMinTimeStamp(threeAxes)) / 2,
+      interval: (getMaxTimeStamp(testData) - getMinTimeStamp(testData)) / 2,
     );
 
 Widget bottomTitleWidgets(double value, TitleMeta meta) {
@@ -128,7 +137,7 @@ SideTitles get leftTitles => SideTitles(
       showTitles: true,
       reservedSize: 40,
       getTitlesWidget: leftTitleWidgets,
-      interval: getMaxUnit(threeAxes) / 2.5,
+      interval: getMaxUnit(testData) / 2.5,
     );
 
 Widget leftTitleWidgets(double value, TitleMeta meta) {
