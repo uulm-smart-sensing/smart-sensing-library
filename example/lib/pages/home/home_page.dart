@@ -10,6 +10,8 @@ import 'demo_sensor_widget.dart';
 import 'device_widget.dart';
 import 'home_page_section_body.dart';
 import 'home_page_section_header.dart';
+import 'package:provider/provider.dart';
+import '../../favorite_provider.dart';
 
 /// Starting point of this demo app.
 ///
@@ -33,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var todayFormatted = formatDate(dateTime: DateTime.now());
-
+    var provider = Provider.of<FavoriteProvider>(context);
     var title = Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage> {
         noChildrenText: "No sensors are currently being tracked.",
         children: snapshot.data != null
             ? snapshot.data!
-                .take(3)
+                .where((id) => provider.sensorList.contains(id))
                 .map(
                   (id) => LiveViewSensorWidget(
                     sensorId: id,
