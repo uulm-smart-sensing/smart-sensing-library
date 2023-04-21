@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
+import 'package:provider/provider.dart';
 
+import 'favorite_provider.dart';
 import 'pages/home/home_page.dart';
 import 'theme.dart';
 
@@ -20,10 +22,13 @@ class SmartSensingLibraryDemoApp extends StatelessWidget {
   const SmartSensingLibraryDemoApp({super.key});
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Smart Sensing Library Demo',
-        theme: theme,
-        home: const HomePage(),
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (context) => FavoriteProvider(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Smart Sensing Library Demo',
+          theme: theme,
+          home: const HomePage(),
+        ),
       );
 }
