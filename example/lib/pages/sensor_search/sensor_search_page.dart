@@ -1,13 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/app_bar_with_header.dart';
 import '../../general_widgets/device_name_title.dart';
 import '../../general_widgets/stylized_container.dart';
-import '../../theme.dart';
 import 'checkbox_with_text.dart';
-import 'sensor_toggle_element.dart';
+import 'sensor_search_page_sensor_list.dart';
 
+/// Page to (de-)activate sensor tracking and mark sensors as favorites.
 class SensorSearchPage extends StatefulWidget {
   const SensorSearchPage({super.key});
 
@@ -19,6 +21,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
   final _controller = TextEditingController();
   var sensorNameFilter = "";
   var showOnlyAvailableSensors = false;
+  var availableSensors = <SensorId>[];
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,8 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         CheckBoxWithText(
           text: "Only show available",
           isChecked: showOnlyAvailableSensors,
-          onPressed: (isChecked) {
+          onPressed: (isChecked) async {
+            availableSensors = await IOManager().getAvailableSensors();
             setState(() {
               showOnlyAvailableSensors = isChecked;
             });
@@ -42,12 +46,10 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
       ],
     );
 
-    // TODO: Replace with call to smart sensing library
-    bool isAvailable(SensorId sensorId) => sensorId != SensorId.barometer;
-
     // Fetch sensors which should be displayed
-    var sensorIdsToDisplay = SensorId.values
-        .where((id) => !showOnlyAvailableSensors || isAvailable(id));
+    var sensorIdsToDisplay = SensorId.values.where(
+      (id) => !showOnlyAvailableSensors || availableSensors.contains(id),
+    );
 
     var searchBar = StylizedContainer(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
