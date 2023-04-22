@@ -5,8 +5,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../date_formatter.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
-import '../../theme.dart';
-import '../historic_view/historic_view_page.dart';
+import 'live_view_sensor_widget.dart';
 
 /// Page that displays sensor widgets for each sensor that is being tracked.
 class LiveViewPage extends StatelessWidget {
@@ -21,22 +20,7 @@ class LiveViewPage extends StatelessWidget {
           .map(
             (id) => Padding(
               padding: const EdgeInsets.all(12),
-              // TODO: Replace with sensor widget
-              child: GestureDetector(
-                child: Container(
-                  color: sensorIdToColor[id]!.withAlpha(128),
-                  child: Placeholder(
-                    color: sensorIdToColor[id]!,
-                    child: Center(child: Text(id.name)),
-                  ),
-                ),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HistoricViewPage(sensorId: id),
-                  ),
-                ),
-              ),
+              child: LiveViewSensorWidget(sensorId: id),
             ),
           )
           .toList(),
