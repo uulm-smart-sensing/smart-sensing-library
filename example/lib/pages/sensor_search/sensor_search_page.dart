@@ -91,7 +91,9 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
     var favorites = sensorIdsToDisplay.take(3).toList();
     var favoritesBody = _getSensorsListFromIds(
       sensorIds: favorites,
+      containerFlex: favorites.length,
       sensorNameFilter: sensorNameFilter,
+      noSensorsText: "No sensors marked as favorite.",
     );
 
     var allSensorsHeader = const Text(
@@ -105,7 +107,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         sensorIdsToDisplay.where((id) => !favorites.contains(id)).toList();
     var allSensorsBody = _getSensorsListFromIds(
       sensorIds: allSensors,
-      containerFlex: 2,
+      containerFlex: allSensors.length,
       sensorNameFilter: sensorNameFilter,
     );
 
@@ -145,30 +147,33 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
     required List<SensorId> sensorIds,
     int containerFlex = 1,
     required String sensorNameFilter,
-  }) =>
-      Expanded(
-        flex: containerFlex,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: sensorIds
-                  .where(
-                    (id) =>
-                        sensorNameFilter == "" ||
-                        id.name
-                            .toLowerCase()
-                            .contains(sensorNameFilter.toLowerCase()),
-                  )
-                  .map(
-                    (id) => [
-                      _getSensorToggleListElementFromSensorId(id),
-                      const SizedBox(height: 6)
-                    ],
-                  )
-                  .expand((element) => element)
-                  .toList(),
+    String noSensorsText = "No sensors.",
+  }) {
+    var sensorWidgets = sensorIds
+        .where(
+          (id) =>
+              sensorNameFilter == "" ||
+              id.name.toLowerCase().contains(sensorNameFilter.toLowerCase()),
+        )
+        .map(
+          (id) => [
+            SensorSearchPageSensorList(sensorId: id),
+            const SizedBox(height: 10)
+          ],
+        )
+        .expand((element) => element)
+        .toList();
+
+    if (sensorWidgets.isEmpty) {
+      sensorWidgets.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+          child: Center(
+            child: Text(
+              noSensorsText,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
             ),
           ),
         ),
