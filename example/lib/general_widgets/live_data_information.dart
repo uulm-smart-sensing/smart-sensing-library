@@ -4,21 +4,21 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../text_formatter.dart';
 import '../theme.dart';
 
-/// This widget shows live sensor data with for the given [SensorId].
+/// This widget shows live sensor data for the given [SensorId].
 ///
 /// Shows the name, main data and the time since the last update.
-/// A short version is available if [shortFormat] is set true.
+/// A short version is available if [shortFormat] is set to true.
 /// By default the long version is returned.
 /// Widget should be wrapped e.g. by a [Container].
 /// An example implementation would be:
 /// ```dart
 /// BrickContainer(
-///            color: sensorIdToColor[SensorId.accelerometer],
-///            child: const LiveDataInformation(
-///              id: SensorId.accelerometer,
-///              headLineFontSize: 15,
-///            ),
-///          );
+///   color: sensorIdToColor[SensorId.accelerometer],
+///   child: const LiveDataInformation(
+///     id: SensorId.accelerometer,
+///     headLineFontSize: 15,
+///   ),
+/// );
 /// ```
 class LiveDataInformation extends StatefulWidget {
   final SensorId id;
