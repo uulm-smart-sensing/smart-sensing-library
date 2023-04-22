@@ -28,14 +28,6 @@ class LiveDataInformation extends StatefulWidget {
   final double timeFontSize;
   final bool shortFormat;
 
-  ///  - Base [padding] is:
-  /// ```dart
-  /// EdgeInsets.symmetric(vertical: 15, horizontal: 15)
-  /// ```
-  /// - Base [mainDataFontSize] is 14
-  /// - Base [headLineFontSize] is 14
-  /// - Base [timeFontSize] is 13
-
   const LiveDataInformation({
     super.key,
     required this.id,
