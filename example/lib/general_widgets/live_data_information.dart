@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -51,13 +52,14 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
   List<double?> mainData = [];
   Unit? unit;
   int? maxPrecision;
+  StreamSubscription? _subscription;
 
   /// Gets the corresponding data stream of [SensorId]
   /// and updates the internal data.
   @override
   void initState() {
     super.initState();
-    IOManager().getSensorStream(widget.id)?.listen(
+    _subscription = IOManager().getSensorStream(widget.id)?.listen(
       (event) {
         setState(() {
           var tmpDateTime = DateTime.fromMicrosecondsSinceEpoch(
@@ -71,6 +73,13 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
         });
       },
     );
+  }
+
+  ///Stops listening when widget gets disposed.
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await _subscription?.cancel();
   }
 
   @override
