@@ -8,7 +8,9 @@ export 'package:sensing_plugin/sensing_plugin.dart'
         SensorAccuracy,
         SensorData,
         SensorTaskResult,
-        SensorConfig;
+        SensorConfig,
+        configValidatorMinPrecision,
+        configValidatorMaxPrecision;
 
 export 'package:smart_sensing_library/device_information_manager.dart'
     show getOSVersion, getFreeStorage, getDeviceName;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 /// [Slider] to configure the target precision of a sensors output data.
 ///
@@ -25,11 +26,11 @@ class _PrecisionSliderState extends State<PrecisionSlider> {
 
   @override
   Widget build(BuildContext context) => Slider(
-        min: 0,
-        max: 10,
+        min: configValidatorMinPrecision.toDouble(),
+        max: configValidatorMaxPrecision.toDouble(),
         value: sliderValue.toDouble(),
         label: sliderValue.toString(),
-        divisions: 10,
+        divisions: configValidatorMaxPrecision - configValidatorMinPrecision,
         onChanged: (newValue) {
           setState(() {
             sliderValue = newValue.toInt();
