@@ -22,7 +22,7 @@ import '../theme.dart';
 /// ```
 class LiveDataInformation extends StatefulWidget {
   final SensorId id;
-  final EdgeInsets? padding;
+  final EdgeInsets padding;
   final double mainDataFontSize;
   final double headLineFontSize;
   final double timeFontSize;
@@ -39,7 +39,7 @@ class LiveDataInformation extends StatefulWidget {
   const LiveDataInformation({
     super.key,
     required this.id,
-    this.padding,
+    this.padding = const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
     this.mainDataFontSize = 14,
     this.headLineFontSize = 15,
     this.timeFontSize = 13,
@@ -81,8 +81,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: widget.padding ??
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        padding: widget.padding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
