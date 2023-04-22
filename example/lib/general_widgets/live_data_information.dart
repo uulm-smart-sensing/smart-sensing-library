@@ -124,7 +124,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
 
 /// Converts the main data to a readable string for the widget.
 String _fromData(List<double?> data, Unit unit, int maxPrecision) {
-   var values = data.whereType<double>().toList();
+  var values = data.whereType<double>().toList();
 
   if (values.isEmpty) {
     return "No Data";
