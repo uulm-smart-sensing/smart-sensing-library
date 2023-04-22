@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
@@ -122,16 +124,18 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
 
 /// Converts the main data to a readable string for the widget.
 String _fromData(List<double?> data, Unit unit, int maxPrecision) {
-  var result = "";
-  for (var element in data) {
-    result += "${element?.toStringAsFixed(
-          3 > maxPrecision ? maxPrecision : 3,
-        ) ?? ""} ${_unitConverter(unit)}\n";
-  }
-  if (result.isEmpty) {
+   var values = data.whereType<double>().toList();
+
+  if (values.isEmpty) {
     return "No Data";
   }
-  return result.substring(0, result.length - 1);
+
+  return values
+      .map(
+        (value) => "${value.toStringAsFixed(min(maxPrecision, 3))} "
+            "${_unitConverter(unit)}",
+      )
+      .join("\n");
 }
 
 /// Converts the [Unit] enum to the corresponing unit string.
