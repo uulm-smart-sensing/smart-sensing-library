@@ -51,7 +51,7 @@ class SensorToggleElement extends StatefulWidget {
   /// Color of the track of the switch when [isDisabled] is true.
   final Color? disabledTrackColor;
 
-  SensorToggleElement({
+  const SensorToggleElement({
     required this.sensorId,
     required this.onChanged,
     this.color,
@@ -65,7 +65,8 @@ class SensorToggleElement extends StatefulWidget {
     this.isDisabled = false,
     this.disabledColor,
     this.disabledTrackColor,
-  }) : super(key: ValueKey(sensorId.name));
+    super.key,
+  });
 
   @override
   State<SensorToggleElement> createState() => _SensorToggleElementState();
@@ -76,8 +77,8 @@ class _SensorToggleElementState extends State<SensorToggleElement> {
 
   @override
   void initState() {
-    _isToggledOn = widget.isToggledOn;
     super.initState();
+    _isToggledOn = widget.isToggledOn;
   }
 
   @override

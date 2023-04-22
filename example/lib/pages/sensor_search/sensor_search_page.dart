@@ -171,76 +171,17 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
           ),
         ),
       );
+    }
 
-  Future<String> _getSensorAvailability(SensorId sensorId) async {
-    // TODO: Replace with call to smart sensing library
-    await Future.delayed(const Duration(milliseconds: 100));
-    return sensorId == SensorId.barometer ? "false" : "true";
+    return Expanded(
+      flex: max(containerFlex, 1),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(children: sensorWidgets),
+        ),
+      ),
+    );
   }
-
-  /// Creates a [SensorToggleElement] for the passed [sensorId].
-  ///
-  /// If [disableToggling] is true, the [SensorToggleElement] is also disabled,
-  /// the colors for the disabeld state are replaced with the colors for the
-  /// inactive state of the switch.
-  /// This has the reason that the [SensorToggleElement] can be shown without
-  /// knowing whether the sensor for the passed [sensorId] is actually available
-  /// in which case the [SensorToggleElement] would be disabled.
-  SensorToggleElement _createSensorToggleListElement({
-    required SensorId sensorId,
-    required bool isDisabled,
-    bool disableToggling = false,
-  }) =>
-      SensorToggleElement(
-        color: sensorIdToColor[sensorId] ?? Colors.white,
-        activeColor: const Color.fromARGB(255, 217, 217, 217),
-        activeTrackColor: const Color.fromARGB(255, 66, 234, 7),
-        inactiveColor: const Color.fromARGB(255, 217, 217, 217),
-        inactiveTrackColor: const Color.fromARGB(255, 144, 149, 142),
-        isDisabled: isDisabled || disableToggling,
-        disabledColor: disableToggling
-            ? const Color.fromARGB(255, 217, 217, 217)
-            : const Color.fromARGB(255, 158, 162, 157),
-        disabledTrackColor: disableToggling
-            ? const Color.fromARGB(255, 144, 149, 142)
-            : const Color.fromARGB(255, 144, 149, 142),
-        textColor: Colors.black,
-        sensorId: sensorId,
-        onChanged: (isToggledOn) {
-          if (disableToggling) {
-            return;
-          }
-
-          setState(() {
-            // TODO: Make call to smart sensing library
-          });
-        },
-      );
-
-  /// Creates a [SensorToggleElement] from the passed [sensorId].
-  ///
-  /// Checks whether the sensor with the passed [sensorId] is available and
-  /// displays [SensorToggleElement] with disabled toggling as long as the
-  /// request lasts.
-  FutureBuilder _getSensorToggleListElementFromSensorId(
-    SensorId sensorId,
-  ) =>
-      FutureBuilder(
-        future: _getSensorAvailability(sensorId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var isAvailable = snapshot.data! == "true";
-            return _createSensorToggleListElement(
-              sensorId: sensorId,
-              isDisabled: !isAvailable,
-            );
-          }
-
-          return _createSensorToggleListElement(
-            sensorId: sensorId,
-            isDisabled: true,
-            disableToggling: true,
-          );
-        },
-      );
 }
