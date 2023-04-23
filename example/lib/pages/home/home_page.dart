@@ -84,26 +84,20 @@ class HomePage extends StatelessWidget {
     );
     var liveViewSectionBody = FutureBuilder(
       future: IOManager().getUsedSensors(),
-      builder: (context, snapshot) {
-        var sensorWidgets = <Widget>[];
-
-        if (snapshot.hasData && snapshot.data != null) {
-          sensorWidgets = snapshot.data!
-              .take(3)
-              .map(
-                (id) => LiveViewSensorWidget(
-                  sensorId: id,
-                  isShortFormat: true,
-                ),
-              )
-              .toList();
-        }
-
-        return HomePageSectionBody(
-          noChildrenText: "No sensors are currently being tracked.",
-          children: sensorWidgets,
-        );
-      },
+      builder: (context, snapshot) => HomePageSectionBody(
+        noChildrenText: "No sensors are currently being tracked.",
+        children: snapshot.data != null
+            ? snapshot.data!
+                .take(3)
+                .map(
+                  (id) => LiveViewSensorWidget(
+                    sensorId: id,
+                    isShortFormat: true,
+                  ),
+                )
+                .toList()
+            : [],
+      ),
     );
 
     var sensorsSectionHeader = HomePageSectionHeader(
