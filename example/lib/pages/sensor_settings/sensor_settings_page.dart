@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/section_header.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../sensor_units.dart';
-import '../../text_formatter.dart';
 import 'precision_slider.dart';
 import 'time_interval_selection_button.dart';
 import 'unit_selection_button.dart';

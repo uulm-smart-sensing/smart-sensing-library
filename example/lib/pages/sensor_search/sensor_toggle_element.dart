@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../formatter/text_formatter.dart';
+import '../sensor_settings/sensor_settings_page.dart';
 
 /// [StatefulWidget] which represents a [Text] and a [Switch] encapsuled in a
 /// rounded container.
