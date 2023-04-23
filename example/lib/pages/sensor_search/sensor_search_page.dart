@@ -93,7 +93,9 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
       sensorIds: favorites,
       containerFlex: favorites.length,
       sensorNameFilter: sensorNameFilter,
-      noSensorsText: "No sensors marked as favorite.",
+      noSensorsText: sensorNameFilter.isEmpty
+          ? "No sensors marked as favorite."
+          : "No sensor marked as favorite matches the search string.",
     );
 
     var allSensorsHeader = const Text(
@@ -109,6 +111,9 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
       sensorIds: allSensors,
       containerFlex: allSensors.length,
       sensorNameFilter: sensorNameFilter,
+      noSensorsText: sensorNameFilter.isEmpty
+          ? "No sensors available."
+          : "No sensor matches the search string.",
     );
 
     return GestureDetector(
