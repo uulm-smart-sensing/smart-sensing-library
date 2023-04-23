@@ -5,7 +5,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../formatter/date_formatter.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
-import 'live_view_sensor_widget.dart';
+import 'live_view_sensors_grid_view.dart';
 
 /// Page that displays sensor widgets for each sensor that is being tracked.
 class LiveViewPage extends StatelessWidget {
@@ -15,20 +15,18 @@ class LiveViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var gridView = FutureBuilder(
       future: IOManager().getUsedSensors(),
-      builder: (context, snapshot) => GridView.count(
-        crossAxisCount: 2,
-        physics: const BouncingScrollPhysics(),
-        children: snapshot.data != null
-            ? snapshot.data!
-                .map(
-                  (id) => Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: LiveViewSensorWidget(sensorId: id),
+      builder: (context, snapshot) =>
+          snapshot.data != null && snapshot.data!.isNotEmpty
+              ? LiveViewSensorsGridView(sensorIds: snapshot.data!)
+              : const Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    "No sensors are currently being tracked.",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
-                )
-                .toList()
-            : [],
-      ),
+                ),
     );
 
     return SmartSensingAppBar(
