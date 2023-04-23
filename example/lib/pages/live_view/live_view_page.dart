@@ -13,17 +13,22 @@ class LiveViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var gridView = GridView.count(
-      crossAxisCount: 2,
-      physics: const BouncingScrollPhysics(),
-      children: SensorId.values
-          .map(
-            (id) => Padding(
-              padding: const EdgeInsets.all(12),
-              child: LiveViewSensorWidget(sensorId: id),
-            ),
-          )
-          .toList(),
+    var gridView = FutureBuilder(
+      future: IOManager().getUsedSensors(),
+      builder: (context, snapshot) => GridView.count(
+        crossAxisCount: 2,
+        physics: const BouncingScrollPhysics(),
+        children: snapshot.data != null
+            ? snapshot.data!
+                .map(
+                  (id) => Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: LiveViewSensorWidget(sensorId: id),
+                  ),
+                )
+                .toList()
+            : [],
+      ),
     );
 
     return SmartSensingAppBar(
