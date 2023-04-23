@@ -16,7 +16,7 @@ class FavoriteProvider extends ChangeNotifier {
     loadFavorites();
   }
 
-  /// adds SensorId to sensorList if it has not already been added
+  /// adds and remove SensorId to sensorList if it has not already been added
   Future<void> toggleFavorite(SensorId id) async {
     var isExist = _sensorList.contains(id);
     if (isExist) {
@@ -48,9 +48,6 @@ class FavoriteProvider extends ChangeNotifier {
   /// checks if SensorId exists in List
   bool isExist(SensorId id) => _sensorList.contains(id);
 
-  /// checks if SesnorId is slideable
+  /// checks if SensorId is slideable
   bool isSlidableEnabled(SensorId id) => id != SensorId.barometer;
-
-  /// checks if sensorList is empty
-  bool isEmpty() => _sensorList.isEmpty;
 }

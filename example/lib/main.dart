@@ -21,6 +21,7 @@ void main() async {
 class SmartSensingLibraryDemoApp extends StatelessWidget {
   const SmartSensingLibraryDemoApp({super.key});
 
+  /// Provider that listen and expose a ChangeNotifier .
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => FavoriteProvider(),
