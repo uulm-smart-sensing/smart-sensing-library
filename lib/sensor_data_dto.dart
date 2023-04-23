@@ -8,48 +8,52 @@ import 'package:sensing_plugin/sensing_plugin.dart';
 class SensorDataDTO {
   ///Id for Objectbox generation
   @Id()
-  late int id;
+  int id;
 
   ///Datapoints that are saved.
   late String data;
 
   ///Max precision of the values.
-  late int maxPrecision;
+  int maxPrecision;
 
   ///Id of the sensor.
-  late int sensorID;
+  int sensorID;
 
   ///Time the data got saved.
-  late DateTime dateTime;
+  @Property(type: PropertyType.dateNano)
+  DateTime dateTime;
 
   ///Unit of sensor data.
-  late int unit;
+  String unit;
 
   ///BaseConstructor
-  SensorDataDTO();
+  SensorDataDTO()
+      : id = 0,
+        maxPrecision = 0,
+        sensorID = 0,
+        dateTime = DateTime.fromMicrosecondsSinceEpoch(0),
+        unit = "";
 
   ///From Sensordata
-  SensorDataDTO.fromSensorData(SensorData sensorData, SensorId senId) {
+  SensorDataDTO.fromSensorData(SensorData sensorData, SensorId senId)
+      : id = 0,
+        data = jsonEncode({"data": sensorData.data}),
+        maxPrecision = sensorData.maxPrecision,
+        sensorID = senId.index,
+        dateTime = sensorData.timestamp,
+        unit = sensorData.unit.toString() {
     _ensureStableEnumValues();
-    id = 0;
-    maxPrecision = sensorData.maxPrecision;
-    sensorID = senId.index;
-    dateTime = DateTime.fromMicrosecondsSinceEpoch(
-      sensorData.timestampInMicroseconds,
-      isUtc: true,
-    );
-    data = jsonEncode({"data": sensorData.data});
-    unit = sensorData.unit.index;
   }
 
-  ///Converts DTO to internalSensorData
+  ///Converts DTO to SensorData
   SensorData toSensorData() {
     _ensureStableEnumValues();
+
     return SensorData(
       maxPrecision: maxPrecision,
-      timestampInMicroseconds: dateTime.microsecondsSinceEpoch,
+      timestamp: dateTime,
       data: (jsonDecode(data)['data'] as List<dynamic>).cast<double>(),
-      unit: Unit.values[unit],
+      unit: _unitFromString(unit),
     );
   }
 
@@ -61,20 +65,25 @@ class SensorDataDTO {
     assert(SensorId.linearAcceleration.index == 4, "Test if enum still stable");
     assert(SensorId.barometer.index == 5, "Test if enum still stable");
     assert(SensorId.thermometer.index == 6, "Test if enum still stable");
+  }
 
-    assert(Unit.metersPerSecondSquared.index == 0, "Test if enum still stable");
-    assert(Unit.gravitationalForce.index == 1, "Test if enum still stable");
-    assert(Unit.radiansPerSecond.index == 2, "Test if enum still stable");
-    assert(Unit.degreesPerSecond.index == 3, "Test if enum still stable");
-    assert(Unit.microTeslas.index == 4, "Test if enum still stable");
-    assert(Unit.radians.index == 5, "Test if enum still stable");
-    assert(Unit.degrees.index == 6, "Test if enum still stable");
-    assert(Unit.hectoPascal.index == 7, "Test if enum still stable");
-    assert(Unit.kiloPascal.index == 8, "Test if enum still stable");
-    assert(Unit.bar.index == 9, "Test if enum still stable");
-    assert(Unit.celsius.index == 10, "Test if enum still stable");
-    assert(Unit.fahrenheit.index == 11, "Test if enum still stable");
-    assert(Unit.kelvin.index == 12, "Test if enum still stable");
-    assert(Unit.unitless.index == 13, "Test if enum still stable");
+  static MapEntry<String, Unit> _unitToMapEntry(Unit unit) =>
+      MapEntry(unit.toString(), unit);
+
+  static final _stringToUnit = Map.fromEntries([
+    ...Acceleration.values.map(_unitToMapEntry),
+    ...Angle.values.map(_unitToMapEntry),
+    ...AngularVelocity.values.map(_unitToMapEntry),
+    ...MagneticFluxDensity.values.map(_unitToMapEntry),
+    ...Pressure.values.map(_unitToMapEntry),
+    ...Temperature.values.map(_unitToMapEntry),
+  ]);
+
+  static Unit _unitFromString(String input) {
+    if (!_stringToUnit.containsKey(input)) {
+      throw Exception("Could not parse unit type");
+    }
+
+    return _stringToUnit[input]!;
   }
 }
