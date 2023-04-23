@@ -2,8 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:smart_sensing_library/smart_sensing_library.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
+
 import '../../favorite_provider.dart';
 import '../../general_widgets/app_bar_with_header.dart';
 import '../../general_widgets/device_name_title.dart';

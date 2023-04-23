@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:smart_sensing_library/smart_sensing_library.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 /// Class that handles Favorite Managment
 class FavoriteProvider extends ChangeNotifier {

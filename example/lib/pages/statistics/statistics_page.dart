@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:smart_sensing_library/smart_sensing_library.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
+
+import '../../date_formatter.dart';
+import '../../favorite_provider.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/text_formatter.dart';
-import '../../favorite_provider.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../general_widgets/stylized_container.dart';
 import '../historic_view/historic_view_page.dart';
