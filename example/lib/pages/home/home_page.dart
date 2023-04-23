@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../date_formatter.dart';
+import '../../formatter/date_formatter.dart';
 import '../live_view/live_view_page.dart';
+import '../live_view/live_view_sensor_widget.dart';
 import '../settings/settings_page.dart';
 import '../statistics/statistics_page.dart';
 import 'demo_sensor_widget.dart';
@@ -81,12 +82,22 @@ class HomePage extends StatelessWidget {
         );
       },
     );
-    var liveViewSectionBody = HomePageSectionBody(
-      // TODO: Replace with call to smart sensing library
-      children: SensorId.values
-          .take(3)
-          .map((id) => DemoSensorWidget(sensorId: id))
-          .toList(),
+    var liveViewSectionBody = FutureBuilder(
+      future: IOManager().getUsedSensors(),
+      builder: (context, snapshot) => HomePageSectionBody(
+        noChildrenText: "No sensors are currently being tracked.",
+        children: snapshot.data != null
+            ? snapshot.data!
+                .take(3)
+                .map(
+                  (id) => LiveViewSensorWidget(
+                    sensorId: id,
+                    isShortFormat: true,
+                  ),
+                )
+                .toList()
+            : [],
+      ),
     );
 
     var sensorsSectionHeader = HomePageSectionHeader(
