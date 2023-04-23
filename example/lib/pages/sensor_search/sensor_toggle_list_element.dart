@@ -22,7 +22,9 @@ class SensorToggleListElement extends SensorToggleElement {
     bool disableToggling = false,
   }) : super(
           key: UniqueKey(),
-          color: sensorIdToColor[sensorId] ?? Colors.white,
+          color: isDisabled
+              ? sensorIdToColor[sensorId]!.withAlpha(150)
+              : sensorIdToColor[sensorId]!,
           activeColor: const Color.fromARGB(255, 217, 217, 217),
           activeTrackColor: const Color.fromARGB(255, 66, 234, 7),
           inactiveColor: const Color.fromARGB(255, 217, 217, 217),
