@@ -8,32 +8,32 @@ void main() {
     data: const [1.1, 1.2, 1.3],
     maxPrecision: 1,
     unit: Unit.microTeslas,
-    timestampInMicroseconds: DateTime.utc(2023).microsecondsSinceEpoch,
+    timestamp: DateTime.utc(2023),
   );
   var testList = [
     SensorData(
       data: const [1.2, 1.2, 1.3],
       maxPrecision: 1,
       unit: Unit.microTeslas,
-      timestampInMicroseconds: DateTime.utc(2023).microsecondsSinceEpoch,
+      timestamp: DateTime.utc(2023),
     ),
     SensorData(
       data: const [2.2, 2.2, 3.3],
       maxPrecision: 1,
       unit: Unit.microTeslas,
-      timestampInMicroseconds: DateTime.utc(2022).microsecondsSinceEpoch,
+      timestamp: DateTime.utc(2022),
     ),
     SensorData(
       data: const [3.2, 3.2, 3.3],
       maxPrecision: 1,
       unit: Unit.microTeslas,
-      timestampInMicroseconds: DateTime.utc(2021).microsecondsSinceEpoch,
+      timestamp: DateTime.utc(2021),
     ),
     SensorData(
       data: const [4.2, 4.2, 4.3],
       maxPrecision: 1,
       unit: Unit.microTeslas,
-      timestampInMicroseconds: DateTime.utc(2020).microsecondsSinceEpoch,
+      timestamp: DateTime.utc(2020),
     )
   ];
 
@@ -77,23 +77,11 @@ void main() {
         ..addBuffer(SensorId.magnetometer)
         ..getBuffer(SensorId.magnetometer).addAll(testList);
       expect(
-        DateTime.fromMicrosecondsSinceEpoch(
-          bufferManager
-              .getBuffer(SensorId.magnetometer)
-              .last
-              .timestampInMicroseconds,
-          isUtc: true,
-        ).year,
+        bufferManager.getBuffer(SensorId.magnetometer).last.timestamp.year,
         2023,
       );
       expect(
-        DateTime.fromMicrosecondsSinceEpoch(
-          bufferManager
-              .getBuffer(SensorId.magnetometer)
-              .first
-              .timestampInMicroseconds,
-          isUtc: true,
-        ).year,
+        bufferManager.getBuffer(SensorId.magnetometer).first.timestamp.year,
         2020,
       );
     });

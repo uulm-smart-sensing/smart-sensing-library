@@ -62,11 +62,8 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
     _subscription = IOManager().getSensorStream(widget.id)?.listen(
       (event) {
         setState(() {
-          var tmpDateTime = DateTime.fromMicrosecondsSinceEpoch(
-            event.timestampInMicroseconds,
-          );
-          lastUpdate = tmpDateTime.difference(lastTimeStamp);
-          lastTimeStamp = tmpDateTime;
+          lastUpdate = event.timestamp.difference(lastTimeStamp);
+          lastTimeStamp = event.timestamp;
           mainData = event.data;
           unit ??= event.unit;
           maxPrecision ??= event.maxPrecision;

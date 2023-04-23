@@ -259,21 +259,18 @@ List<SensorData> createRandomTestData() {
           Random().nextDouble() * 360,
         ],
         maxPrecision: 1,
-        timestampInMicroseconds: DateTime.utc(
+        timestamp: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ).microsecondsSinceEpoch,
+        ),
         unit: Unit.bar,
       ),
     );
   }
   testData.sort(
-    (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
-        .compareTo(
-      DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
-    ),
+    (a, b) => a.timestamp.compareTo(b.timestamp),
   );
   return testData;
 }
@@ -290,12 +287,12 @@ List<SensorData> createDeterminedTestData() {
         ],
         maxPrecision: 1,
         unit: Unit.bar,
-        timestampInMicroseconds: DateTime.utc(
+        timestamp: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ).microsecondsSinceEpoch,
+        ),
       ),
     );
   }
@@ -309,19 +306,16 @@ List<SensorData> createDeterminedTestData() {
         ],
         maxPrecision: 1,
         unit: Unit.bar,
-        timestampInMicroseconds: DateTime.utc(
+        timestamp: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
           Random().nextInt(30) + 1,
           Random().nextInt(60),
-        ).microsecondsSinceEpoch,
+        ),
       ),
     )
     ..sort(
-      (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
-          .compareTo(
-        DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
-      ),
+      (a, b) => a.timestamp.compareTo(b.timestamp),
     );
   return testData;
 }
@@ -347,13 +341,13 @@ List<SensorData> createDataForSplitting() {
               ],
               maxPrecision: 1,
               unit: Unit.celsius,
-              timestampInMicroseconds: DateTime.utc(
+              timestamp: DateTime.utc(
                 2023,
                 month,
                 day,
                 hour,
                 minute,
-              ).microsecondsSinceEpoch,
+              ),
             ),
           );
         }
@@ -361,10 +355,7 @@ List<SensorData> createDataForSplitting() {
     }
   }
   testData.sort(
-    (a, b) => DateTime.fromMicrosecondsSinceEpoch(a.timestampInMicroseconds)
-        .compareTo(
-      DateTime.fromMicrosecondsSinceEpoch(b.timestampInMicroseconds),
-    ),
+    (a, b) => a.timestamp.compareTo(b.timestamp),
   );
 
   return testData;
@@ -396,6 +387,6 @@ class SensorDataMatcher extends Matcher {
   bool _isSameSensorData(SensorData a, SensorData b) =>
       containsAllInOrder(a.data).matches(b.data, {}) &&
       a.maxPrecision == b.maxPrecision &&
-      a.timestampInMicroseconds == b.timestampInMicroseconds &&
+      a.timestamp == b.timestamp &&
       a.unit == b.unit;
 }

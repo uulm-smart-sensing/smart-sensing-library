@@ -60,15 +60,7 @@ class FilterTools {
         _buffer[bufferCounter].add(tmpList[i]);
         intervalCount += interval;
       }
-      tmpDuration += DateTime.fromMicrosecondsSinceEpoch(
-        tmpList[i + 1].timestampInMicroseconds,
-        isUtc: true,
-      ).difference(
-        DateTime.fromMicrosecondsSinceEpoch(
-          tmpList[i].timestampInMicroseconds,
-          isUtc: true,
-        ),
-      );
+      tmpDuration += tmpList[i + 1].timestamp.difference(tmpList[i].timestamp);
     }
     //Is used for the last entry in the list.
     if (tmpDuration < intervalCount) {
@@ -155,8 +147,8 @@ class FilterTools {
       var avgEntry = SensorData(
         data: avgData,
         maxPrecision: lastEntry.maxPrecision,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
         unit: lastEntry.unit,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
@@ -183,8 +175,8 @@ class FilterTools {
       var sumEntry = SensorData(
         data: sumData,
         maxPrecision: lastEntry.maxPrecision,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
         unit: lastEntry.unit,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[i]
         ..clear()
@@ -232,8 +224,8 @@ class FilterTools {
       var modeEntry = SensorData(
         data: modeData,
         maxPrecision: lastEntry.maxPrecision,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
         unit: lastEntry.unit,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
@@ -278,8 +270,8 @@ class FilterTools {
       var rangeEntry = SensorData(
         data: rangeData,
         maxPrecision: lastEntry.maxPrecision,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
         unit: lastEntry.unit,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
@@ -307,7 +299,7 @@ class FilterTools {
         data: medianData,
         maxPrecision: lastEntry.maxPrecision,
         unit: lastEntry.unit,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
@@ -347,7 +339,7 @@ class FilterTools {
         data: sdData.toList(),
         maxPrecision: lastEntry.maxPrecision,
         unit: lastEntry.unit,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
