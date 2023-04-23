@@ -30,39 +30,46 @@ class StatisticsPage extends StatelessWidget {
     // The list containing the buttons for all implemented sensors
     // for navigation to the [HistoricViewPage]s.
     var sensorList = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      child: Column(
-        children: [
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text("Favorite"),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Expanded(
-            child: ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text("Favorite"),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               children: provider.sensorList
                   .map((id) => _getSensorListItem(id, context))
                   .toList(),
             ),
-          ),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text("All"),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Expanded(
-            child: ListView(
+            const SizedBox(
+              height: 30,
+            ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text("All"),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               children: SensorId.values
                   .where((sensorId) => !provider.sensorList.contains(sensorId))
                   .map((id) => _getSensorListItem(id, context))
                   .toList(),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
 

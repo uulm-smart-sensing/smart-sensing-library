@@ -124,7 +124,6 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
           ? "No sensors available."
           : "No sensor matches the search string.",
     );
-
     return GestureDetector(
       onTap: () {
         var currentFocus = FocusScope.of(context);
