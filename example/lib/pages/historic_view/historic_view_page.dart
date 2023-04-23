@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../formatter/text_formatter.dart';
 import '../../general_widgets/app_bar_with_header.dart';
-import '../../text_formatter.dart';
 import 'historic_view_page_body.dart';
 import 'sensor_info_tooltip.dart';
 

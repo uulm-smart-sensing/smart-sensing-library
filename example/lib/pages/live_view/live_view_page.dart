@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../date_formatter.dart';
+import '../../formatter/date_formatter.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import 'live_view_sensor_widget.dart';
 
