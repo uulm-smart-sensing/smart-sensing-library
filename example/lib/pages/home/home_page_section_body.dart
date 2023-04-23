@@ -18,11 +18,15 @@ class HomePageSectionBody extends StatelessWidget {
   /// It is expected that the children widgets are sensor widgets.
   final List<Widget> children;
 
+  /// Text that is displayed if [children] is empty.
+  final String noChildrenText;
+
   const HomePageSectionBody({
     super.key,
     this.scrollDirection = Axis.horizontal,
     this.spaceBetweenChildren = 20,
     this.children = const [],
+    this.noChildrenText = "No elements",
   });
 
   @override
@@ -38,6 +42,20 @@ class HomePageSectionBody extends StatelessWidget {
               : SizedBox(height: spaceBetweenChildren),
         );
       }
+    }
+
+    if (bodyElements.isEmpty) {
+      bodyElements.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            noChildrenText,
+            style: const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ),
+      );
     }
 
     return SingleChildScrollView(

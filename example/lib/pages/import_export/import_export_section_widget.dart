@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import './import_export_page.dart';
+import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_dropdown_button.dart';
-import '../../text_formatter.dart';
 
 /// Widget displaying a section on the 'Import / Export' page.
 ///

@@ -5,6 +5,7 @@ import '../../theme.dart';
 import '../historic_view/historic_view_page.dart';
 
 /// [Widget] used as placecholder for the sensor widgets
+/// TODO: Remove when not required anymore
 class DemoSensorWidget extends StatelessWidget {
   final SensorId sensorId;
 
