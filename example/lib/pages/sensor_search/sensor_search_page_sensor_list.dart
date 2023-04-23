@@ -22,6 +22,7 @@ class _SensorSearchPageSensorListState
           if (snapshot.hasData && snapshot.data != null) {
             var state = snapshot.data!;
             return SensorToggleListElement(
+              key: UniqueKey(),
               sensorId: widget.sensorId,
               isDisabled: !state.isAvailable,
               isToggledOn: state.isCurrentlyBeingTracked,
@@ -31,7 +32,7 @@ class _SensorSearchPageSensorListState
           return SensorToggleListElement(
             sensorId: widget.sensorId,
             isDisabled: true,
-            disableToggling: true,
+            isTogglingDisabled: true,
             isToggledOn: false,
           );
         },

@@ -9,7 +9,7 @@ import 'sensor_toggle_element.dart';
 class SensorToggleListElement extends SensorToggleElement {
   /// Creates a [SensorToggleListElement] for the passed [sensorId].
   ///
-  /// If [disableToggling] is true, the [SensorToggleListElement] is also
+  /// If [isTogglingDisabled] is true, the [SensorToggleListElement] is also
   /// disabled, the colors for the disabeld state are replaced with the colors
   /// for the inactive state of the switch.
   /// This has the reason that the [SensorToggleListElement] can be shown
@@ -19,9 +19,9 @@ class SensorToggleListElement extends SensorToggleElement {
     required super.sensorId,
     required bool isDisabled,
     required super.isToggledOn,
-    bool disableToggling = false,
+    bool isTogglingDisabled = false,
+    super.key,
   }) : super(
-          key: UniqueKey(),
           color: isDisabled
               ? sensorIdToColor[sensorId]!.withAlpha(150)
               : sensorIdToColor[sensorId]!,
@@ -29,16 +29,14 @@ class SensorToggleListElement extends SensorToggleElement {
           activeTrackColor: const Color.fromARGB(255, 66, 234, 7),
           inactiveColor: const Color.fromARGB(255, 217, 217, 217),
           inactiveTrackColor: const Color.fromARGB(255, 144, 149, 142),
-          isDisabled: isDisabled || disableToggling,
-          disabledColor: disableToggling
+          isDisabled: isDisabled || isTogglingDisabled,
+          disabledColor: isTogglingDisabled
               ? const Color.fromARGB(255, 217, 217, 217)
               : const Color.fromARGB(255, 158, 162, 157),
-          disabledTrackColor: disableToggling
-              ? const Color.fromARGB(255, 144, 149, 142)
-              : const Color.fromARGB(255, 144, 149, 142),
+          disabledTrackColor: const Color.fromARGB(255, 144, 149, 142),
           textColor: Colors.black,
           onChanged: (isToggledOn) async {
-            if (disableToggling) {
+            if (isTogglingDisabled) {
               return;
             }
 
