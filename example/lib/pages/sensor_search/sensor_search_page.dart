@@ -158,7 +158,6 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
   /// [sensorNameFilter] (for that [sensorNameFilter] must be not empty).
   Widget _getSensorsListFromIds({
     required List<SensorId> sensorIds,
-    int containerFlex = 2,
     required String sensorNameFilter,
     String noSensorsText = "No sensors.",
     required FavoriteProvider provider,

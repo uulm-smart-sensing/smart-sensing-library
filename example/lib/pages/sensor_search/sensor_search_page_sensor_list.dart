@@ -33,24 +33,23 @@ class _SensorSearchPageSensorListElementState
             return Slidable(
               enabled: widget.provider.isSlidableEnabled(widget.sensorId),
               endActionPane: ActionPane(
-                        motion: const StretchMotion(),
-                        extentRatio: 0.25,
-                        children: [
-                          SlidableAction(
-                            borderRadius: BorderRadius.circular(20),
-                            foregroundColor: Colors.red,
-                            backgroundColor:
-                                const Color.fromRGBO(34, 0, 77, 100),
-                            icon: widget.provider.isExist(widget.sensorId)
-                                ? Icons.favorite
-                                : Icons.favorite_outline,
-                            onPressed: (context) async {
-                              await widget.provider.toggleFavorite(widget.sensorId);
-                              setState(() {});
-                            },
-                          ),
-                        ],
-                      ),
+                motion: const StretchMotion(),
+                extentRatio: 0.15,
+                children: [
+                  SlidableAction(
+                    borderRadius: BorderRadius.circular(20),
+                    foregroundColor: Colors.red,
+                    backgroundColor: const Color.fromRGBO(34, 0, 77, 100),
+                    icon: widget.provider.isExist(widget.sensorId)
+                        ? Icons.favorite
+                        : Icons.favorite_outline,
+                    onPressed: (context) async {
+                      await widget.provider.toggleFavorite(widget.sensorId);
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
               child: Column(
                 children: [
                   SensorToggleListElement(
