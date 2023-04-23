@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../sensor_default_target_unit.dart';
 import '../../theme.dart';
 import 'sensor_toggle_element.dart';
 
@@ -57,14 +58,3 @@ class SensorToggleListElement extends SensorToggleElement {
           },
         );
 }
-
-// TODO: Replace with `sensor_default_target_unit.dart`
-const sensorIdToDefaultTargetUnit = {
-  SensorId.accelerometer: Unit.metersPerSecondSquared,
-  SensorId.gyroscope: Unit.degreesPerSecond,
-  SensorId.magnetometer: Unit.microTeslas,
-  SensorId.orientation: Unit.degrees,
-  SensorId.linearAcceleration: Unit.metersPerSecondSquared,
-  SensorId.barometer: Unit.hectoPascal,
-  SensorId.thermometer: Unit.celsius,
-};
