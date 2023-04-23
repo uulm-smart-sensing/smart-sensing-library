@@ -65,7 +65,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
           lastUpdate = event.timestamp.difference(lastTimeStamp);
           lastTimeStamp = event.timestamp;
           mainData = event.data;
-          unit ??= event.unit;
+          unit = event.unit;
           maxPrecision ??= event.maxPrecision;
         });
       },
@@ -129,7 +129,7 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
 }
 
 /// Converts the main data to a readable string for the widget.
-String _fromData(List<double?> data, Unit unit, int maxPrecision) {
+String _fromData(List<double?> data, Unit? unit, int maxPrecision) {
   var values = data.whereType<double>().toList();
 
   if (values.isEmpty) {
@@ -139,44 +139,9 @@ String _fromData(List<double?> data, Unit unit, int maxPrecision) {
   return values
       .map(
         (value) => "${value.toStringAsFixed(min(maxPrecision, 3))} "
-            "${_unitConverter(unit)}",
+            "${unit?.toTextDisplay(isShort: true)}",
       )
       .join("\n");
-}
-
-/// Converts the [Unit] enum to the corresponding unit string.
-String _unitConverter(Unit unit) {
-  switch (unit) {
-    case Unit.metersPerSecondSquared:
-      return "m/s²";
-    case Unit.gravitationalForce:
-      return "N";
-    case Unit.radiansPerSecond:
-      return "rad/s";
-    case Unit.degreesPerSecond:
-      return "deg/s";
-    case Unit.microTeslas:
-      return "µT";
-    case Unit.radians:
-      return "rad";
-    case Unit.degrees:
-      return "deg";
-    case Unit.hectoPascal:
-      return "hPa";
-    case Unit.kiloPascal:
-      return "kPa";
-    case Unit.bar:
-      return "bar";
-    case Unit.celsius:
-      return "°C";
-    case Unit.fahrenheit:
-      return "°F";
-    case Unit.kelvin:
-      return "K";
-    case Unit.unitless:
-    default:
-      return "";
-  }
 }
 
 /// Creates the [Text] widget for the main data block.
@@ -192,7 +157,7 @@ Widget _mainDataText(
       child: Align(
         alignment: Alignment.center,
         child: Text(
-          _fromData(data, unit ?? Unit.unitless, maxPrecision),
+          _fromData(data, unit, maxPrecision),
           textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: size,

@@ -265,7 +265,7 @@ List<SensorData> createRandomTestData() {
           Random().nextInt(30) + 1,
           Random().nextInt(60),
         ),
-        unit: Unit.bar,
+        unit: Pressure.bar,
       ),
     );
   }
@@ -286,7 +286,7 @@ List<SensorData> createDeterminedTestData() {
           i + 100.3,
         ],
         maxPrecision: 1,
-        unit: Unit.bar,
+        unit: Pressure.bar,
         timestamp: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
@@ -305,7 +305,7 @@ List<SensorData> createDeterminedTestData() {
           100.3,
         ],
         maxPrecision: 1,
-        unit: Unit.bar,
+        unit: Pressure.bar,
         timestamp: DateTime.utc(
           2023,
           Random().nextInt(12) + 1,
@@ -340,7 +340,7 @@ List<SensorData> createDataForSplitting() {
                 hour.toDouble(),
               ],
               maxPrecision: 1,
-              unit: Unit.celsius,
+              unit: Temperature.celsius,
               timestamp: DateTime.utc(
                 2023,
                 month,

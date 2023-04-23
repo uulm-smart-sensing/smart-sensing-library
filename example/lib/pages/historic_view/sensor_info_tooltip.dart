@@ -27,7 +27,10 @@ class SensorInfoTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     var tableRows = [
       _getSensorInfoRow("Sensor ID", formatPascalCase(sensorId.name)),
-      _getSensorInfoRow("Unit", formatPascalCase(sensorInfo.unit.name)),
+      _getSensorInfoRow(
+        "Unit",
+        formatPascalCase(sensorInfo.unit.toTextDisplay(isShort: true)),
+      ),
       _getSensorInfoRow("Accuracy", formatPascalCase(sensorInfo.accuracy.name)),
       _getSensorInfoRow(
         "Time Interval (ms)",

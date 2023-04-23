@@ -7,32 +7,32 @@ void main() {
   var testData = SensorData(
     data: const [1.1, 1.2, 1.3],
     maxPrecision: 1,
-    unit: Unit.microTeslas,
+    unit: MagneticFluxDensity.microTesla,
     timestamp: DateTime.utc(2023),
   );
   var testList = [
     SensorData(
       data: const [1.2, 1.2, 1.3],
       maxPrecision: 1,
-      unit: Unit.microTeslas,
+      unit: MagneticFluxDensity.microTesla,
       timestamp: DateTime.utc(2023),
     ),
     SensorData(
       data: const [2.2, 2.2, 3.3],
       maxPrecision: 1,
-      unit: Unit.microTeslas,
+      unit: MagneticFluxDensity.microTesla,
       timestamp: DateTime.utc(2022),
     ),
     SensorData(
       data: const [3.2, 3.2, 3.3],
       maxPrecision: 1,
-      unit: Unit.microTeslas,
+      unit: MagneticFluxDensity.microTesla,
       timestamp: DateTime.utc(2021),
     ),
     SensorData(
       data: const [4.2, 4.2, 4.3],
       maxPrecision: 1,
-      unit: Unit.microTeslas,
+      unit: MagneticFluxDensity.microTesla,
       timestamp: DateTime.utc(2020),
     )
   ];
