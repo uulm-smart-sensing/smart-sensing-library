@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
+import 'package:smart_sensing_library/fake_sensor_manager.dart';
 import 'package:smart_sensing_library/io_manager.dart';
 
 Future<void> main() async {
@@ -107,4 +109,55 @@ Future<void> main() async {
     test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
   });
+
+  test(
+    'When sensor is available, then isSensorAvailable returns true',
+    () async {
+      var id = SensorId.accelerometer;
+      FakeSensorManager.configureAvailableSensors([id], available: true);
+      var isAvailable = await ioManager.isSensorAvailable(id);
+      expect(isAvailable, isTrue);
+    },
+  );
+
+  test(
+    'When sensor is not available, then isSensorAvailable returns false',
+    () async {
+      var id = SensorId.accelerometer;
+      FakeSensorManager.configureAvailableSensors([id], available: false);
+      var isAvailable = await ioManager.isSensorAvailable(id);
+      expect(isAvailable, isFalse);
+    },
+  );
+
+  test(
+    'When a set of sensors are available, then getAvailableSensors returns this'
+    ' set of available sensors',
+    () async {
+      var availableSensorIds = [
+        SensorId.accelerometer,
+        SensorId.barometer,
+        SensorId.gyroscope
+      ];
+      var notAvailableSensorIds =
+          SensorId.values.whereNot(availableSensorIds.contains).toList();
+      FakeSensorManager.configureAvailableSensors(
+        availableSensorIds,
+        available: true,
+      );
+      FakeSensorManager.configureAvailableSensors(
+        notAvailableSensorIds,
+        available: false,
+      );
+      var availableSensors = await ioManager.getAvailableSensors();
+      expect(availableSensors.length, availableSensorIds.length);
+      expect(
+        availableSensorIds
+            .map(availableSensors.contains)
+            .any((element) => !element),
+        isFalse,
+        reason: "getAvailableSensors doesn't contain all available sensors",
+      );
+    },
+  );
 }
