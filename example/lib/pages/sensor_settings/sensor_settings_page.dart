@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
@@ -48,14 +46,10 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
   Widget build(BuildContext context) {
     var unitHeader = SectionHeader("Unit");
 
-    var totalWidth = MediaQuery.of(context).size.width;
     var units = getUnitsFromSensorId(widget.sensorId);
-    var buttonWidth = _getButtonWidth(totalWidth, units.length);
     var unitSelection = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: units
-          .map((unit) => _getUnitSelectionButtonFromUnit(unit, buttonWidth))
-          .toList(),
+      children: units.map(_getUnitSelectionButtonFromUnit).toList(),
     );
 
     var precisionHeader = SectionHeader("Precision");
@@ -123,8 +117,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     );
   }
 
-  Widget _getUnitSelectionButtonFromUnit(Unit unit, double width) =>
-      UnitSelectionButton(
+  Widget _getUnitSelectionButtonFromUnit(Unit unit) => UnitSelectionButton(
         onPressed: () {
           setState(() {
             selectedUnit = unit;
@@ -134,6 +127,3 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         isSelected: selectedUnit == unit,
       );
 }
-
-double _getButtonWidth(double totalWidth, int numberOfWidgets) =>
-    min(totalWidth / 3, totalWidth / numberOfWidgets - 18 * numberOfWidgets);
