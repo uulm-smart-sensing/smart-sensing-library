@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'selection_button.dart';
+import '../../general_widgets/selection_button.dart';
 
 /// [SelectionButton] that is used for displaying the visualization selection.
 class VisualizationSelectionButton extends SelectionButton {
