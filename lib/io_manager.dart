@@ -200,8 +200,8 @@ class IOManager {
     var query = (_objectStore!.box<SensorDataDTO>().query(
               SensorDataDTO_.sensorID.equals(id.index).and(
                     SensorDataDTO_.dateTime.between(
-                      from.millisecondsSinceEpoch,
-                      to.millisecondsSinceEpoch,
+                      from.microsecondsSinceEpoch * 1000,
+                      to.microsecondsSinceEpoch * 1000,
                     ),
                   ),
             )..order(SensorDataDTO_.dateTime, flags: Order.descending))
@@ -345,8 +345,8 @@ class IOManager {
     await (_objectStore!.box<SensorDataDTO>().query(
           SensorDataDTO_.sensorID.equals(id.index).and(
                 SensorDataDTO_.dateTime.between(
-                  from.millisecondsSinceEpoch,
-                  to.millisecondsSinceEpoch,
+                  from.microsecondsSinceEpoch * 1000,
+                  to.microsecondsSinceEpoch * 1000,
                 ),
               ),
         )).build().removeAsync();
