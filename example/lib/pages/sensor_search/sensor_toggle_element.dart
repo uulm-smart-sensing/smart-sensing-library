@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
@@ -94,31 +97,46 @@ class _SensorToggleElementState extends State<SensorToggleElement> {
       ),
     );
 
+    var switchValue = !widget.isDisabled && (_isToggledOn ?? false);
+    void switchOnChanged(isToggledOn) {
+      if (widget.isDisabled) {
+        return;
+      }
+
+      setState(() {
+        _isToggledOn = isToggledOn;
+      });
+      widget.onChanged.call(isToggledOn);
+    }
+
+    var inactiveTrackColor = widget.isDisabled
+        ? widget.disabledTrackColor
+        : widget.inactiveTrackColor;
     var switchContainer = Container(
       padding: const EdgeInsets.only(right: 6),
       child: SizedBox(
-        height: 35,
-        child: Switch.adaptive(
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          value: !widget.isDisabled && (_isToggledOn ?? false),
-          activeColor: widget.activeColor,
-          activeTrackColor: widget.activeTrackColor,
-          inactiveThumbColor:
-              widget.isDisabled ? widget.disabledColor : widget.inactiveColor,
-          inactiveTrackColor: widget.isDisabled
-              ? widget.disabledTrackColor
-              : widget.inactiveTrackColor,
-          onChanged: (isToggledOn) {
-            if (widget.isDisabled) {
-              return;
-            }
-
-            setState(() {
-              _isToggledOn = isToggledOn;
-            });
-            widget.onChanged.call(isToggledOn);
-          },
-        ),
+        height: 40,
+        child: Platform.isIOS
+            ? CupertinoSwitch(
+                value: switchValue,
+                onChanged: switchOnChanged,
+                activeColor: widget.activeTrackColor,
+                thumbColor: widget.isDisabled
+                    ? widget.disabledColor
+                    : widget.activeColor,
+                trackColor: inactiveTrackColor,
+              )
+            : Switch(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                value: switchValue,
+                activeColor: widget.activeColor,
+                activeTrackColor: widget.activeTrackColor,
+                inactiveThumbColor: widget.isDisabled
+                    ? widget.disabledColor
+                    : widget.inactiveColor,
+                inactiveTrackColor: inactiveTrackColor,
+                onChanged: switchOnChanged,
+              ),
       ),
     );
 
