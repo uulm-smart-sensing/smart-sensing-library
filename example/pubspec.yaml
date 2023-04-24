@@ -30,7 +30,7 @@ dependencies:
 
   smart_sensing_library:
     path: ../
-  intl: ^0.18.0
+  intl: ^0.17.0
   file_picker: ^5.2.7
   flutter_datetime_picker: ^1.5.1
   font_awesome_flutter: ^10.4.0
@@ -40,6 +40,9 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  test_cov_console: ^0.2.2
+  junitreport: ^2.0.2
+  cobertura: ^1.0.3
 
 flutter:
 
