@@ -31,7 +31,7 @@ class _SensorSearchPageSensorListState
 
           return SensorToggleListElement(
             sensorId: widget.sensorId,
-            isDisabled: true,
+            isDisabled: false,
             isTogglingDisabled: true,
             isToggledOn: false,
           );
