@@ -8,8 +8,7 @@ import '../../formatter/date_formatter.dart';
 import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';
-import '../../text_formatter.dart';
-import '../../utils.dart';
+
 import 'graph_view_page.dart';
 import 'historic_view_page.dart';
 import 'sensor_data.dart';
