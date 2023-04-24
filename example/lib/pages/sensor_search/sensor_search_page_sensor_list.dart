@@ -3,18 +3,19 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import 'sensor_toggle_list_element.dart';
 
-class SensorSearchPageSensorList extends StatefulWidget {
+/// List element that wraps [SensorToggleListElement] in a [FutureBuilder].
+class SensorSearchPageSensorListElement extends StatefulWidget {
   final SensorId sensorId;
 
-  const SensorSearchPageSensorList({super.key, required this.sensorId});
+  const SensorSearchPageSensorListElement({super.key, required this.sensorId});
 
   @override
-  State<SensorSearchPageSensorList> createState() =>
-      _SensorSearchPageSensorListState();
+  State<SensorSearchPageSensorListElement> createState() =>
+      _SensorSearchPageSensorListElementState();
 }
 
-class _SensorSearchPageSensorListState
-    extends State<SensorSearchPageSensorList> {
+class _SensorSearchPageSensorListElementState
+    extends State<SensorSearchPageSensorListElement> {
   @override
   Widget build(BuildContext context) => FutureBuilder(
         future: _getSensorState(widget.sensorId),

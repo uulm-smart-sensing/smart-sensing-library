@@ -19,6 +19,9 @@ import 'home_page_section_header.dart';
 /// * sensors section -> [StatisticsPage].
 /// The last section contains basic information about the device on which this
 /// app is running.
+///
+/// When navigating back to this page, the page is refreshed to update the live
+/// view.
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 

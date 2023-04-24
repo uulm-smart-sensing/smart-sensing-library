@@ -9,7 +9,8 @@ import '../../general_widgets/stylized_container.dart';
 import 'checkbox_with_text.dart';
 import 'sensor_search_page_sensor_list.dart';
 
-/// Page to (de-)activate sensor tracking and mark sensors as favorites.
+/// Page to (de-)activate sensor tracking, mark sensors as favorites, search
+/// for sensors and hide not available sensors.
 class SensorSearchPage extends StatefulWidget {
   const SensorSearchPage({super.key});
 
@@ -162,7 +163,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         )
         .map(
           (id) => [
-            SensorSearchPageSensorList(sensorId: id),
+            SensorSearchPageSensorListElement(sensorId: id),
             const SizedBox(height: 10)
           ],
         )
