@@ -19,9 +19,17 @@ import 'home_page_section_header.dart';
 /// * sensors section -> [StatisticsPage].
 /// The last section contains basic information about the device on which this
 /// app is running.
-class HomePage extends StatelessWidget {
+///
+/// When navigating back to this page, the page is refreshed to update the live
+/// view.
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var todayFormatted = formatDate(dateTime: DateTime.now());
@@ -58,14 +66,7 @@ class HomePage extends StatelessWidget {
         child: IconButton(
           padding: EdgeInsets.zero,
           iconSize: 30,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SettingsPage(),
-              ),
-            );
-          },
+          onPressed: () => _navigateToPage(context, const SettingsPage()),
           icon: const Icon(Icons.settings),
         ),
       ),
@@ -73,14 +74,7 @@ class HomePage extends StatelessWidget {
 
     var liveViewSectionHeader = HomePageSectionHeader(
       title: "live view",
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LiveViewPage(),
-          ),
-        );
-      },
+      onPressed: () => _navigateToPage(context, const LiveViewPage()),
     );
     var liveViewSectionBody = FutureBuilder(
       future: IOManager().getUsedSensors(),
@@ -102,14 +96,7 @@ class HomePage extends StatelessWidget {
 
     var sensorsSectionHeader = HomePageSectionHeader(
       title: "sensors",
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const StatisticsPage(),
-          ),
-        );
-      },
+      onPressed: () => _navigateToPage(context, const StatisticsPage()),
     );
     var sensorsSectionBody = HomePageSectionBody(
       children:
@@ -155,5 +142,14 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _navigateToPage(BuildContext context, Widget page) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => page))
+        .then(
+          // Called when navigating back to the this home page
+          (value) => setState(() {}),
+        );
   }
 }

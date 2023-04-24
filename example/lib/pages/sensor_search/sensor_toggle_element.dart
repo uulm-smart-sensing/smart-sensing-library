@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
@@ -51,7 +54,7 @@ class SensorToggleElement extends StatefulWidget {
   /// Color of the track of the switch when [isDisabled] is true.
   final Color? disabledTrackColor;
 
-  SensorToggleElement({
+  const SensorToggleElement({
     required this.sensorId,
     required this.onChanged,
     this.color,
@@ -65,7 +68,8 @@ class SensorToggleElement extends StatefulWidget {
     this.isDisabled = false,
     this.disabledColor,
     this.disabledTrackColor,
-  }) : super(key: ValueKey(sensorId.name));
+    super.key,
+  });
 
   @override
   State<SensorToggleElement> createState() => _SensorToggleElementState();
@@ -76,8 +80,8 @@ class _SensorToggleElementState extends State<SensorToggleElement> {
 
   @override
   void initState() {
-    _isToggledOn = widget.isToggledOn;
     super.initState();
+    _isToggledOn = widget.isToggledOn;
   }
 
   @override
@@ -93,31 +97,46 @@ class _SensorToggleElementState extends State<SensorToggleElement> {
       ),
     );
 
+    var switchValue = !widget.isDisabled && (_isToggledOn ?? false);
+    void switchOnChanged(isToggledOn) {
+      if (widget.isDisabled) {
+        return;
+      }
+
+      setState(() {
+        _isToggledOn = isToggledOn;
+      });
+      widget.onChanged.call(isToggledOn);
+    }
+
+    var inactiveTrackColor = widget.isDisabled
+        ? widget.disabledTrackColor
+        : widget.inactiveTrackColor;
     var switchContainer = Container(
       padding: const EdgeInsets.only(right: 6),
       child: SizedBox(
-        height: 35,
-        child: Switch.adaptive(
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          value: !widget.isDisabled && (_isToggledOn ?? false),
-          activeColor: widget.activeColor,
-          activeTrackColor: widget.activeTrackColor,
-          inactiveThumbColor:
-              widget.isDisabled ? widget.disabledColor : widget.inactiveColor,
-          inactiveTrackColor: widget.isDisabled
-              ? widget.disabledTrackColor
-              : widget.inactiveTrackColor,
-          onChanged: (isToggledOn) {
-            if (widget.isDisabled) {
-              return;
-            }
-
-            setState(() {
-              _isToggledOn = isToggledOn;
-            });
-            widget.onChanged.call(isToggledOn);
-          },
-        ),
+        height: 40,
+        child: Platform.isIOS
+            ? CupertinoSwitch(
+                value: switchValue,
+                onChanged: switchOnChanged,
+                activeColor: widget.activeTrackColor,
+                thumbColor: widget.isDisabled
+                    ? widget.disabledColor
+                    : widget.activeColor,
+                trackColor: inactiveTrackColor,
+              )
+            : Switch(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                value: switchValue,
+                activeColor: widget.activeColor,
+                activeTrackColor: widget.activeTrackColor,
+                inactiveThumbColor: widget.isDisabled
+                    ? widget.disabledColor
+                    : widget.inactiveColor,
+                inactiveTrackColor: inactiveTrackColor,
+                onChanged: switchOnChanged,
+              ),
       ),
     );
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme.dart';
+
 /// Same as [Container] but with with specified decoration:
 /// * Rounded border with radius 20
 /// * Color ARGB: (255, 34, 0, 77)
@@ -41,7 +43,7 @@ class StylizedContainer extends StatelessWidget {
         alignment: alignment,
         padding: padding,
         decoration: BoxDecoration(
-          color: color ?? const Color.fromARGB(255, 34, 0, 77),
+          color: color ?? secondaryColor,
           borderRadius: BorderRadius.circular(20),
         ),
         foregroundDecoration: foregroundDecoration,

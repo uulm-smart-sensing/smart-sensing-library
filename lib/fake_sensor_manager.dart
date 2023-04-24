@@ -94,6 +94,10 @@ class FakeSensorManager extends Fake implements SensorManager {
           ..keys.toList()) as List<SensorId>,
       );
 
+  @override
+  Future<bool> isSensorAvailable(SensorId id) =>
+      Future(() => _sensorAvailableMap[id]!);
+
   ///Base implementation for test data creation.
   SensorData _createTestData(int i) => SensorData(
         data: [i + 0.1, i + 0.2, i + 0.3],
