@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme.dart';
 import 'stylized_container.dart';
 
 /// A customized [DropdownButton] that is wrapped by a [StylizedContainer].
@@ -44,7 +45,7 @@ class CustomDropdownButton<T> extends StylizedContainer {
             isDense: isDense,
             underline: const SizedBox.shrink(),
             borderRadius: BorderRadius.circular(20),
-            dropdownColor: const Color.fromARGB(255, 34, 0, 77),
+            dropdownColor: secondaryColor,
             hint: Text(
               hint,
               style: const TextStyle(

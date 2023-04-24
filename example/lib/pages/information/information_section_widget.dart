@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './information_page.dart';
+import '../../theme.dart';
 
 /// Widget displaying a information section.
 ///
@@ -49,9 +50,9 @@ class InformationSectionWidget extends StatelessWidget {
     var body = Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        color: Theme.of(context).cardColor,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: secondaryColor,
       ),
       child: _content,
     );
