@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../formatter/text_formatter.dart';
+import '../sensor_settings/sensor_settings_page.dart';
 
 /// [StatefulWidget] which represents a [Text] and a [Switch] encapsuled in a
 /// rounded container.
@@ -80,7 +81,54 @@ class _SensorToggleElementState extends State<SensorToggleElement> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) {
+    var textContainer = Container(
+      padding: const EdgeInsets.only(left: 20),
+      child: Text(
+        formatPascalCase(widget.sensorId.name),
+        style: TextStyle(
+          color: widget.textColor,
+          fontSize: widget.fontSize,
+        ),
+      ),
+    );
+
+    var switchContainer = Container(
+      padding: const EdgeInsets.only(right: 6),
+      child: SizedBox(
+        height: 35,
+        child: Switch.adaptive(
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          value: !widget.isDisabled && (_isToggledOn ?? false),
+          activeColor: widget.activeColor,
+          activeTrackColor: widget.activeTrackColor,
+          inactiveThumbColor:
+              widget.isDisabled ? widget.disabledColor : widget.inactiveColor,
+          inactiveTrackColor: widget.isDisabled
+              ? widget.disabledTrackColor
+              : widget.inactiveTrackColor,
+          onChanged: (isToggledOn) {
+            if (widget.isDisabled) {
+              return;
+            }
+
+            setState(() {
+              _isToggledOn = isToggledOn;
+            });
+            widget.onChanged.call(isToggledOn);
+          },
+        ),
+      ),
+    );
+
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SensorSettingsPage(sensorId: widget.sensorId),
+        ),
+      ),
+      child: Container(
         decoration: BoxDecoration(
           color: widget.color,
           borderRadius: BorderRadius.circular(20),
@@ -88,45 +136,11 @@ class _SensorToggleElementState extends State<SensorToggleElement> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                formatPascalCase(widget.sensorId.name),
-                style: TextStyle(
-                  color: widget.textColor,
-                  fontSize: widget.fontSize,
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(right: 6),
-              child: SizedBox(
-                height: 35,
-                child: Switch.adaptive(
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  value: !widget.isDisabled && (_isToggledOn ?? false),
-                  activeColor: widget.activeColor,
-                  activeTrackColor: widget.activeTrackColor,
-                  inactiveThumbColor: widget.isDisabled
-                      ? widget.disabledColor
-                      : widget.inactiveColor,
-                  inactiveTrackColor: widget.isDisabled
-                      ? widget.disabledTrackColor
-                      : widget.inactiveTrackColor,
-                  onChanged: (isToggledOn) {
-                    if (widget.isDisabled) {
-                      return;
-                    }
-
-                    setState(() {
-                      _isToggledOn = isToggledOn;
-                    });
-                    widget.onChanged.call(isToggledOn);
-                  },
-                ),
-              ),
-            ),
+            textContainer,
+            switchContainer,
           ],
         ),
-      );
+      ),
+    );
+  }
 }

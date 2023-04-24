@@ -1,40 +1,34 @@
 import 'package:flutter/material.dart';
 
-/// Same as [TextButton] but with with specified decoration around the button:
-/// * Rounded border with radius 20
-/// * Color ARGB: (255, 23, 27, 137)
-/// * white text color.
+import 'custom_text_button_template.dart';
+
+/// Same as [CustomTextButtonTemplate] but with with a [Text] as textButtonChild
 ///
-/// This [CustomTextButton ]widget can be used as button in the entire app
+/// This [CustomTextButton] widget can be used as button in the entire app
 /// if an as button recognizable element is needed.
-class CustomTextButton extends StatelessWidget {
+class CustomTextButton extends CustomTextButtonTemplate {
   /// The [text] which is shown on the custom [TextButton]
   final String text;
 
-  /// The [Function] which is called if this [CustomTextButton]
-  /// is pressed.
-  final Function()? onPressed;
+  /// Custom [TextStyle] of this [CustomTextButton].
+  ///
+  /// If not provided, a default [TextStyle] will be used.
+  final TextStyle? style;
 
-  const CustomTextButton({
+  CustomTextButton({
     super.key,
+    super.onPressed,
+    super.width,
+    super.isDense,
     required this.text,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) => Container(
-        height: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 23, 27, 137),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: TextButton(
-          onPressed: onPressed,
-          child: Text(
+    this.style,
+  }) : super(
+          textButtonChild: Text(
             text,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: style ??
+                const TextStyle(
+                  color: Colors.white,
+                ),
           ),
-        ),
-      );
+        );
 }

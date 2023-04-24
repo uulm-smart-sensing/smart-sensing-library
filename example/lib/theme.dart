@@ -75,4 +75,9 @@ var theme = ThemeData(
       ),
     ),
   ),
+  sliderTheme: const SliderThemeData(
+    thumbColor: Colors.white,
+    activeTrackColor: Colors.white,
+    inactiveTrackColor: Color.fromARGB(255, 142, 142, 152),
+  ),
 );
