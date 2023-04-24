@@ -24,29 +24,30 @@ const sensorIdToIcon = {
   SensorId.thermometer: FontAwesomeIcons.temperatureHalf,
 };
 
-const primaryColorHex = 0xFF00072F;
-const primaryColor = MaterialColor(
-  primaryColorHex,
+const primaryColor = Color.fromARGB(255, 0, 7, 47);
+final primaryMaterialColor = MaterialColor(
+  primaryColor.value,
   {
-    50: Color.fromRGBO(0, 7, 47, .1),
-    100: Color.fromRGBO(0, 7, 47, .2),
-    200: Color.fromRGBO(0, 7, 47, .3),
-    300: Color.fromRGBO(0, 7, 47, .4),
-    400: Color.fromRGBO(0, 7, 47, .5),
-    500: Color.fromRGBO(0, 7, 47, .6),
-    600: Color.fromRGBO(0, 7, 47, .7),
-    700: Color.fromRGBO(0, 7, 47, .8),
-    800: Color.fromRGBO(0, 7, 47, .9),
-    900: Color.fromRGBO(0, 7, 47, 1),
+    50: primaryColor.withOpacity(.1),
+    100: primaryColor.withOpacity(.2),
+    200: primaryColor.withOpacity(.3),
+    300: primaryColor.withOpacity(.4),
+    400: primaryColor.withOpacity(.5),
+    500: primaryColor.withOpacity(.6),
+    600: primaryColor.withOpacity(.7),
+    700: primaryColor.withOpacity(.8),
+    800: primaryColor.withOpacity(.9),
+    900: primaryColor.withOpacity(1),
   },
 );
 
+const secondaryColor = Color.fromARGB(255, 34, 0, 77);
+
 /// Theme used for the app-
-var theme = ThemeData(
-  primarySwatch: primaryColor,
-  scaffoldBackgroundColor: const Color(primaryColorHex),
+final theme = ThemeData(
+  primarySwatch: primaryMaterialColor,
+  scaffoldBackgroundColor: primaryColor,
   dividerColor: Colors.white,
-  cardColor: const Color.fromARGB(255, 34, 0, 77),
   iconTheme: const IconThemeData(
     color: Colors.white,
   ),

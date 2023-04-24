@@ -23,7 +23,7 @@ class LiveViewSensorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BrickContainer(
-        height: isShortFormat ? 105 : null,
+        height: isShortFormat ? 120 : null,
         color: sensorIdToColor[sensorId],
         child: LiveDataInformation(
           id: sensorId,

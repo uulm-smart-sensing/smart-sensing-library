@@ -75,6 +75,24 @@ class IOManager {
   Future<List<SensorId>> getUsedSensors() async =>
       _sensorManager.getUsedSensors();
 
+  /// Checks whether the sensor with the passed [id] is available.
+  Future<bool> isSensorAvailable(SensorId id) =>
+      _sensorManager.isSensorAvailable(id);
+
+  /// Returns all available sensors.
+  ///
+  /// This is equivalent to call [isSensorAvailable] on each element of
+  /// [SensorId.values] and return the [SensorId] if the result is true.
+  Future<List<SensorId>> getAvailableSensors() async {
+    var availableSensors = <SensorId>[];
+    for (var sensorId in SensorId.values) {
+      if (await isSensorAvailable(sensorId)) {
+        availableSensors.add(sensorId);
+      }
+    }
+    return availableSensors;
+  }
+
   /// Adds a Sensor with the passed [id].
   ///
   /// The returned [SensorTaskResult] indicates whether the operation was

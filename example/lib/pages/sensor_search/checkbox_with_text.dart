@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme.dart';
+
 class CheckBoxWithText extends StatefulWidget {
   final String text;
   final bool isChecked;
@@ -34,7 +36,7 @@ class _CheckBoxWithTextState extends State<CheckBoxWithText> {
               dimension: 30,
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 34, 0, 77),
+                  color: secondaryColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: isChecked

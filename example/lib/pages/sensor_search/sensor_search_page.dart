@@ -1,13 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/app_bar_with_header.dart';
 import '../../general_widgets/device_name_title.dart';
 import '../../general_widgets/stylized_container.dart';
-import '../../theme.dart';
 import 'checkbox_with_text.dart';
-import 'sensor_toggle_element.dart';
+import 'sensor_search_page_sensor_list.dart';
 
+/// Page to (de-)activate sensor tracking, mark sensors as favorites, search
+/// for sensors and hide not available sensors.
 class SensorSearchPage extends StatefulWidget {
   const SensorSearchPage({super.key});
 
@@ -19,6 +22,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
   final _controller = TextEditingController();
   var sensorNameFilter = "";
   var showOnlyAvailableSensors = false;
+  var availableSensors = <SensorId>[];
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,8 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         CheckBoxWithText(
           text: "Only show available",
           isChecked: showOnlyAvailableSensors,
-          onPressed: (isChecked) {
+          onPressed: (isChecked) async {
+            availableSensors = await IOManager().getAvailableSensors();
             setState(() {
               showOnlyAvailableSensors = isChecked;
             });
@@ -42,12 +47,10 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
       ],
     );
 
-    // TODO: Replace with call to smart sensing library
-    bool isAvailable(SensorId sensorId) => sensorId != SensorId.barometer;
-
     // Fetch sensors which should be displayed
-    var sensorIdsToDisplay = SensorId.values
-        .where((id) => !showOnlyAvailableSensors || isAvailable(id));
+    var sensorIdsToDisplay = SensorId.values.where(
+      (id) => !showOnlyAvailableSensors || availableSensors.contains(id),
+    );
 
     var searchBar = StylizedContainer(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -89,7 +92,11 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
     var favorites = sensorIdsToDisplay.take(3).toList();
     var favoritesBody = _getSensorsListFromIds(
       sensorIds: favorites,
+      containerFlex: favorites.length,
       sensorNameFilter: sensorNameFilter,
+      noSensorsText: sensorNameFilter.isEmpty
+          ? "No sensors marked as favorite."
+          : "No sensor marked as favorite matches the search string.",
     );
 
     var allSensorsHeader = const Text(
@@ -103,8 +110,11 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         sensorIdsToDisplay.where((id) => !favorites.contains(id)).toList();
     var allSensorsBody = _getSensorsListFromIds(
       sensorIds: allSensors,
-      containerFlex: 2,
+      containerFlex: allSensors.length,
       sensorNameFilter: sensorNameFilter,
+      noSensorsText: sensorNameFilter.isEmpty
+          ? "No sensors available."
+          : "No sensor matches the search string.",
     );
 
     return GestureDetector(
@@ -143,104 +153,48 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
     required List<SensorId> sensorIds,
     int containerFlex = 1,
     required String sensorNameFilter,
-  }) =>
-      Expanded(
-        flex: containerFlex,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: sensorIds
-                  .where(
-                    (id) =>
-                        sensorNameFilter == "" ||
-                        id.name
-                            .toLowerCase()
-                            .contains(sensorNameFilter.toLowerCase()),
-                  )
-                  .map(
-                    (id) => [
-                      _getSensorToggleListElementFromSensorId(id),
-                      const SizedBox(height: 6)
-                    ],
-                  )
-                  .expand((element) => element)
-                  .toList(),
+    String noSensorsText = "No sensors.",
+  }) {
+    var sensorWidgets = sensorIds
+        .where(
+          (id) =>
+              sensorNameFilter == "" ||
+              id.name.toLowerCase().contains(sensorNameFilter.toLowerCase()),
+        )
+        .map(
+          (id) => [
+            SensorSearchPageSensorListElement(sensorId: id),
+            const SizedBox(height: 10)
+          ],
+        )
+        .expand((element) => element)
+        .toList();
+
+    if (sensorWidgets.isEmpty) {
+      sensorWidgets.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+          child: Center(
+            child: Text(
+              noSensorsText,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
             ),
           ),
         ),
       );
+    }
 
-  Future<String> _getSensorAvailability(SensorId sensorId) async {
-    // TODO: Replace with call to smart sensing library
-    await Future.delayed(const Duration(milliseconds: 100));
-    return sensorId == SensorId.barometer ? "false" : "true";
+    return Expanded(
+      flex: max(containerFlex, 1),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(children: sensorWidgets),
+        ),
+      ),
+    );
   }
-
-  /// Creates a [SensorToggleElement] for the passed [sensorId].
-  ///
-  /// If [disableToggling] is true, the [SensorToggleElement] is also disabled,
-  /// the colors for the disabeld state are replaced with the colors for the
-  /// inactive state of the switch.
-  /// This has the reason that the [SensorToggleElement] can be shown without
-  /// knowing whether the sensor for the passed [sensorId] is actually available
-  /// in which case the [SensorToggleElement] would be disabled.
-  SensorToggleElement _createSensorToggleListElement({
-    required SensorId sensorId,
-    required bool isDisabled,
-    bool disableToggling = false,
-  }) =>
-      SensorToggleElement(
-        color: sensorIdToColor[sensorId] ?? Colors.white,
-        activeColor: const Color.fromARGB(255, 217, 217, 217),
-        activeTrackColor: const Color.fromARGB(255, 66, 234, 7),
-        inactiveColor: const Color.fromARGB(255, 217, 217, 217),
-        inactiveTrackColor: const Color.fromARGB(255, 144, 149, 142),
-        isDisabled: isDisabled || disableToggling,
-        disabledColor: disableToggling
-            ? const Color.fromARGB(255, 217, 217, 217)
-            : const Color.fromARGB(255, 158, 162, 157),
-        disabledTrackColor: disableToggling
-            ? const Color.fromARGB(255, 144, 149, 142)
-            : const Color.fromARGB(255, 144, 149, 142),
-        textColor: Colors.black,
-        sensorId: sensorId,
-        onChanged: (isToggledOn) {
-          if (disableToggling) {
-            return;
-          }
-
-          setState(() {
-            // TODO: Make call to smart sensing library
-          });
-        },
-      );
-
-  /// Creates a [SensorToggleElement] from the passed [sensorId].
-  ///
-  /// Checks whether the sensor with the passed [sensorId] is available and
-  /// displays [SensorToggleElement] with disabled toggling as long as the
-  /// request lasts.
-  FutureBuilder _getSensorToggleListElementFromSensorId(
-    SensorId sensorId,
-  ) =>
-      FutureBuilder(
-        future: _getSensorAvailability(sensorId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var isAvailable = snapshot.data! == "true";
-            return _createSensorToggleListElement(
-              sensorId: sensorId,
-              isDisabled: !isAvailable,
-            );
-          }
-
-          return _createSensorToggleListElement(
-            sensorId: sensorId,
-            isDisabled: true,
-            disableToggling: true,
-          );
-        },
-      );
 }
