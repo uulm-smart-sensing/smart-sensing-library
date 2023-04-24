@@ -120,6 +120,22 @@ Future<void> main() async {
     test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
   });
+  
+  test("Test multi query functionality", () async {
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
+    await ioManager.addSensor(
+      id: SensorId.gyroscope,
+      config: exampleConfig,
+    );
+    await Future.delayed(const Duration(seconds: 15));
+    var test = await ioManager
+        .getMultiFilterFrom([SensorId.accelerometer, SensorId.gyroscope]);
+    expect(test?.result()[SensorId.accelerometer]!.isNotEmpty, true);
+    expect(test?.result()[SensorId.gyroscope]!.isNotEmpty, true);
+  });
 
   test("Test multi query functionality", () async {
     await ioManager.addSensor(
