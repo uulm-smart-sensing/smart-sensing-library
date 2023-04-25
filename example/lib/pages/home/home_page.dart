@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
         noChildrenText: "No sensors are currently being tracked.",
         children: snapshot.data != null
             ? snapshot.data!
-                .where((id) => provider.sensorList.contains(id))
+                .where((id) => SensorId.values.contains(id))
                 .map(
                   (id) => LiveViewSensorWidget(
                     sensorId: id,
