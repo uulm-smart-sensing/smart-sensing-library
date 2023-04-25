@@ -12,7 +12,7 @@ import 'supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the given [format].
 ///
-/// Therefor the appropiate specific formatter is called and the sensor data
+/// Therefor the appropriate specific formatter is called and the sensor data
 /// encoded as byte array is returned, which can be used to write the data
 /// into a file.
 List<int> formatData(

@@ -361,7 +361,7 @@ class IOManager {
   ///
   /// Returns false, if
   /// * there exist no directory with the [directoryName]
-  /// * the list of [sensorIds] is empty, so acutally no export is requested.
+  /// * the list of [sensorIds] is empty, so actually no export is requested.
   /// * there exist no data (for one of the sensors, eventually in the
   /// time interval from [startTime] to [endTime]), otherwise it will return
   /// true.
