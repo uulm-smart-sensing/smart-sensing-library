@@ -12,7 +12,7 @@ import 'stylized_container.dart';
 /// in a [StylizedContainer] and opens a `DateTimePicker` (contained in
 /// the [DatePicker] package) where the user can set the desired date and time.
 /// Than the selected [DateTime] will be shown in the [StylizedContainer] in the
-/// format like desribed above.
+/// format like described above.
 ///
 /// It can be used on every page in the smart sensing library demo app, where
 /// a datetime selector is needed.

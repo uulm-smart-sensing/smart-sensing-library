@@ -147,7 +147,7 @@ String _fromData(List<double?> data, Unit unit, int maxPrecision) {
       .join("\n");
 }
 
-/// Converts the [Unit] enum to the corresponing unit string.
+/// Converts the [Unit] enum to the corresponding unit string.
 String _unitConverter(Unit unit) {
   switch (unit) {
     case Unit.metersPerSecondSquared:

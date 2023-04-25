@@ -15,7 +15,7 @@ import 'information_section_widget.dart';
 /// * version ....
 /// * the developer of demo app and smart sensing library.
 ///
-/// If further information become interesting and should be accessable by the
+/// If further information become interesting and should be accessible by the
 /// user, they should be displayed on this [InformationPage].
 ///
 /// This [InformationPage] is reachable through the [SettingsPage].
@@ -103,7 +103,7 @@ class InformationPage extends StatelessWidget {
 
           if (snapshot.hasError) {
             return const Text(
-              "Error occured while getting information about current OS",
+              "Error occurred while getting information about current OS",
             );
           }
 
@@ -122,7 +122,7 @@ class InformationPage extends StatelessWidget {
 
           if (snapshot.hasError) {
             return const Text(
-              "Error occured while getting information about free storage",
+              "Error occurred while getting information about free storage",
             );
           }
 

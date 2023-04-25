@@ -11,7 +11,7 @@ class FilterTools {
   ///The [buffer] gets shallow copied into the internal [_buffer].
   ///The [_buffer] is used to do all filter options.
   FilterTools(List<SensorData> buffer) {
-    //Asumes that we have a valid buffer with valid enties.
+    //Assumes that we have a valid buffer with valid enties.
     _buffer.add(List.of(buffer));
     _precision = _buffer[0][0].maxPrecision;
   }

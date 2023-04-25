@@ -28,7 +28,7 @@ Future<void> main() async {
         ),
   );
 
-  ///The fakeSensorManager cancles the Stream after 10 seconds,
+  ///The fakeSensorManager cancels the Stream after 10 seconds,
   ///so after 15 seconds all data is saved in the database.
   test("Add sensor and get from database", () async {
     await ioManager.addSensor(

@@ -19,7 +19,7 @@ class DeviceNameTitle extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return const Text("Error occured while fetching device name.");
+            return const Text("Error occurred while fetching device name.");
           }
 
           return const Text("Device name is being fetched ...");
