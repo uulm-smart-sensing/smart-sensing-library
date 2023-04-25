@@ -23,7 +23,7 @@ Future<void> main() async {
   );
 
   setUp(
-    () => ioManager.removeData(SensorId.accelerometer).then(
+    () => FakeSensorManager().resetState().then(
           (value) => ioManager.removeSensor(SensorId.accelerometer),
         ),
   );
