@@ -118,7 +118,7 @@ Widget _getAvailableSensorsText() => FutureBuilder(
 
         if (snapshot.hasError) {
           return const Text(
-            "Error occured while fetching number of available sensors",
+            "Error occurred while fetching number of available sensors",
           );
         }
 
@@ -146,7 +146,7 @@ Widget _getRunningSensorsText() => FutureBuilder(
 
         if (snapshot.hasError) {
           return const Text(
-            "Error occured while fetching number of running sensors",
+            "Error occurred while fetching number of running sensors",
           );
         }
 

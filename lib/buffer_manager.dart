@@ -36,11 +36,11 @@ class BufferManager {
 
   ///Sorts the buffer with [id]
   void _sortBuffer(SensorId id) {
-    (_buffer[id] as List<SensorData>).sort(_sortComparision);
+    (_buffer[id] as List<SensorData>).sort(_sortComparison);
   }
 
-  ///Comparision method that compares Sensordata timestap [a] with [b]
-  int _sortComparision(SensorData a, SensorData b) =>
+  ///Comparison method that compares Sensordata timestamp [a] with [b]
+  int _sortComparison(SensorData a, SensorData b) =>
       DateTime.fromMicrosecondsSinceEpoch(
         a.timestampInMicroseconds,
         isUtc: true,
