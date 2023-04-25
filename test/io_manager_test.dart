@@ -22,10 +22,11 @@ Future<void> main() async {
     timeInterval: Duration(milliseconds: 1000),
   );
 
-  setUp(() async {
-    await ioManager.removeData(SensorId.accelerometer);
-    await ioManager.removeSensor(SensorId.accelerometer);
-  });
+  setUp(
+    () => ioManager.removeData(SensorId.accelerometer).then(
+          (value) => ioManager.removeSensor(SensorId.accelerometer),
+        ),
+  );
 
   ///The fakeSensorManager cancles the Stream after 10 seconds,
   ///so after 15 seconds all data is saved in the database.
