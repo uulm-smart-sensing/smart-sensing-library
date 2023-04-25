@@ -29,17 +29,13 @@ class StatisticsPage extends StatelessWidget {
     // The list containing the buttons for all implemented sensors
     // for navigation to the [HistoricViewPage]s.
     var sensorList = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text("Favorite"),
-            ),
-            const SizedBox(
-              height: 10,
+              child: Text("Favorites", style: TextStyle(fontSize: 24)),
             ),
             ListView(
               shrinkWrap: true,
@@ -53,7 +49,7 @@ class StatisticsPage extends StatelessWidget {
             ),
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text("All"),
+              child: Text("All", style: TextStyle(fontSize: 24)),
             ),
             const SizedBox(
               height: 10,
