@@ -30,7 +30,7 @@ class _SensorSearchPageSensorListElementState
           if (snapshot.hasData && snapshot.data != null) {
             var state = snapshot.data!;
             return Slidable(
-              enabled: widget.provider.isSlidableEnabled(widget.sensorId),
+              enabled: state.isAvailable,
               endActionPane: ActionPane(
                 motion: const StretchMotion(),
                 extentRatio: 0.15,
@@ -38,10 +38,11 @@ class _SensorSearchPageSensorListElementState
                   SlidableAction(
                     borderRadius: BorderRadius.circular(20),
                     foregroundColor: Colors.red,
-                    backgroundColor: const Color.fromRGBO(34, 0, 77, 100),
+                    backgroundColor: Theme.of(context).primaryColor,
                     icon: widget.provider.isExist(widget.sensorId)
                         ? Icons.favorite
                         : Icons.favorite_outline,
+                    label: "",
                     onPressed: (context) async {
                       await widget.provider.toggleFavorite(widget.sensorId);
                     },
