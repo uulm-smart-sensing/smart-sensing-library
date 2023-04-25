@@ -5,7 +5,7 @@
   <a>
     <img src="https://cdn-images-1.medium.com/max/1200/1*5-aoK8IBmXve5whBQM90GA.png" alt="Logo" width="80" height="80">
   </a>
-<h3 align="center">Smart Sensing Libary</h3>
+<h3 align="center">Smart Sensing Library</h3>
 <a href="https://gitlab.uni-ulm.de/groups/se-anwendungsprojekt-22-23/-/wikis/home"><strong>Explore the docs »</strong></a>
     <br />
     <br />
@@ -32,7 +32,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#developement-setup">Developement Setup</a></li>
+    <li><a href="#development-setup">Development Setup</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Authors</a></li>
   </ol>
@@ -85,8 +85,8 @@ _For more examples, please refer to the [Documentation](https://gitlab.uni-ulm.d
 
 
 
-<!-- Developement setup-->
-## Developement setup
+<!-- Development setup-->
+## Development setup
 
 We use an `.editorconfig` file to define coding styles in this repo.
 In order to apply to these coding style, following IDEs/editors need to be configured:

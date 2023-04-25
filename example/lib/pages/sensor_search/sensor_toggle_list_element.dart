@@ -11,7 +11,7 @@ class SensorToggleListElement extends SensorToggleElement {
   /// Creates a [SensorToggleListElement] for the passed [sensorId].
   ///
   /// If [isTogglingDisabled] is true, the [SensorToggleListElement] is also
-  /// disabled, the colors for the disabeld state are replaced with the colors
+  /// disabled, the colors for the disabled state are replaced with the colors
   /// for the inactive state of the switch.
   /// This has the reason that the [SensorToggleListElement] can be shown
   /// without knowing whether the sensor for the passed [sensorId] is actually

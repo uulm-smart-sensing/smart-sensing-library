@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 /// When [locale] is null, [Platform.localeName] will be used instead.
 /// When [shortenYear] is true, the first two characters of the year will be
 /// omitted.
-/// When [extendWithDayName] is true, the corresponding day (name in shortend
+/// When [extendWithDayName] is true, the corresponding day (name in shortened
 /// form) will be added at the beginning of the formatted string.
 ///
 /// Example:
@@ -59,7 +59,7 @@ String formatDate({
   // Add a leading zero to single digits for days and months
   dateParts = dateParts.map((part) => part.padLeft(2, "0")).toList();
 
-  // If year should be shortend remove first two characters: 2023 -> 23
+  // If year should be shortened remove first two characters: 2023 -> 23
   if (shortenYear) {
     dateParts[dateParts.length - 1] = dateParts.last.substring(2);
   }

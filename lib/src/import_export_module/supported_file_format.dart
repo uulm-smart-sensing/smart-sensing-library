@@ -56,7 +56,7 @@ enum SupportedFileFormat {
   /// |accelerometer|meters...|2           |1681561948  |0.1, 0.15, 0.6 |
   /// |accelerometer|meters...|2           |1681561949  |0.1, 0.15 |
   ///
-  /// The array of datapoints is encoded as ', ' (whitespace!) seperated list
+  /// The array of datapoints is encoded as ', ' (whitespace!) separated list
   /// in one cell.
   ///
   /// The data will be stored in only one sheet named 'sensor_data' and so

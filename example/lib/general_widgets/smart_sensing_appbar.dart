@@ -11,8 +11,8 @@ import '../pages/information/information_page.dart';
 /// customized by setting a [title] and [subtitle] (combined with a [Divider]).
 ///
 /// This custom [SmartSensingAppBar] should be used on every page, which do not
-/// need any more specialed [AppBar] to have a unified layout and design, which
-/// increases the usability.
+/// need any more specialized [AppBar] to have a unified layout and design,
+/// which increases the usability.
 class SmartSensingAppBar extends StatelessWidget {
   /// Title of this [AppBar] (= title of the page).
   final String title;
@@ -60,7 +60,7 @@ class SmartSensingAppBar extends StatelessWidget {
   ///
   /// This widget will be placed at the bottom of the [AppBar].
   PreferredSizeWidget? _createBottom() {
-    // check, whether the subtitle is not emtpy, a subtitle was given
+    // check, whether the subtitle is not empty, a subtitle was given
     if (subtitle.isNotEmpty) {
       return PreferredSize(
         preferredSize: const Size.fromHeight(80.0),
