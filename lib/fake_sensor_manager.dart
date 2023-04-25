@@ -14,7 +14,7 @@ class FakeSensorManager extends Fake implements SensorManager {
   final Map _streamMap = HashMap<SensorId, StreamController<SensorData>>();
 
   ///Configurable fake inputs
-  static final Map<SensorId, bool> _sensorAvailableMap = {
+  final Map<SensorId, bool> _sensorAvailableMap = {
     SensorId.accelerometer: true,
     SensorId.barometer: true,
     SensorId.gyroscope: true,
@@ -23,7 +23,7 @@ class FakeSensorManager extends Fake implements SensorManager {
     SensorId.orientation: true,
     SensorId.thermometer: true,
   };
-  static SensorTaskResult _platformCallResult = SensorTaskResult.success;
+  SensorTaskResult _platformCallResult = SensorTaskResult.success;
   SensorData Function(int)? _creationFunction;
   //Is in seconds
   int _streamUpTime = 10;
