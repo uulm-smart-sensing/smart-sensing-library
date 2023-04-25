@@ -215,13 +215,15 @@ Future<void> main() async {
     test(
       "CSV formatting complies with requirements.",
       () async {
+        // filter out all bytes with value 13 (in ASCII CR, because git seems
+        // to convert CRLF to LF)
         var formattedData = Uint8List.fromList(
           formatDataIntoCSV(SensorId.linearAcceleration, exampleData),
-        );
+        ).where((element) => element != 13);
 
         var expectedData = File(
           "lib/src/import_export_module/example_import_files/exampleSensorData.csv",
-        ).readAsBytesSync();
+        ).readAsBytesSync().where((element) => element != 13);
 
         expect(formattedData, expectedData);
       },
