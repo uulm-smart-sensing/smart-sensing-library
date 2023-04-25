@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
@@ -161,6 +160,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
     required String sensorNameFilter,
     String noSensorsText = "No sensors.",
     required FavoriteProvider provider,
+    required int containerFlex,
   }) {
     var sensorWidgets = sensorIds
         .where(
