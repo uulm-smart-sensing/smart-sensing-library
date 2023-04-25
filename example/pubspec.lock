@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  cli_badges:
+    dependency: transitive
+    description:
+      name: cli_badges
+      sha256: "1e7e18aa32e908f727e49efb4a9c4d675c28abaf3ebe9229e777a497bbffeaa1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   clock:
     dependency: transitive
     description:
@@ -81,6 +89,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  cobertura:
+    dependency: "direct dev"
+    description:
+      name: cobertura
+      sha256: a684dc79889f9b3bad2327cfc18c15ec3d3fadde334eee588fd733e382506068
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   code_builder:
     dependency: transitive
     description:
@@ -260,10 +276,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: a3715e3bc90294e971cb7dc063fbf3cd9ee0ebf8604ffeafabd9e6f16abbdbe6
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.0"
+    version: "0.17.0"
   js:
     dependency: transitive
     description:
@@ -272,6 +288,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
+  junitreport:
+    dependency: "direct dev"
+    description:
+      name: junitreport
+      sha256: "139a457f5d91e82744df09d04f272d23b6a81c8ef9b8b3bd1cd2e1768460fbeb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   lints:
     dependency: transitive
     description:
@@ -400,6 +424,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.5"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      sha256: "49392a45ced973e8d94a85fdb21293fbb40ba805fc49f2965101ae748a3683b4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   platform:
     dependency: transitive
     description:
@@ -507,6 +539,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.16"
+  test_cov_console:
+    dependency: "direct dev"
+    description:
+      name: test_cov_console
+      sha256: "73519e8be3689d73f5cffb652c12c310acacf48379396d834da937094836e65e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
+  testreport:
+    dependency: transitive
+    description:
+      name: testreport
+      sha256: d9b9af11e591d15724f63324b7957e6b36c04cca293147db7761064bbf363b0d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  tint:
+    dependency: transitive
+    description:
+      name: tint
+      sha256: "9652d9a589f4536d5e392cf790263d120474f15da3cf1bee7f1fdb31b4de5f46"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   typed_data:
     dependency: transitive
     description:
@@ -547,6 +603,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      sha256: "80d494c09849dc3f899d227a78c30c5b949b985ededf884cb3f3bcd39f4b447a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.1"
   yaml:
     dependency: transitive
     description:
