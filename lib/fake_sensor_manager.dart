@@ -48,6 +48,17 @@ class FakeSensorManager extends Fake implements SensorManager {
   ///Sets the internal maximum uptime of a stream to [time]
   void configureStreamUpTime(int time) => _streamUpTime = time;
 
+  ///Resets the SensorManager to the initial state
+  Future<void> resetState() async {
+    configureAvailableSensors(SensorId.values);
+    for (var key in _streamMap.keys) {
+      await (_streamMap[key] as StreamController<SensorData>).close();
+    }
+    _platformCallResult = SensorTaskResult.success;
+    _creationFunction = null;
+    _streamUpTime = 10;
+  }
+
   @override
   Stream<SensorData>? getSensorStream(SensorId id) =>
       _createStream(const Duration(seconds: 1), id);
