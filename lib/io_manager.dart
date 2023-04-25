@@ -124,7 +124,6 @@ class IOManager {
 
       _sensorThreadLock = true;
 
-
       result = await _sensorManager.startSensorTracking(
         id: id,
         config: config,
@@ -156,15 +155,10 @@ class IOManager {
           "Establish connection first to use the IOManager.");
     }
 
-    while (_sensorThreadLock) {
-      await Future.delayed(Duration.zero);
-    }
-
     if (_subscriptions[id] == null) {
       return SensorTaskResult.notTrackingSensor;
     }
 
-    _sensorThreadLock = true;
     return _sensorManager.stopSensorTracking(id);
   }
 
@@ -318,6 +312,10 @@ class IOManager {
 
   ///Closes all connections to the stream and buffer.
   Future<void> _onDataDone(SensorId id) async {
+    while (_sensorThreadLock) {
+      await Future.delayed(Duration.zero);
+    }
+    _sensorThreadLock = true;
     await (_subscriptions[id] as StreamSubscription).cancel();
     _subscriptions[id] = null;
     await flushToDatabase(id);
