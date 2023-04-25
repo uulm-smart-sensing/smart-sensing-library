@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
-import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 import 'package:smart_sensing_library/src/import_export_module/sensor_data_collection.dart';
 
@@ -23,7 +22,14 @@ Future<void> main() async {
     await ioManager.removeSensor(SensorId.accelerometer);
 
     // add sensor data to the database
-    await ioManager.addSensor(SensorId.accelerometer, 1000);
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: const SensorConfig(
+        targetUnit: Unit.metersPerSecondSquared,
+        targetPrecision: 2,
+        timeInterval: Duration(milliseconds: 1000),
+      ),
+    );
     await Future.delayed(const Duration(seconds: 15));
   });
   group("Test of the export feature of the smart sensing libary.", () {
