@@ -120,7 +120,7 @@ Future<void> main() async {
     test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
   });
-  
+
   test("Test multi query functionality", () async {
     await ioManager.addSensor(
       id: SensorId.accelerometer,
