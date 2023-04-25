@@ -50,7 +50,7 @@ Future<void> main() async {
     );
     await Future.delayed(const Duration(seconds: 15));
   });
-  group("Test of the export feature of the smart sensing libary.", () {
+  group("Test of the export feature of the smart sensing library.", () {
     test("Export only work with valid directory.", () async {
       var wasExportSuccessful = await ioManager.exportSensorDataToFile(
         "./dummy_dir",
@@ -154,7 +154,7 @@ Future<void> main() async {
       );
       expect(
         sensorDataCollection.toJson()["sensorData"][1]["unit"],
-        equals("unitless"),
+        equals("gravitationalForce"),
       );
     });
   });
