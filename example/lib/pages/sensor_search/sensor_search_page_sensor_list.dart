@@ -44,7 +44,6 @@ class _SensorSearchPageSensorListElementState
                         : Icons.favorite_outline,
                     onPressed: (context) async {
                       await widget.provider.toggleFavorite(widget.sensorId);
-                      setState(() {});
                     },
                   ),
                 ],
