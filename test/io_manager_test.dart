@@ -22,10 +22,11 @@ Future<void> main() async {
     timeInterval: Duration(milliseconds: 1000),
   );
 
-  setUp(() async {
-    await ioManager.removeData(SensorId.accelerometer);
-    await ioManager.removeSensor(SensorId.accelerometer);
-  });
+  setUp(
+    () => FakeSensorManager().resetState().then(
+          (value) => ioManager.removeSensor(SensorId.accelerometer),
+        ),
+  );
 
   ///The fakeSensorManager cancles the Stream after 10 seconds,
   ///so after 15 seconds all data is saved in the database.
@@ -114,7 +115,7 @@ Future<void> main() async {
     'When sensor is available, then isSensorAvailable returns true',
     () async {
       var id = SensorId.accelerometer;
-      FakeSensorManager.configureAvailableSensors([id], available: true);
+      FakeSensorManager().configureAvailableSensors([id], available: true);
       var isAvailable = await ioManager.isSensorAvailable(id);
       expect(isAvailable, isTrue);
     },
@@ -124,7 +125,7 @@ Future<void> main() async {
     'When sensor is not available, then isSensorAvailable returns false',
     () async {
       var id = SensorId.accelerometer;
-      FakeSensorManager.configureAvailableSensors([id], available: false);
+      FakeSensorManager().configureAvailableSensors([id], available: false);
       var isAvailable = await ioManager.isSensorAvailable(id);
       expect(isAvailable, isFalse);
     },
@@ -141,11 +142,11 @@ Future<void> main() async {
       ];
       var notAvailableSensorIds =
           SensorId.values.whereNot(availableSensorIds.contains).toList();
-      FakeSensorManager.configureAvailableSensors(
+      FakeSensorManager().configureAvailableSensors(
         availableSensorIds,
         available: true,
       );
-      FakeSensorManager.configureAvailableSensors(
+      FakeSensorManager().configureAvailableSensors(
         notAvailableSensorIds,
         available: false,
       );

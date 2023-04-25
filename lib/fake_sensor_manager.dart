@@ -14,7 +14,7 @@ class FakeSensorManager extends Fake implements SensorManager {
   final Map _streamMap = HashMap<SensorId, StreamController<SensorData>>();
 
   ///Configurable fake inputs
-  static final Map<SensorId, bool> _sensorAvailableMap = {
+  final Map<SensorId, bool> _sensorAvailableMap = {
     SensorId.accelerometer: true,
     SensorId.barometer: true,
     SensorId.gyroscope: true,
@@ -23,16 +23,16 @@ class FakeSensorManager extends Fake implements SensorManager {
     SensorId.orientation: true,
     SensorId.thermometer: true,
   };
-  static SensorTaskResult _platformCallResult = SensorTaskResult.success;
-  static SensorData Function(int)? _creationFunction;
+  SensorTaskResult _platformCallResult = SensorTaskResult.success;
+  SensorData Function(int)? _creationFunction;
   //Is in seconds
-  static int _streamUpTime = 10;
+  int _streamUpTime = 10;
 
   ///Instance for FakeSensorManager
   factory FakeSensorManager() => _instance;
 
   ///Sets the internal available sensors with [ids] to [available].
-  static void configureAvailableSensors(
+  void configureAvailableSensors(
     List<SensorId> ids, {
     bool available = true,
   }) {
@@ -42,11 +42,22 @@ class FakeSensorManager extends Fake implements SensorManager {
   }
 
   ///Sets the internal platformResult to [result].
-  static void configurePlatformResult(SensorTaskResult result) =>
+  void configurePlatformResult(SensorTaskResult result) =>
       _platformCallResult = result;
 
   ///Sets the internal maximum uptime of a stream to [time]
-  static void configureStreamUpTime(int time) => _streamUpTime = time;
+  void configureStreamUpTime(int time) => _streamUpTime = time;
+
+  ///Resets the SensorManager to the initial state
+  Future<void> resetState() async {
+    configureAvailableSensors(SensorId.values);
+    for (var key in _streamMap.keys) {
+      await (_streamMap[key] as StreamController<SensorData>).close();
+    }
+    _platformCallResult = SensorTaskResult.success;
+    _creationFunction = null;
+    _streamUpTime = 10;
+  }
 
   @override
   Stream<SensorData>? getSensorStream(SensorId id) =>
