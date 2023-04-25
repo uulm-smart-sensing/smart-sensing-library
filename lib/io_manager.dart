@@ -123,7 +123,7 @@ class IOManager {
       }
 
       _sensorThreadLock = true;
-      _bufferManager.addBuffer(id);
+
 
       result = await _sensorManager.startSensorTracking(
         id: id,
@@ -131,6 +131,7 @@ class IOManager {
       );
 
       if (result == SensorTaskResult.success) {
+        _bufferManager.addBuffer(id);
         _subscriptions[id] = _sensorManager.getSensorStream(id)!.listen(
               (sensorData) => _processSensorData(sensorData, id),
               onDone: () async => _onDataDone(id),
