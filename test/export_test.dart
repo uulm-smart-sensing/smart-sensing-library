@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:excel/excel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
+import 'package:smart_sensing_library/src/import_export_module/export_tool.dart';
 import 'package:smart_sensing_library/src/import_export_module/sensor_data_collection.dart';
 
 Future<void> main() async {
@@ -16,6 +19,22 @@ Future<void> main() async {
   if (!await ioManager.openDatabase()) {
     throw Exception("Database connection failed!");
   }
+
+  // create dummy sensorData
+  var exampleData = [
+    SensorData(
+      data: [1.4, 0, 9.81],
+      maxPrecision: 5,
+      unit: Unit.metersPerSecondSquared,
+      timestampInMicroseconds: 1681561948,
+    ),
+    SensorData(
+      data: [0.2, 0, 1],
+      maxPrecision: 5,
+      unit: Unit.gravitationalForce,
+      timestampInMicroseconds: 1681562008,
+    ),
+  ];
 
   setUp(() async {
     await ioManager.removeData(SensorId.accelerometer);
@@ -122,24 +141,8 @@ Future<void> main() async {
 
   group("Test the SensorDataCollection object.", () {
     test("SensorDataCollection object converted to json.", () async {
-      // create dummy sensorData
-      var sensorData = [
-        SensorData(
-          data: [0.4],
-          maxPrecision: 2,
-          unit: Unit.bar,
-          timestampInMicroseconds: 1,
-        ),
-        SensorData(
-          data: [0.4, 0.9],
-          maxPrecision: 3,
-          unit: Unit.unitless,
-          timestampInMicroseconds: 2,
-        ),
-      ];
-
       var sensorDataCollection =
-          SensorDataCollection(SensorId.linearAcceleration, sensorData);
+          SensorDataCollection(SensorId.linearAcceleration, exampleData);
 
       expect(sensorDataCollection.toJson(), isNotEmpty);
       expect(
@@ -155,5 +158,133 @@ Future<void> main() async {
         equals("unitless"),
       );
     });
+  });
+
+  group("Test export in different file formats.", () {
+    test(
+      "Data will be correctly formatted depending on selected format.",
+      () async {
+        expect(
+          formatDataIntoJson(SensorId.accelerometer, exampleData),
+          formatData(
+            SensorId.accelerometer,
+            exampleData,
+            SupportedFileFormat.json,
+          ),
+        );
+        expect(
+          formatDataIntoCSV(SensorId.accelerometer, exampleData),
+          formatData(
+            SensorId.accelerometer,
+            exampleData,
+            SupportedFileFormat.csv,
+          ),
+        );
+        expect(
+          formatDataIntoXLSX(SensorId.accelerometer, exampleData),
+          formatData(
+            SensorId.accelerometer,
+            exampleData,
+            SupportedFileFormat.xlsx,
+          ),
+        );
+        expect(
+          formatDataIntoXML(SensorId.accelerometer, exampleData),
+          formatData(
+            SensorId.accelerometer,
+            exampleData,
+            SupportedFileFormat.xml,
+          ),
+        );
+      },
+    );
+    test(
+      "JSON formatting complies with requirements.",
+      () async {
+        var formattedData = Uint8List.fromList(
+          formatDataIntoJson(SensorId.linearAcceleration, exampleData),
+        );
+
+        var expectedData = File(
+          "lib/src/import_export_module/example_import_files/exampleSensorData.json",
+        ).readAsBytesSync();
+
+        expect(formattedData, expectedData);
+      },
+    );
+
+    test(
+      "CSV formatting complies with requirements.",
+      () async {
+        var formattedData = Uint8List.fromList(
+          formatDataIntoCSV(SensorId.linearAcceleration, exampleData),
+        );
+
+        var expectedData = File(
+          "lib/src/import_export_module/example_import_files/exampleSensorData.csv",
+        ).readAsBytesSync();
+
+        expect(formattedData, expectedData);
+      },
+    );
+
+    test(
+      "XLSX formatting complies with requirements.",
+      () async {
+        writeFormattedData(
+          "exampleSensorData",
+          SupportedFileFormat.xlsx,
+          formatDataIntoXLSX(SensorId.linearAcceleration, exampleData),
+        );
+
+        var expectedData = Excel.decodeBytes(
+          File(
+            "lib/src/import_export_module/example_import_files/exampleSensorData.xlsx",
+          ).readAsBytesSync(),
+        );
+
+        expect(
+          expectedData.tables["sensor_data"]!
+              .row(0)
+              .map((e) => e!.value)
+              .toList()
+              .toString(),
+          "[sensorId, unit, maxPrecision, timestampInMicroseconds, data]",
+        );
+        expect(
+          expectedData.tables["sensor_data"]!
+              .row(1)
+              .map((e) => e!.value)
+              .toList()
+              .toString(),
+          "[linearAcceleration, metersPerSecondSquared, 5, "
+          "1681561948, 1.4, 0.0, 9.81]",
+        );
+        expect(
+          expectedData.tables["sensor_data"]!
+              .row(2)
+              .map((e) => e!.value)
+              .toList()
+              .toString(),
+          "[linearAcceleration, gravitationalForce, 5, "
+          "1681562008, 0.2, 0.0, 1.0]",
+        );
+      },
+    );
+
+    test(
+      "XML formatting complies with requirements.",
+      () async {
+        var formattedData = Uint8List.fromList(
+          formatDataIntoXML(SensorId.linearAcceleration, exampleData),
+        );
+
+        var expectedData = File(
+          "lib/src/import_export_module/example_import_files/exampleSensorData.xml",
+        ).readAsBytesSync();
+
+        expect(formattedData, expectedData);
+      },
+    );
   });
 }

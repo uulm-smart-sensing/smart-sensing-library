@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-  <sensorId>linearAcceleration</sensorId>
-  <sensorData>
-    <data>
-      <dataPoint>1.4</dataPoint>
-      <dataPoint>0.0</dataPoint>
-      <dataPoint>9.81</dataPoint>
-    </data>
-    <unit>metersPerSecondSquared</unit>
-    <maxPrecision>5</maxPrecision>
-    <timestampInMicroseconds>1681561948</timestampInMicroseconds>
-  </sensorData>
-  <sensorData>
-    <data>
-      <dataPoint>0.2</dataPoint>
-      <dataPoint>0</dataPoint>
-      <dataPoint>1</dataPoint>
-    </data>
-    <unit>gravitationalForce</unit>
-    <maxPrecision>5</maxPrecision>
-    <timestampInMicroseconds>1681562008</timestampInMicroseconds>
-  </sensorData>
+	<sensorId>linearAcceleration</sensorId>
+	<sensorData>
+		<data>
+			<dataPoint>1.4</dataPoint>
+			<dataPoint>0.0</dataPoint>
+			<dataPoint>9.81</dataPoint>
+		</data>
+		<unit>metersPerSecondSquared</unit>
+		<maxPrecision>5</maxPrecision>
+		<timestampInMicroseconds>1681561948</timestampInMicroseconds>
+	</sensorData>
+	<sensorData>
+		<data>
+			<dataPoint>0.2</dataPoint>
+			<dataPoint>0.0</dataPoint>
+			<dataPoint>1.0</dataPoint>
+		</data>
+		<unit>gravitationalForce</unit>
+		<maxPrecision>5</maxPrecision>
+		<timestampInMicroseconds>1681562008</timestampInMicroseconds>
+	</sensorData>
 </root>
