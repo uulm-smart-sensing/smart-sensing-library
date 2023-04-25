@@ -18,7 +18,7 @@ import '../../general_widgets/custom_dropdown_button.dart';
 ///
 /// 'Import sensor data' (= [_sectionTitle])
 ///
-/// supported format: json
+/// supported formats: ...
 /// Dropdown for 'Choose a sensor'
 /// "Import" (= [_buttons])
 ///
@@ -44,6 +44,10 @@ class ImportExportSectionWidget extends StatefulWidget {
   final Function _setSensorId;
 
   /// Function passed by the parent widget ([ImportExportPage]) to set
+  /// which file format (for export) was selected by the user.
+  final Function? _setFileFormatForExport;
+
+  /// Function passed by the parent widget ([ImportExportPage]) to set
   /// whether the user selected 'All' in the dropdown menu meaning,
   /// all possible sensor ids should be considered.
   final Function _setUseAllPossibleSensorIds;
@@ -53,10 +57,12 @@ class ImportExportSectionWidget extends StatefulWidget {
     required String sectionTitle,
     required Widget buttons,
     required Function setSensorId,
+    Function? setFileFormatForExport,
     required Function setUseAllPossibleSensorIds,
   })  : _buttons = buttons,
         _sectionTitle = sectionTitle,
         _setSensorId = setSensorId,
+        _setFileFormatForExport = setFileFormatForExport,
         _setUseAllPossibleSensorIds = setUseAllPossibleSensorIds;
 
   @override
@@ -66,6 +72,8 @@ class ImportExportSectionWidget extends StatefulWidget {
 class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
   String? _selectedSensor;
   final List<String> _sensorOptions = [];
+
+  String? _selectedFormat;
 
   @override
   void initState() {
@@ -107,6 +115,33 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
       },
     );
 
+    var dropdownMenuForFileFormat = CustomDropdownButton(
+      hint: "Choose a format",
+      value: _selectedFormat,
+      isDense: false,
+      items: SupportedFileFormat.values
+          .map(
+            (format) =>
+                DropdownMenuItem(value: format.name, child: Text(format.name)),
+          )
+          .toList(),
+      onChanged: (newFormat) {
+        setState(() {
+          _selectedFormat = newFormat;
+          // set the state of the [ImportExportPage]
+          if (newFormat != null) {
+            var find = SupportedFileFormat.values.firstWhere(
+              (element) =>
+                  element.toString() == "SupportedFileFormat.$newFormat",
+            );
+            if (widget._sectionTitle == "Export sensor data") {
+              widget._setFileFormatForExport!(find);
+            }
+          }
+        });
+      },
+    );
+
     // Display the text, which represents the "title" of
     // this section
     var header = Text(
@@ -123,10 +158,7 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              // TODO: do not hardcode 'json' here,
-              // but aggregate supported formats from the library and
-              // display the list here
-              "supported format: json",
+              """supported formats: ${SupportedFileFormat.values.map((e) => ".${e.name}").join(", ")}""",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.bodySmall,
             ),
@@ -134,6 +166,12 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
           const SizedBox(
             height: 25,
           ),
+          if (widget._sectionTitle == "Export sensor data")
+            dropdownMenuForFileFormat,
+          if (widget._sectionTitle == "Export sensor data")
+            const SizedBox(
+              height: 15,
+            ),
           dropdownMenuForSensorSelection,
           const SizedBox(
             height: 25,
