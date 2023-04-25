@@ -2,21 +2,24 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-/// Class that handles Favorite Managment
+// Handles the Favorite Management.
+//The class uses the preference shared by the database. With shared preference
+//it is possible to store the data globally and to modify it.
 class FavoriteProvider extends ChangeNotifier {
-  /// List of all favorite Sensors
+  /// List of all favored sensors
   List<SensorId> _sensorList = [];
   List<SensorId> get sensorList => _sensorList;
 
   final Future<SharedPreferences> _prefs;
 
-  // Constructor that initialises the SharedPreferences and loads the
-  //list of favourites.
+  // Initializes the `SharedPreferences` and loads the
+  // previously stored list of favorites.
   FavoriteProvider() : _prefs = SharedPreferences.getInstance() {
     loadFavorites();
   }
 
-  /// adds and remove SensorId to sensorList if it has not already been added
+  /// Adds or removes a sensor[id] to the [_sensorList] depending on whether
+  /// the sensor (with [id]) was already been added (= remove) or not (= add).
   Future<void> toggleFavorite(SensorId id) async {
     var isExist = _sensorList.contains(id);
     if (isExist) {
@@ -33,7 +36,7 @@ class FavoriteProvider extends ChangeNotifier {
     );
   }
 
-  /// loads the list of favorite Sensors from SharedPreferences
+  /// Loads the list of favorite Sensors from SharedPreferences
   Future<void> loadFavorites() async {
     var pref = await _prefs;
     var favoriteSensors = pref.getStringList('favoriteSensors') ?? [];
@@ -45,9 +48,6 @@ class FavoriteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// checks if SensorId exists in List
+  /// Checks if SensorId exists in List
   bool isExist(SensorId id) => _sensorList.contains(id);
-
-  /// checks if SensorId is slideable
-  bool isSlidableEnabled(SensorId id) => id != SensorId.barometer;
 }
