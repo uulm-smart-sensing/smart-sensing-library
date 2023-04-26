@@ -8,8 +8,7 @@ import '../../formatter/date_formatter.dart';
 import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';
-
-import 'graph_view_page.dart';
+import 'graph_view.dart';
 import 'historic_view_page.dart';
 import 'sensor_data.dart';
 import 'time_selection_button.dart';
@@ -216,7 +215,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
                 right: 16,
                 bottom: 4,
               ),
-              child: GraphView(lineData: numberOfDataPoints),
+              child: GraphView(listOfDataPoints: numberOfDataPoints),
             ),
           )
         ],
@@ -224,27 +223,34 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     );
 
     // Table that visualizes sensor data
+    var tableRows = [
+      TableRow(
+        children: [
+          visualizationSelection,
+          ..._getTableElementsFromSensorId(
+            widget.sensorId,
+            selectedVisualization,
+          ),
+        ],
+      ),
+      paddingRow,
+      paddingRow,
+    ];
+    if (selectedVisualization == _Visualization.table) {
+      tableRows.addAll(
+        testData
+            .take(numberOfDataPoints)
+            .map(
+              (sensorData) =>
+                  [_getTableRowFromSensorData(sensorData), paddingRow],
+            )
+            .expand((row) => row)
+            .toList(),
+      );
+    }
     var visualizationTable = Table(
       columnWidths: columnWidths,
-      children: [
-        TableRow(
-          children: [
-            visualizationSelection,
-            ..._getTableElementsFromSensorId(
-              widget.sensorId,
-              selectedVisualization,
-            ),
-          ],
-        ),
-        paddingRow,
-        // TODO: Add data row using call to smart sensing library
-        // and _getTableRowFromSensorData add padding with paddingRow
-
-        _getTableRowFromSensorData(
-          testData.take(numberOfDataPoints).toList(),
-        ),
-        paddingRow,
-      ],
+      children: tableRows,
     );
 
     return Column(
@@ -377,71 +383,28 @@ TableRow _getPaddingRow(SensorId sensorId) {
 }
 
 // ignore: unused_element
-TableRow _getTableRowFromSensorData(List<SData> data) => TableRow(
-      children: [
-        Center(
-          child: Column(
-            children: data
-                .map(
-                  (value) => Center(
-                    child: Text(
-                      '${formatDate(
-                        dateTime: convertToDate(value.timestamp),
-                        shortenYear: true,
-                        extendWithDayName: true,
-                      )}\n${DateFormat.Hms(
-                        Platform.localeName,
-                      ).format(convertToDate(value.timestamp))}',
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
+TableRow _getTableRowFromSensorData(SensorViewData sensorData) {
+  var dateTime =
+      DateTime.fromMillisecondsSinceEpoch(sensorData.timestamp.toInt());
+  var formattedDate = formatDate(
+    dateTime: dateTime,
+    shortenYear: true,
+    extendWithDayName: true,
+  );
+  var formattedTime = DateFormat.Hms(Platform.localeName).format(dateTime);
+
+  return TableRow(
+    children: [
+      Center(
+        child: Column(
+          children: [
+            Text(formattedDate),
+            Text(formattedTime),
+          ],
         ),
-        ...data.map(
-          (value) => Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 16.0,
-                  width: double.infinity,
-                ),
-                Text(
-                  value.x.toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-                const SizedBox(
-                  height: 16.0,
-                  width: double.infinity,
-                ),
-                Text(
-                  value.y.toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-                const SizedBox(
-                  height: 16.0,
-                  width: double.infinity,
-                ),
-                Text(
-                  value.z.toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+      ),
+      ...[sensorData.x, sensorData.y, sensorData.z]
+          .map((value) => Center(child: Text(value.toString()))),
+    ],
+  );
+}
