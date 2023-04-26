@@ -131,7 +131,7 @@ Future<void> main() async {
 
       expect(
         await File(
-          "./accelerometer_${DateFormat('yyyy-MM-dd hh:mm').format(DateTime.fromMicrosecondsSinceEpoch(0))}_${DateFormat('yyyy-MM-dd hh:mm').format(DateTime.now())}.json",
+          "./accelerometer_${DateFormat('yyyy-MM-dd_hh-mm').format(DateTime.fromMicrosecondsSinceEpoch(0))}_${DateFormat('yyyy-MM-dd_hh-mm').format(DateTime.now())}.json",
         ).exists(),
         isTrue,
       );
