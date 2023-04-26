@@ -65,19 +65,18 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
     "data"
   ];
 
-  var csvData = <List<dynamic>>[headerRow];
-
-  // create sensor data rows
-  for (var sensorData in data) {
-    var sensorDataRow = [
-      sensorId.name,
-      sensorData.unit.name,
-      sensorData.maxPrecision,
-      sensorData.timestampInMicroseconds,
-      sensorData.data.map((e) => e.toString()).toList().join(", "),
-    ];
-    csvData.add(sensorDataRow);
-  }
+  var csvData = <List<dynamic>>[headerRow] +
+      data
+          .map(
+            (sensorData) => [
+              sensorId.name,
+              sensorData.unit.name,
+              sensorData.maxPrecision,
+              sensorData.timestampInMicroseconds,
+              sensorData.data.join(", "),
+            ],
+          )
+          .toList();
 
   return const ListToCsvConverter().convert(csvData).codeUnits;
 }
@@ -103,7 +102,7 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
       sensorData.unit.name,
       sensorData.maxPrecision,
       sensorData.timestampInMicroseconds,
-      sensorData.data.map((e) => e.toString()).toList().join(", "),
+      sensorData.data.join(", "),
     ];
     sheet.appendRow(sensorDataRow);
   }
@@ -179,7 +178,7 @@ Future<void> writeFormattedData(
 ///
 /// The filename have the format:
 /// _<sensorId>\_<startTime>\_<endTime>_
-/// The start and endTime is formatted as 'yyyy-MM-dd hh:mm'
+/// The start and endTime is formatted as 'yyyy-MM-dd_hh-mm'
 String createFileName(
   SensorId sensorId,
   DateTime startTime,

@@ -93,9 +93,7 @@ class _ManualExportPageState extends State<ManualExportPage> {
             Center(
               child: SizedBox(
                 width: 120,
-                child: endDatetime.isAfter(startDatetime) &&
-                        startDatetime.isBefore(DateTime.now()) &&
-                        endDatetime.isBefore(DateTime.now())
+                child: _isSelectedTimeIntervalValid()
                     ? CustomTextButton(
                         text: "Export",
                         onPressed: _exportWithCustomTimeInterval,
@@ -178,4 +176,9 @@ class _ManualExportPageState extends State<ManualExportPage> {
     if (!mounted) return;
     Navigator.pop(context);
   }
+
+  bool _isSelectedTimeIntervalValid() =>
+      endDatetime.isAfter(startDatetime) &&
+      startDatetime.isBefore(DateTime.now()) &&
+      endDatetime.isBefore(DateTime.now());
 }

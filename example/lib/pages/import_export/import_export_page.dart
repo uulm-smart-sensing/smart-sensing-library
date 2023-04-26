@@ -177,11 +177,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
         SizedBox(
           width: 120,
           child: CustomTextButton(
-            onPressed: (_selectedSensorIdForExport != null &&
-                        _selectedFileFormat != null) ||
-                    _exportForAllSensorIds
-                ? _exportData
-                : null,
+            onPressed: _allNeededValuesForExportSet() ? _exportData : null,
             text: "All",
             style: TextStyle(
               color: (_selectedSensorIdForExport != null &&
@@ -197,9 +193,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
         SizedBox(
           width: 120,
           child: CustomTextButton(
-            onPressed: (_selectedSensorIdForExport != null &&
-                        _selectedFileFormat != null) ||
-                    _exportForAllSensorIds
+            onPressed: _allNeededValuesForExportSet()
                 ? selectTimeIntervalForExport
                 : null,
             text: "Manual",
@@ -251,4 +245,8 @@ class _ImportExportPageState extends State<ImportExportPage> {
       ),
     );
   }
+
+  bool _allNeededValuesForExportSet() =>
+      (_selectedSensorIdForExport != null && _selectedFileFormat != null) ||
+      _exportForAllSensorIds;
 }
