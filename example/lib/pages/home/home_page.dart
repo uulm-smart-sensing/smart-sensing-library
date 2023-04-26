@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../favorite_provider.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../formatter/date_formatter.dart';
 import '../live_view/live_view_page.dart';
 import '../live_view/live_view_sensor_widget.dart';
@@ -35,7 +33,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var todayFormatted = formatDate(dateTime: DateTime.now());
-    var provider = Provider.of<FavoriteProvider>(context);
     var title = Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
