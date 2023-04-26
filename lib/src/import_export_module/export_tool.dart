@@ -167,13 +167,11 @@ Future<void> writeFormattedData(
   SupportedFileFormat format,
   List<int> formattedData,
 ) async {
-  var status = await Permission.storage.status;
-  if (status != PermissionStatus.granted) {
-    status = await Permission.storage.request();
+  if (Platform.isAndroid &&
+      !(await Permission.manageExternalStorage.request().isGranted)) {
+    return;
   }
-  if (status.isGranted) {
-    File("$filepath.${format.name}").writeAsBytesSync(formattedData);
-  }
+  File("$filepath.${format.name}").writeAsBytesSync(formattedData);
 }
 
 /// Creates the filename for the export of the sensor data for the sensor
@@ -187,7 +185,7 @@ String createFileName(
   DateTime startTime,
   DateTime endTime,
 ) {
-  var dateFormat = DateFormat('yyyy-MM-dd hh:mm');
+  var dateFormat = DateFormat('yyyy-MM-dd_hh-mm');
 
   return "${sensorId.name}_${dateFormat.format(startTime)}_"
       "${dateFormat.format(endTime)}";
