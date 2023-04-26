@@ -199,15 +199,6 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       aspectRatio: 1.7,
       child: Column(
         children: [
-          visualizationSelection,
-          const Padding(
-            padding: EdgeInsets.only(
-              left: 50,
-              right: 0,
-              top: 20,
-              bottom: 4,
-            ),
-          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -215,7 +206,10 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
                 right: 16,
                 bottom: 4,
               ),
-              child: GraphView(listOfDataPoints: numberOfDataPoints),
+              child: GraphView(
+                lineDataCount: numberOfDataPoints,
+                lineData: testData,
+              ),
             ),
           )
         ],
@@ -259,9 +253,10 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         const SizedBox(height: 15),
         filterSelectionDropdown,
         const SizedBox(height: 20),
-        selectedVisualization == _Visualization.table
-            ? visualizationTable
-            : visualizationGraph,
+        visualizationTable,
+        selectedVisualization == _Visualization.graph
+            ? visualizationGraph
+            : const SizedBox.shrink()
       ],
     );
   }
