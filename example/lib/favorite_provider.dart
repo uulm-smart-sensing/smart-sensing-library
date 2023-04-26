@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-// Handles the Favorite Management.
-//The class uses the preference shared by the database. With shared preference
-//it is possible to store the data globally and to modify it.
+/// Handles the favorite management.
+/// The class uses the preference shared by the database. With shared preference
+/// it is possible to store the data globally and to modify it.
 class FavoriteProvider extends ChangeNotifier {
   /// List of all favored sensors
   List<SensorId> _sensorList = [];
@@ -12,8 +12,8 @@ class FavoriteProvider extends ChangeNotifier {
 
   final Future<SharedPreferences> _prefs;
 
-  // Initializes the `SharedPreferences` and loads the
-  // previously stored list of favorites.
+  /// Initializes the `SharedPreferences` and loads the
+  /// previously stored list of favorites.
   FavoriteProvider() : _prefs = SharedPreferences.getInstance() {
     loadFavorites();
   }
@@ -36,7 +36,7 @@ class FavoriteProvider extends ChangeNotifier {
     );
   }
 
-  /// Loads the list of favorite Sensors from SharedPreferences
+  /// Loads the list of favorite sensors from SharedPreferences
   Future<void> loadFavorites() async {
     var pref = await _prefs;
     var favoriteSensors = pref.getStringList('favoriteSensors') ?? [];
@@ -48,6 +48,6 @@ class FavoriteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Checks if SensorId exists in List
+  /// Checks if SensorId exists in list
   bool isExist(SensorId id) => _sensorList.contains(id);
 }
