@@ -18,7 +18,7 @@ import '../../general_widgets/custom_dropdown_button.dart';
 ///
 /// 'Import sensor data' (= [_sectionTitle])
 ///
-/// supported formats: ...
+/// supported formats: json, csv, xlsx, xml
 /// Dropdown for 'Choose a sensor'
 /// "Import" (= [_buttons])
 ///
@@ -73,7 +73,7 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
   String? _selectedSensor;
   final List<String> _sensorOptions = [];
 
-  String? _selectedFormat;
+  SupportedFileFormat? _selectedFormat;
 
   @override
   void initState() {
@@ -122,21 +122,16 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
       items: SupportedFileFormat.values
           .map(
             (format) =>
-                DropdownMenuItem(value: format.name, child: Text(format.name)),
+                DropdownMenuItem(value: format, child: Text(format.name)),
           )
           .toList(),
       onChanged: (newFormat) {
         setState(() {
           _selectedFormat = newFormat;
           // set the state of the [ImportExportPage]
-          if (newFormat != null) {
-            var find = SupportedFileFormat.values.firstWhere(
-              (element) =>
-                  element.toString() == "SupportedFileFormat.$newFormat",
-            );
-            if (widget._sectionTitle == "Export sensor data") {
-              widget._setFileFormatForExport!(find);
-            }
+          if (newFormat != null &&
+              widget._sectionTitle == "Export sensor data") {
+            widget._setFileFormatForExport!(newFormat);
           }
         });
       },
@@ -168,10 +163,9 @@ class _ImportExportSectionWidgetState extends State<ImportExportSectionWidget> {
           ),
           if (widget._sectionTitle == "Export sensor data")
             dropdownMenuForFileFormat,
-          if (widget._sectionTitle == "Export sensor data")
-            const SizedBox(
-              height: 15,
-            ),
+          const SizedBox(
+            height: 15,
+          ),
           dropdownMenuForSensorSelection,
           const SizedBox(
             height: 25,
