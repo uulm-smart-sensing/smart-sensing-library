@@ -168,8 +168,8 @@ Future<void> writeFormattedData(
 ) async {
   if (Platform.isAndroid &&
       !(await Permission.manageExternalStorage.request().isGranted)) {
-        /// TODO: provide a visual hint to the user, that the app dont have the
-        /// permission
+    /// TODO: provide a visual hint to the user, that the app dont have the
+    /// permission
     return;
   }
   File("$filepath.${format.name}").writeAsBytesSync(formattedData);
