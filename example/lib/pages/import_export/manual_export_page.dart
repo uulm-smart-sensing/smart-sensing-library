@@ -25,9 +25,14 @@ class ManualExportPage extends StatefulWidget {
   /// sensors should be exported or not.
   final bool exportForAllSensorIds;
 
+  /// The selected [SupportedFileFormat], so the format in which the sensor
+  /// data should be exported
+  final SupportedFileFormat selectedFileFormat;
+
   const ManualExportPage({
     required this.selectedSensorIdForExport,
     required this.exportForAllSensorIds,
+    required this.selectedFileFormat,
     super.key,
   });
 
@@ -157,7 +162,7 @@ class _ManualExportPageState extends State<ManualExportPage> {
     if (widget.exportForAllSensorIds) {
       await IOManager().exportSensorDataToFile(
         selectedDirectory,
-        SupportedFileFormat.json,
+        widget.selectedFileFormat,
         SensorId.values,
         startDatetime,
         endDatetime,
@@ -165,7 +170,7 @@ class _ManualExportPageState extends State<ManualExportPage> {
     } else {
       await IOManager().exportSensorDataToFile(
         selectedDirectory,
-        SupportedFileFormat.json,
+        widget.selectedFileFormat,
         [widget.selectedSensorIdForExport],
         startDatetime,
         endDatetime,

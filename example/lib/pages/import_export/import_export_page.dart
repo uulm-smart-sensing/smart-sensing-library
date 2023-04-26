@@ -143,6 +143,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
         builder: (context) => ManualExportPage(
           selectedSensorIdForExport: _selectedSensorIdForExport!,
           exportForAllSensorIds: _exportForAllSensorIds,
+          selectedFileFormat: _selectedFileFormat!,
         ),
       ),
     );
