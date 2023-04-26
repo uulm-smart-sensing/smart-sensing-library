@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:excel/excel.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:xml/xml.dart';
 
@@ -161,12 +162,18 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
 /// (= [formattedData]) into this file and saves it.
 ///
 /// The [filepath] can be relative or absolute.
-void writeFormattedData(
+Future<void> writeFormattedData(
   String filepath,
   SupportedFileFormat format,
   List<int> formattedData,
-) {
-  File("$filepath.${format.name}").writeAsBytesSync(formattedData);
+) async {
+  var status = await Permission.storage.status;
+  if (status != PermissionStatus.granted) {
+    status = await Permission.storage.request();
+  }
+  if (status.isGranted) {
+    File("$filepath.${format.name}").writeAsBytesSync(formattedData);
+  }
 }
 
 /// Creates the filename for the export of the sensor data for the sensor

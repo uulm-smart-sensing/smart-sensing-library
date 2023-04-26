@@ -384,7 +384,8 @@ class IOManager {
     // Fetch the data for all sensors, format them and save the result in a new
     // file.
     for (var sensor in sensorIds) {
-      var fileName = directoryName + createFileName(sensor, startTime, endTime);
+      var fileName =
+          "$directoryName/${createFileName(sensor, startTime, endTime)}";
 
       var formattedData = "".codeUnits;
       await _getFromDatabase(startTime, endTime, sensor).then(
