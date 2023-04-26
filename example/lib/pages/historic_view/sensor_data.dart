@@ -1,3 +1,5 @@
+import 'dart:math';
+
 /// Class that stores Data for historic view page
 class SensorViewData {
   final double timestamp;
@@ -51,15 +53,13 @@ final List<SensorViewData> testData = [
 ];
 
 /// Determines the maximum of a unit in a list and returns the maximum.
-double getMaxUnit(List<SensorViewData> value) {
-  var maxUnit = value.map((data) => [data.x, data.y ?? 0, data.z ?? 0]).reduce(
-        (a, b) => a.reduce((a1, b1) => a1 > b1 ? a1 : b1) >
-                b.reduce((a1, b1) => a1 > b1 ? a1 : b1)
-            ? a
-            : b,
-      );
-  return maxUnit.reduce((a, b) => a > b ? a : b);
-}
+double getMaxUnit(List<SensorViewData> value) => value
+    .expand((element) => [
+          element.x,
+          element.y ?? double.negativeInfinity,
+          element.z ?? double.negativeInfinity
+        ])
+    .reduce(max);
 
 /// Determines the maximum of timestamp in a list and returns the maximum.
 double getMaxTimeStamp(List<SensorViewData> value) {
