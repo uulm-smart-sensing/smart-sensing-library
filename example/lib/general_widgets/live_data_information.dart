@@ -85,39 +85,8 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
   @override
   Widget build(BuildContext context) => Padding(
         padding: widget.padding,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Stack(
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      formatPascalCase(widget.id.name),
-                      style: TextStyle(
-                        fontSize: widget.headLineFontSize,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: _mainDataText(
-                      mainData,
-                      unit,
-                      maxPrecision ?? 3,
-                      widget.mainDataFontSize,
-                    ),
-                  ),
-                  !widget.shortFormat
-                      ? _updateText(lastUpdate, widget.timeFontSize)
-                      : const SizedBox.shrink(),
-                ],
-              ),
-            ),
             Align(
               alignment: Alignment.topRight,
               child: Icon(
@@ -125,6 +94,34 @@ class _LiveDataInformationState extends State<LiveDataInformation> {
                 size: widget.headLineFontSize,
                 color: Colors.black,
               ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    formatPascalCase(widget.id.name),
+                    style: TextStyle(
+                      fontSize: widget.headLineFontSize,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: _mainDataText(
+                    mainData,
+                    unit,
+                    maxPrecision ?? 3,
+                    widget.mainDataFontSize,
+                  ),
+                ),
+                !widget.shortFormat
+                    ? _updateText(lastUpdate, widget.timeFontSize)
+                    : const SizedBox.shrink(),
+              ],
             ),
           ],
         ),
