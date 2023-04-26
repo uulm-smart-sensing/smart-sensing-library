@@ -232,7 +232,7 @@ Future<void> main() async {
     test(
       "XLSX formatting complies with requirements.",
       () async {
-        writeFormattedData(
+        await writeFormattedData(
           "exampleSensorData",
           SupportedFileFormat.xlsx,
           formatDataIntoXLSX(SensorId.linearAcceleration, exampleData),

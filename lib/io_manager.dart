@@ -395,7 +395,7 @@ class IOManager {
 
       if (formattedData.isEmpty) return false;
 
-      writeFormattedData(fileName, format, formattedData);
+      await writeFormattedData(fileName, format, formattedData);
     }
 
     return true;
