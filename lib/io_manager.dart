@@ -365,6 +365,8 @@ class IOManager {
   /// * there exist no data (for one of the sensors, eventually in the
   /// time interval from [startTime] to [endTime]), otherwise it will return
   /// true.
+  /// TODO: add parameter to turn the spacing and line breaks of (= don't
+  /// "beautify")
   Future<bool> exportSensorDataToFile(
     String directoryName,
     SupportedFileFormat format,

@@ -23,7 +23,7 @@ List<int> formatData(
 ) {
   if (data.isEmpty) {
     /// TODO: check for a better way to handle the case, nothing exists for the
-    /// export
+    /// export and give the user a visual hint
     return "".codeUnits;
   }
 
@@ -168,6 +168,8 @@ Future<void> writeFormattedData(
 ) async {
   if (Platform.isAndroid &&
       !(await Permission.manageExternalStorage.request().isGranted)) {
+        /// TODO: provide a visual hint to the user, that the app dont have the
+        /// permission
     return;
   }
   File("$filepath.${format.name}").writeAsBytesSync(formattedData);
