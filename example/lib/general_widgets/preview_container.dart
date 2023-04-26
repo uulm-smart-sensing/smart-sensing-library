@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../formatter/text_formatter.dart';
 import '../theme.dart';
+import '../unit_string_representation.dart';
 import 'brick_container.dart';
 
 class PreviewContainer extends StatefulWidget {
@@ -124,45 +125,11 @@ String createStringFromData(List<double?> data, Unit unit) {
   return values
       .map(
         (value) => "${value.toStringAsFixed(3)} "
-            "${_unitConverter(unit)}",
+            "${unitToUnitStringRepresentation[unit]}",
       )
       .join("\n");
 }
 
-/// Converts the [Unit] enum to the corresponing unit string.
-String _unitConverter(Unit unit) {
-  switch (unit) {
-    case Unit.metersPerSecondSquared:
-      return "m/s²";
-    case Unit.gravitationalForce:
-      return "N";
-    case Unit.radiansPerSecond:
-      return "rad/s";
-    case Unit.degreesPerSecond:
-      return "deg/s";
-    case Unit.microTeslas:
-      return "µT";
-    case Unit.radians:
-      return "rad";
-    case Unit.degrees:
-      return "deg";
-    case Unit.hectoPascal:
-      return "hPa";
-    case Unit.kiloPascal:
-      return "kPa";
-    case Unit.bar:
-      return "bar";
-    case Unit.celsius:
-      return "°C";
-    case Unit.fahrenheit:
-      return "°F";
-    case Unit.kelvin:
-      return "K";
-    case Unit.unitless:
-    default:
-      return "";
-  }
-}
 
 Widget _createDataText({
   required List<double?> data,
