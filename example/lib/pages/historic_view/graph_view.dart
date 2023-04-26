@@ -4,26 +4,25 @@ import 'package:intl/intl.dart';
 import 'sensor_data.dart';
 
 /// Widget for displaying Graph in Historic View
-class GraphView extends StatelessWidget {
+class GraphView extends LineChart {
   /// Variable that determines how many data points are needed
-  final int listOfDataPoints;
+  final int lineDataCount;
+  final List<SensorViewData> lineData;
 
-  const GraphView({super.key, required this.listOfDataPoints});
-
-  @override
-  Widget build(BuildContext context) => LineChart(
-        LineChartData(
-          lineTouchData: lineTouchData,
-          gridData: gridData,
-          titlesData: titleData,
-          borderData: borderData,
-          lineBarsData: chartData(listOfDataPoints),
-          minX: getMinTimeStamp(testData),
-          maxX: getMaxTimeStamp(testData),
-          minY: 0,
-          maxY: getMaxUnit(testData) + 1,
-        ),
-      );
+  GraphView({super.key, required this.lineDataCount, required this.lineData})
+      : super(
+          LineChartData(
+            lineTouchData: lineTouchData,
+            gridData: gridData,
+            titlesData: titleData,
+            borderData: borderData,
+            lineBarsData: chartData(lineDataCount),
+            minX: getMinTimeStamp(lineData),
+            maxX: getMaxTimeStamp(lineData),
+            minY: 0,
+            maxY: getMaxUnit(lineData) + 1,
+          ),
+        );
 }
 
 /// Determines whether there will be 3 or 1 linechart depending on the parameter
@@ -38,7 +37,6 @@ FlGridData get gridData => FlGridData(show: false);
 
 /// Changes border attribute for the graph
 FlBorderData get borderData => FlBorderData(
-      show: true,
       border: Border.all(
         color: Colors.white,
         width: 1,
@@ -100,8 +98,8 @@ LineChartBarData get lineChartBarDataZ => _getLineChartBarData(
 FlTitlesData get titleData => FlTitlesData(
       bottomTitles: AxisTitles(sideTitles: bottomTitles),
       leftTitles: AxisTitles(sideTitles: leftTitles),
-      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      rightTitles: AxisTitles(sideTitles: SideTitles()),
+      topTitles: AxisTitles(sideTitles: SideTitles()),
     );
 
 SideTitles get bottomTitles => SideTitles(
