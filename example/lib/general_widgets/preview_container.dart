@@ -1,56 +1,31 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:smart_sensing_library/filter_tools.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
-import '../filter_options.dart';
 import '../formatter/text_formatter.dart';
 import '../theme.dart';
-import '../unit_string_representation.dart';
 import 'brick_container.dart';
 
-/// Creates a preview for the given [filterOption].
-///
-/// The created preview shows all relevant axles form the data.
-/// E.g. the maximum filter shows the maximum of all three axles,
-/// while the average shows only one:
-///
-/// Max ->
-/// ```
-/// Axis 1    Axis 2    Axis 3
-///    1         1         1
-///    2         2         2
-///    3         3         3
-/// ```
-///
-/// Avg ->
-/// ```
-/// Axis 1
-///    1
-///    2
-///    3
-/// ```
 class PreviewContainer extends StatefulWidget {
-  final SensorId sensorId;
+  final SensorId id;
   final EdgeInsets padding;
   final double mainDataFontSize;
   final double headLineFontSize;
   final Duration duration;
-  final FilterOption filterOption;
   const PreviewContainer({
     super.key,
     this.duration = const Duration(seconds: 5),
-    required this.sensorId,
+    required this.id,
     this.padding = const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
     this.mainDataFontSize = 15,
     this.headLineFontSize = 15,
-    required this.filterOption,
   });
   @override
   State<StatefulWidget> createState() => _PreviewContainerState();
 }
 
 class _PreviewContainerState extends State<PreviewContainer> {
+  int counter = 0;
   late Timer timer;
   var data = <SensorData>[];
   var style = const TextStyle(
@@ -62,30 +37,25 @@ class _PreviewContainerState extends State<PreviewContainer> {
   @override
   void initState() {
     super.initState();
-    //Creates the timer that periodically gets updated.
     timer = Timer.periodic(
       widget.duration,
       (t) async {
-        var dataList = <SensorData>[];
-        for (var i = 0; i < widget.filterOption.axisNumber; i++) {
-          var filter = await IOManager().getFilterFrom(widget.sensorId);
-          dataList.addAll(
-            _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
-          );
-        }
+        var filterMax = await IOManager().getFilterFrom(widget.id);
+        var filterMin = await IOManager().getFilterFrom(widget.id);
+        var filterAvg = await IOManager().getFilterFrom(widget.id);
         setState(() {
+          data.clear();
+          filterMax?.getMax();
+          filterMin?.getMin();
+          filterAvg?.getAvg();
           data
-            ..clear()
-            ..addAll(dataList);
+            ..add(filterMax!.result()[0])
+            ..add(filterMin!.result()[0])
+            ..add(filterAvg!.result()[0]);
+          counter++;
         });
       },
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    timer.cancel();
   }
 
   Widget internalText() => Padding(
@@ -95,7 +65,7 @@ class _PreviewContainerState extends State<PreviewContainer> {
             Align(
               alignment: Alignment.topRight,
               child: Icon(
-                sensorIdToIcon[widget.sensorId],
+                sensorIdToIcon[widget.id],
                 size: 15,
                 color: Colors.black,
               ),
@@ -106,7 +76,7 @@ class _PreviewContainerState extends State<PreviewContainer> {
               children: [
                 Flexible(
                   child: Text(
-                    formatPascalCase(widget.sensorId.name),
+                    formatPascalCase(widget.id.name),
                     style: TextStyle(
                       fontSize: widget.headLineFontSize,
                       color: Colors.black,
@@ -114,17 +84,9 @@ class _PreviewContainerState extends State<PreviewContainer> {
                     ),
                   ),
                 ),
-                Text(
-                  widget.filterOption.shortText,
-                  style: style,
-                ),
                 Expanded(
                   flex: 2,
-                  child: mainData(
-                    data: data,
-                    style: style,
-                    filterOption: widget.filterOption,
-                  ),
+                  child: mainData(data, style),
                 ),
               ],
             ),
@@ -134,30 +96,26 @@ class _PreviewContainerState extends State<PreviewContainer> {
 
   @override
   Widget build(BuildContext context) => BrickContainer(
-        width: 300,
-        color: sensorIdToColor[widget.sensorId],
+        width: 250,
         child: internalText(),
       );
 }
 
-/// Creates the main data inside this widget.
-///
-/// If no data is loaded at the moment, the content is empty.
-Widget mainData({
-  required List<SensorData> data,
-  required TextStyle style,
-  required FilterOption filterOption,
-}) =>
-    Row(
-      children: data.isEmpty
-          ? [const SizedBox.shrink()]
-          : (data.length != 1
-              ? _createWidgetList(data: data, style: style)
-              : [_createDataText(data: data[0].data, style: style)]),
+Widget mainData(List<SensorData> data, TextStyle style) => Row(
+      children: [
+        data.isEmpty
+            ? const SizedBox.shrink()
+            : _createDataText(data: data[0].data, style: style),
+        data.isEmpty
+            ? const SizedBox.shrink()
+            : _createDataText(data: data[0].data, style: style),
+        data.isEmpty
+            ? const SizedBox.shrink()
+            : _createDataText(data: data[0].data, style: style),
+      ],
     );
 
-/// Transforms [data] into a usable [String] format for [PreviewContainer].
-String _createStringFromData(List<double?> data, Unit unit) {
+String createStringFromData(List<double?> data, Unit unit) {
   var values = data.whereType<double>().toList();
 
   if (values.isEmpty) {
@@ -166,34 +124,65 @@ String _createStringFromData(List<double?> data, Unit unit) {
   return values
       .map(
         (value) => "${value.toStringAsFixed(3)} "
-            "${unitToUnitStringRepresentation[unit]}",
+            "${_unitConverter(unit)}",
       )
       .join("\n");
 }
 
-/// Creates a flexible [Text] with the data given.
+/// Converts the [Unit] enum to the corresponing unit string.
+String _unitConverter(Unit unit) {
+  switch (unit) {
+    case Unit.metersPerSecondSquared:
+      return "m/s²";
+    case Unit.gravitationalForce:
+      return "N";
+    case Unit.radiansPerSecond:
+      return "rad/s";
+    case Unit.degreesPerSecond:
+      return "deg/s";
+    case Unit.microTeslas:
+      return "µT";
+    case Unit.radians:
+      return "rad";
+    case Unit.degrees:
+      return "deg";
+    case Unit.hectoPascal:
+      return "hPa";
+    case Unit.kiloPascal:
+      return "kPa";
+    case Unit.bar:
+      return "bar";
+    case Unit.celsius:
+      return "°C";
+    case Unit.fahrenheit:
+      return "°F";
+    case Unit.kelvin:
+      return "K";
+    case Unit.unitless:
+    default:
+      return "";
+  }
+}
+
 Widget _createDataText({
   required List<double?> data,
   Unit unit = Unit.metersPerSecondSquared,
   required TextStyle style,
-  int? axisNumber,
 }) =>
     Expanded(
       flex: 1,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          axisNumber != null
-              ? Align(
-                  child: Text(
-                    "Axis $axisNumber",
-                    style: style,
-                  ),
-                )
-              : const SizedBox.shrink(),
           Align(
             child: Text(
-              _createStringFromData(data, unit),
+              "Max",
+              style: style,
+            ),
+          ),
+          Align(
+            child: Text(
+              createStringFromData(data, unit),
               textAlign: TextAlign.right,
               style: style,
             ),
@@ -201,56 +190,3 @@ Widget _createDataText({
         ],
       ),
     );
-
-/// Returns the filtered data from given [option].
-List<SensorData>? _getFromFilter(
-  FilterOption option,
-  FilterTools? filterTool, {
-  int axis = 0,
-}) {
-  switch (option) {
-    case FilterOption.max:
-      filterTool?.getMax(axis: axis);
-      break;
-    case FilterOption.min:
-      filterTool?.getMin(axis: axis);
-      break;
-    case FilterOption.avg:
-      filterTool?.getAvg();
-      break;
-    case FilterOption.sd:
-      filterTool?.getSD();
-      break;
-    case FilterOption.mode:
-      filterTool?.getMode(axis: axis);
-      break;
-    case FilterOption.range:
-      filterTool?.getRange();
-      break;
-    case FilterOption.median:
-      filterTool?.getMedian();
-      break;
-    case FilterOption.sum:
-      filterTool?.getSum();
-      break;
-  }
-  return filterTool?.result();
-}
-
-/// Creates a list for each [data] given.
-List<Widget> _createWidgetList({
-  required List<SensorData> data,
-  required TextStyle style,
-}) {
-  var widgetList = <Widget>[];
-  for (var i = 0; i < data.length; i++) {
-    widgetList.add(
-      _createDataText(
-        data: data[i].data,
-        style: style,
-        axisNumber: i,
-      ),
-    );
-  }
-  return widgetList;
-}
