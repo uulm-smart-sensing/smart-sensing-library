@@ -196,22 +196,15 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     // Graph that visualize sensor data
     var visualizationGraph = AspectRatio(
       aspectRatio: 1.7,
-      child: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 6,
-                right: 16,
-                bottom: 4,
-              ),
-              child: GraphView(
-                lineDataCount: numberOfDataPoints,
-                lineData: testData,
-              ),
-            ),
-          )
-        ],
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: 4,
+        ),
+        child: GraphView(
+          lineData: testData,
+        ),
       ),
     );
 
