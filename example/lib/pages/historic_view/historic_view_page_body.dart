@@ -204,6 +204,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         ),
         child: GraphView(
           lineData: testData,
+          lineDataCount: numberOfDataPoints,
         ),
       ),
     );
