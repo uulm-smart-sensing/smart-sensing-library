@@ -60,7 +60,7 @@ Future<void> main() async {
       expect(wasExportSuccessful, isFalse);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
-        "./",
+        ".",
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
