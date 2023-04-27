@@ -41,19 +41,13 @@ Future<void> main() async {
     ),
   ];
 
-  setUpAll(() {
+  setUpAll(() async {
     // Create test directory
     Directory(testFilesOutputPath).createSync();
     // Delete all files in the test directory
     Directory(testFilesOutputPath)
         .listSync()
         .forEach((file) => file.deleteSync());
-  });
-
-  setUp(() async {
-    await ioManager.removeData(SensorId.accelerometer);
-    await ioManager.removeSensor(SensorId.accelerometer);
-
     // add sensor data to the database
     await ioManager.addSensor(
       id: SensorId.accelerometer,
