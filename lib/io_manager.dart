@@ -62,6 +62,7 @@ class IOManager {
     return true;
   }
 
+  /// Deletes all data from the database.
   Future<void> deleteDatabase() async {
     _objectStore!.box<SensorDataDTO>().removeAll();
   }
@@ -379,7 +380,6 @@ class IOManager {
     DateTime? endTime,
   ]) async {
     if (!await Directory(directoryName).exists()) return false;
-    print(!await Directory(directoryName).exists());
 
     // Set the start and end time, if not specified by the user to
     // furthest back in time and latest time.
@@ -387,7 +387,6 @@ class IOManager {
     endTime ??= DateTime.now();
 
     if (sensorIds.isEmpty) return false;
-    print(sensorIds.isEmpty);
 
     // Fetch the data for all sensors, format them and save the result in a new
     // file.
@@ -402,7 +401,6 @@ class IOManager {
       );
 
       if (formattedData.isEmpty) return false;
-      print(formattedData.isEmpty);
 
       await writeFormattedData(fileName, format, formattedData);
     }
