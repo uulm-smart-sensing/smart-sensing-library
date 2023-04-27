@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'sensor_data.dart';
+import 'sensor_view_data.dart';
 
 /// Widget for displaying Graph in Historic View
 class GraphView extends LineChart {
