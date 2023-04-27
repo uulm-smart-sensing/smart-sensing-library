@@ -1,2 +1,6 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
 * text=auto
+
+# Set eol of example import files to LF
+./test/example_import/files/*.json text eol=lf
+./test/example_import/files/*.xml text eol=lf
