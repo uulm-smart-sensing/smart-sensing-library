@@ -53,27 +53,42 @@ final List<SensorViewData> testData = [
 ];
 
 /// Determines the maximum of a unit in a list and returns the maximum.
-double getMaxUnit(List<SensorViewData> value) => value
-    .expand((element) => [
+double getMaxY(List<SensorViewData> value) => value
+    .expand(
+      (element) => [
+        element.x,
+        element.y ?? double.negativeInfinity,
+        element.z ?? double.negativeInfinity
+      ],
+    )
+    .reduce(max);
+
+double getMinY(List<SensorViewData> value) {
+  var minX = value
+      .expand(
+        (element) => [
           element.x,
           element.y ?? double.negativeInfinity,
           element.z ?? double.negativeInfinity
-        ])
-    .reduce(max);
+        ],
+      )
+      .reduce(max);
+  return minX > 0 ? 0 : minX;
+}
 
 /// Determines the maximum of timestamp in a list and returns the maximum.
-double getMaxTimeStamp(List<SensorViewData> value) {
-  var maxUnit =
-      value.map((data) => data.timestamp).reduce((a, b) => a > b ? a : b);
-  return maxUnit;
-}
+double getMaxX(List<SensorViewData> value) => value
+    .expand(
+      (element) => [element.timestamp],
+    )
+    .reduce(max);
 
 /// Determines the minimum of timestamp in a list and returns the maximum.
-double getMinTimeStamp(List<SensorViewData> value) {
-  var maxUnit =
-      value.map((data) => data.timestamp).reduce((a, b) => a < b ? a : b);
-  return maxUnit;
-}
+double getMinX(List<SensorViewData> value) => value
+    .expand(
+      (element) => [element.timestamp],
+    )
+    .reduce(min);
 
 DateTime convertToDate(double value) =>
     DateTime.fromMillisecondsSinceEpoch(value.toInt());
