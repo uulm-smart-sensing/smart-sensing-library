@@ -225,7 +225,6 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     if (selectedVisualization == _Visualization.table) {
       tableRows.addAll(
         testData
-            .take(numberOfDataPoints)
             .map(
               (sensorData) =>
                   [_getTableRowFromSensorData(sensorData), paddingRow],
