@@ -25,9 +25,14 @@ class ManualExportPage extends StatefulWidget {
   /// sensors should be exported or not.
   final bool exportForAllSensorIds;
 
+  /// The selected [SupportedFileFormat], so the format in which the sensor
+  /// data should be exported
+  final SupportedFileFormat selectedFileFormat;
+
   const ManualExportPage({
     required this.selectedSensorIdForExport,
     required this.exportForAllSensorIds,
+    required this.selectedFileFormat,
     super.key,
   });
 
@@ -93,13 +98,14 @@ class _ManualExportPageState extends State<ManualExportPage> {
             Center(
               child: SizedBox(
                 width: 120,
-                child: endDatetime.isAfter(startDatetime)
+                child: _isSelectedTimeIntervalValid()
                     ? CustomTextButton(
                         text: "Export",
                         onPressed: _exportWithCustomTimeInterval,
                       )
                     : const Text(
-                        "End time must be after start time!",
+                        "End time must be after start time and times can not"
+                        "be in the future!",
                         style: TextStyle(color: Colors.red, fontSize: 14),
                       ),
               ),
@@ -154,15 +160,30 @@ class _ManualExportPageState extends State<ManualExportPage> {
     if (selectedDirectory == null) return;
 
     if (widget.exportForAllSensorIds) {
-      // TODO: call smart sensing library with 'selectedDirectory'
-      // and 'SensorId.values' and the dates
+      await IOManager().exportSensorDataToFile(
+        selectedDirectory,
+        widget.selectedFileFormat,
+        SensorId.values,
+        startDatetime,
+        endDatetime,
+      );
     } else {
-      // TODO: call smart sensing library with 'selectedDirectory'
-      // and 'selectedSensorIdForExport' and the dates
+      await IOManager().exportSensorDataToFile(
+        selectedDirectory,
+        widget.selectedFileFormat,
+        [widget.selectedSensorIdForExport],
+        startDatetime,
+        endDatetime,
+      );
     }
 
     // Return to "Import / Export" page
-
+    if (!mounted) return;
     Navigator.pop(context);
   }
+
+  bool _isSelectedTimeIntervalValid() =>
+      endDatetime.isAfter(startDatetime) &&
+      startDatetime.isBefore(DateTime.now()) &&
+      endDatetime.isBefore(DateTime.now());
 }
