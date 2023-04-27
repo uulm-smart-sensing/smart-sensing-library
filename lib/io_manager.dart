@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,6 +11,8 @@ import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
+import 'src/import_export_module/export_tool.dart';
+import 'src/import_export_module/supported_file_format.dart';
 
 /// This class is the core component of the smart sensing library.
 ///
@@ -57,6 +60,11 @@ class IOManager {
       },
     );
     return true;
+  }
+
+  /// Deletes all data from the database.
+  Future<void> deleteDatabase() async {
+    _objectStore!.box<SensorDataDTO>().removeAll();
   }
 
   ///Returns a list of usable sensors
@@ -338,5 +346,65 @@ class IOManager {
                 ),
               ),
         )).build().removeAsync();
+  }
+
+  /// Exports the sensor data of a sensor or different sensors, considering a
+  /// certain [format] and optional a certain time interval.
+  ///
+  /// The time interval ranges from [startTime] to [endTime], where the
+  /// following default values are used, if the user do not specify either or
+  /// both of them:
+  /// * startTime = DateTime.fromMicrosecondsSinceEpoch(0), so the furthest back
+  /// in time
+  /// * endTime = DateTime.now(), so the latest moment in time, where sensor
+  /// data could exist.
+  ///
+  /// The sensor data will be exported into a file with the following naming
+  /// pattern:
+  /// _<sensorId>\_<startTime>\_<endTime>_
+  /// and be saved in the directory with the given [directoryName].
+  ///
+  /// Returns false, if
+  /// * there exist no directory with the [directoryName]
+  /// * the list of [sensorIds] is empty, so actually no export is requested.
+  /// * there exist no data (for one of the sensors, eventually in the
+  /// time interval from [startTime] to [endTime]), otherwise it will return
+  /// true.
+  /// TODO: add parameter to turn the spacing and line breaks of (= don't
+  /// "beautify")
+  Future<bool> exportSensorDataToFile(
+    String directoryName,
+    SupportedFileFormat format,
+    List<SensorId> sensorIds, [
+    DateTime? startTime,
+    DateTime? endTime,
+  ]) async {
+    if (!await Directory(directoryName).exists()) return false;
+
+    // Set the start and end time, if not specified by the user to
+    // furthest back in time and latest time.
+    startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
+    endTime ??= DateTime.now();
+
+    if (sensorIds.isEmpty) return false;
+
+    // Fetch the data for all sensors, format them and save the result in a new
+    // file.
+    for (var sensor in sensorIds) {
+      var fileName =
+          "$directoryName/${createFileName(sensor, startTime, endTime)}";
+
+      var formattedData = "".codeUnits;
+      await _getFromDatabase(startTime, endTime, sensor).then(
+        (sensorData) =>
+            {formattedData = formatData(sensor, sensorData, format)},
+      );
+
+      if (formattedData.isEmpty) return false;
+
+      await writeFormattedData(fileName, format, formattedData);
+    }
+
+    return true;
   }
 }
