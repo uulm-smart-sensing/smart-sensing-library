@@ -103,7 +103,6 @@ class _GraphView extends State<GraphView> {
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
         barWidth: 3,
-        //isCurved: true,
         spots: spots,
       );
 
