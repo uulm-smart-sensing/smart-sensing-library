@@ -12,7 +12,7 @@ const exampleJsonFilePath = "test/example_import_files/exampleSensorData.json";
 const exampleCsvFilePath = "test/example_import_files/exampleSensorData.csv";
 const exampleXlsxFilePath = "test/example_import_files/exampleSensorData.xlsx";
 const exampleXmlFilePath = "test/example_import_files/exampleSensorData.xml";
-const testFilesOutputPath = "test/generated_test_files/";
+const testFilesOutputPath = "test/generated_test_files";
 
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +48,9 @@ Future<void> main() async {
     Directory(testFilesOutputPath)
         .listSync()
         .forEach((file) => file.deleteSync());
+
+    await ioManager.deleteDatabase();
+
     // add sensor data to the database
     await ioManager.addSensor(
       id: SensorId.accelerometer,
@@ -117,7 +120,7 @@ Future<void> main() async {
         SupportedFileFormat.json,
         [SensorId.accelerometer],
         DateTime.fromMicrosecondsSinceEpoch(0),
-        DateTime.now().add(const Duration(seconds: -20)),
+        DateTime.now().add(const Duration(seconds: -60)),
       );
       expect(wasExportSuccessful, isFalse);
 
