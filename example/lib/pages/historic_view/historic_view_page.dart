@@ -116,6 +116,7 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
               // The overlay contains the body and controls the tooltip which is
               // displayed on top of the body
               Stack(children: children),
+              const SizedBox(height: 20),
               exampleSection,
             ],
           ),
