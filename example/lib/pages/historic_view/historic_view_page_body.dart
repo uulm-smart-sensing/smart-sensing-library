@@ -10,7 +10,7 @@ import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';
 import 'graph_view.dart';
 import 'historic_view_page.dart';
-import 'sensor_data.dart';
+import 'sensor_view_data.dart';
 import 'time_selection_button.dart';
 import 'visualization_selection_button.dart';
 
