@@ -93,7 +93,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
       ),
     );
 
-    /// show all Favorits
+    /// show all Favorites
     var favoritesBody = _getSensorsListFromIds(
       sensorIds: provider.sensorList,
       containerFlex: provider.sensorList.length,
