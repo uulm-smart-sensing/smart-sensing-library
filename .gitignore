@@ -38,3 +38,6 @@ build/
 
 # CI coverage reports
 report_outputs/
+
+# Generated test files
+test/generated_test_files/

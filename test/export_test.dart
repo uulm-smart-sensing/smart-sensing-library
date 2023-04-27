@@ -12,6 +12,7 @@ const exampleJsonFilePath = "test/example_import_files/exampleSensorData.json";
 const exampleCsvFilePath = "test/example_import_files/exampleSensorData.csv";
 const exampleXlsxFilePath = "test/example_import_files/exampleSensorData.xlsx";
 const exampleXmlFilePath = "test/example_import_files/exampleSensorData.xml";
+const testFilesOutputPath = "test/generated_test_files/";
 
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,15 @@ Future<void> main() async {
     ),
   ];
 
+  setUpAll(() {
+    // Create test directory
+    Directory(testFilesOutputPath).createSync();
+    // Delete all files in the test directory
+    Directory(testFilesOutputPath)
+        .listSync()
+        .forEach((file) => file.deleteSync());
+  });
+
   setUp(() async {
     await ioManager.removeData(SensorId.accelerometer);
     await ioManager.removeSensor(SensorId.accelerometer);
@@ -55,6 +65,7 @@ Future<void> main() async {
     );
     await Future.delayed(const Duration(seconds: 15));
   });
+
   group("Test of the export feature of the smart sensing library.", () {
     test("Export only work with valid directory.", () async {
       var wasExportSuccessful = await ioManager.exportSensorDataToFile(
@@ -65,7 +76,7 @@ Future<void> main() async {
       expect(wasExportSuccessful, isFalse);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
-        ".",
+        testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
@@ -74,14 +85,14 @@ Future<void> main() async {
 
     test("Export only work with at least one sensor (id)", () async {
       var wasExportSuccessful = await ioManager.exportSensorDataToFile(
-        "./",
+        testFilesOutputPath,
         SupportedFileFormat.json,
         [],
       );
       expect(wasExportSuccessful, isFalse);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
-        "./",
+        testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
@@ -90,14 +101,14 @@ Future<void> main() async {
 
     test("Export only works, if sensor data really exist.", () async {
       var wasExportSuccessful = await ioManager.exportSensorDataToFile(
-        "./",
+        testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.gyroscope, SensorId.accelerometer],
       );
       expect(wasExportSuccessful, isFalse);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
-        "./",
+        testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
@@ -108,7 +119,7 @@ Future<void> main() async {
         "Export only works, if sensor data really exist"
         "(in time interval).", () async {
       var wasExportSuccessful = await ioManager.exportSensorDataToFile(
-        "./",
+        testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
         DateTime.fromMicrosecondsSinceEpoch(0),
@@ -117,7 +128,7 @@ Future<void> main() async {
       expect(wasExportSuccessful, isFalse);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
-        "./",
+        testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
         DateTime.now().add(const Duration(seconds: -10)),
@@ -129,14 +140,19 @@ Future<void> main() async {
         "Export method creates the correct file in the correct"
         "directory", () async {
       await ioManager.exportSensorDataToFile(
-        "./",
+        testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
 
+      var expectedFromDate = DateFormat('yyyy-MM-dd_hh-mm')
+          .format(DateTime.fromMicrosecondsSinceEpoch(0));
+      var expectedToDate =
+          DateFormat('yyyy-MM-dd_hh-mm').format(DateTime.now());
       expect(
         await File(
-          "./accelerometer_${DateFormat('yyyy-MM-dd_hh-mm').format(DateTime.fromMicrosecondsSinceEpoch(0))}_${DateFormat('yyyy-MM-dd_hh-mm').format(DateTime.now())}.json",
+          "$testFilesOutputPath/accelerometer_${expectedFromDate}_"
+          "$expectedToDate.json",
         ).exists(),
         isTrue,
       );
@@ -202,6 +218,7 @@ Future<void> main() async {
         );
       },
     );
+
     test(
       "JSON formatting complies with requirements.",
       () async {
@@ -236,7 +253,7 @@ Future<void> main() async {
       "XLSX formatting complies with requirements.",
       () async {
         await writeFormattedData(
-          "exampleSensorData",
+          "$testFilesOutputPath/exampleSensorData",
           SupportedFileFormat.xlsx,
           formatDataIntoXLSX(SensorId.linearAcceleration, exampleData),
         );
