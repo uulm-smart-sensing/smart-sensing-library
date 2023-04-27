@@ -60,7 +60,6 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     }
   }
 
-  int getNumberOfDataPoints() => numberOfDataPoints;
   @override
   Widget build(BuildContext context) {
     var divider = const VerticalDivider(
