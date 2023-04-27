@@ -8,6 +8,11 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import 'package:smart_sensing_library/src/import_export_module/export_tool.dart';
 import 'package:smart_sensing_library/src/import_export_module/sensor_data_collection.dart';
 
+const exampleJsonFilePath = "test/example_import_files/exampleSensorData.json";
+const exampleCsvFilePath = "test/example_import_files/exampleSensorData.csv";
+const exampleXlsxFilePath = "test/example_import_files/exampleSensorData.xlsx";
+const exampleXmlFilePath = "test/example_import_files/exampleSensorData.xml";
+
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   const MethodChannel(
@@ -204,9 +209,7 @@ Future<void> main() async {
           formatDataIntoJson(SensorId.linearAcceleration, exampleData),
         );
 
-        var expectedData = File(
-          "lib/src/import_export_module/example_import_files/exampleSensorData.json",
-        ).readAsBytesSync();
+        var expectedData = File(exampleJsonFilePath).readAsBytesSync();
 
         expect(formattedData, expectedData);
       },
@@ -221,9 +224,9 @@ Future<void> main() async {
           formatDataIntoCSV(SensorId.linearAcceleration, exampleData),
         ).where((element) => element != 13);
 
-        var expectedData = File(
-          "lib/src/import_export_module/example_import_files/exampleSensorData.csv",
-        ).readAsBytesSync().where((element) => element != 13);
+        var expectedData = File(exampleCsvFilePath)
+            .readAsBytesSync()
+            .where((element) => element != 13);
 
         expect(formattedData, expectedData);
       },
@@ -239,9 +242,7 @@ Future<void> main() async {
         );
 
         var expectedData = Excel.decodeBytes(
-          File(
-            "lib/src/import_export_module/example_import_files/exampleSensorData.xlsx",
-          ).readAsBytesSync(),
+          File(exampleXlsxFilePath).readAsBytesSync(),
         );
 
         expect(
@@ -280,9 +281,7 @@ Future<void> main() async {
           formatDataIntoXML(SensorId.linearAcceleration, exampleData),
         );
 
-        var expectedData = File(
-          "lib/src/import_export_module/example_import_files/exampleSensorData.xml",
-        ).readAsBytesSync();
+        var expectedData = File(exampleXmlFilePath).readAsBytesSync();
 
         expect(formattedData, expectedData);
       },
