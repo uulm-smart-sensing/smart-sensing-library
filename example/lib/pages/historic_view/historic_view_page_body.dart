@@ -312,7 +312,7 @@ List<Widget> _getTableElementsFromSensorId(
         Text(
           "X",
           style: TextStyle(
-            color: selectedVisualization == _Visualization.table
+            color: selectedVisualization == _Visualization.graph
                 ? Colors.red
                 : null,
           ),
@@ -320,7 +320,7 @@ List<Widget> _getTableElementsFromSensorId(
         Text(
           "Y",
           style: TextStyle(
-            color: selectedVisualization == _Visualization.table
+            color: selectedVisualization == _Visualization.graph
                 ? Colors.green
                 : null,
           ),
@@ -328,7 +328,7 @@ List<Widget> _getTableElementsFromSensorId(
         Text(
           "Z",
           style: TextStyle(
-            color: selectedVisualization == _Visualization.table
+            color: selectedVisualization == _Visualization.graph
                 ? Colors.lightBlue
                 : null,
           ),
