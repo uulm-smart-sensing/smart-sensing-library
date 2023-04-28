@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
@@ -12,6 +12,7 @@ import 'filter_tools.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
 import 'src/import_export_module/export_tool.dart';
+import 'src/import_export_module/import_tool.dart';
 import 'src/import_export_module/supported_file_format.dart';
 
 /// This class is the core component of the smart sensing library.
@@ -69,7 +70,7 @@ class IOManager {
       (dir) => {
         _objectStore = Store(
           getObjectBoxModel(),
-          directory: join(dir.path, 'smart_sensing_library.db'),
+          directory: path.join(dir.path, 'smart_sensing_library.db'),
         )
       },
     );
@@ -410,5 +411,43 @@ class IOManager {
     }
 
     return true;
+  }
+}
+
+Future<bool> importSensorDataFromFile(String path) async {
+  var file = File(path);
+
+  if (!await file.exists()) {
+    return false;
+  }
+
+  var format = _determineFileFormat(file.path);
+
+  if (format == null) {
+    return false;
+  }
+
+  var data = await file.readAsBytes();
+
+  var sensorData = decodeSensorData(rawData: data, format: format);
+
+  // TODO: Store data in database
+
+  return true;
+}
+
+SupportedFileFormat? _determineFileFormat(String filePath) {
+  var extension = path.extension(filePath);
+  switch (extension) {
+    case ".csv":
+      return SupportedFileFormat.csv;
+    case ".json":
+      return SupportedFileFormat.json;
+    case ".xml":
+      return SupportedFileFormat.xml;
+    case ".xlsx":
+      return SupportedFileFormat.xlsx;
+    default:
+      return null;
   }
 }
