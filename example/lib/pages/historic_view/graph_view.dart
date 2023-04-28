@@ -76,8 +76,7 @@ class _GraphView extends State<GraphView> {
           tooltipBgColor: Colors.black.withOpacity(0.8),
           getTooltipItems: (touchedSpots) => touchedSpots.map((touchedSpot) {
             var textStyle = TextStyle(
-              color:
-                  touchedSpot.bar.gradient?.colors[0] ?? touchedSpot.bar.color,
+              color: touchedSpot.bar.color,
               fontWeight: FontWeight.bold,
               fontSize: 14,
             );
