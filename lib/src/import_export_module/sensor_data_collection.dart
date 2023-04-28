@@ -34,4 +34,32 @@ class SensorDataCollection {
 
     return data;
   }
+
+  /// Creates a new [SensorDataCollection] from the passed [json] map.
+  factory SensorDataCollection.fromJson(Map<String, dynamic> json) {
+    var sensorId =
+        SensorId.values.firstWhere((id) => id.name == json['sensorId']);
+    var sensorData = <SensorData>[];
+
+    for (var sensorDataJson in json['sensorData']) {
+      sensorData.add(_formatSensorDataFromJson(sensorDataJson));
+    }
+
+    return SensorDataCollection(sensorId, sensorData);
+  }
+
+  static SensorData _formatSensorDataFromJson(Map<String, dynamic> json) {
+    var data = (json['data'] as List<dynamic>).whereType<double>().toList();
+    var unit =
+        Unit.values.firstWhere((element) => element.name == json['unit']);
+    var maxPrecision = json['maxPrecision'] as int;
+    var timestampInMicroseconds = json['timestampInMicroseconds'] as int;
+
+    return SensorData(
+      data: data,
+      unit: unit,
+      maxPrecision: maxPrecision,
+      timestampInMicroseconds: timestampInMicroseconds,
+    );
+  }
 }

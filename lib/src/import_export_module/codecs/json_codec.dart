@@ -15,3 +15,14 @@ List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
 
   return encoder.convert(sensorDataCollection).codeUnits;
 }
+
+/// Decodes binary json data into a list of [SensorData] points.
+List<SensorData> decodeJson(List<int> rawData) {
+  var jsonString = String.fromCharCodes(rawData);
+
+  var jsonData = const JsonDecoder().convert(jsonString);
+
+  var sensorDataCollection = SensorDataCollection.fromJson(jsonData);
+
+  return sensorDataCollection.sensorData;
+}
