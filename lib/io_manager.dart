@@ -192,7 +192,7 @@ class IOManager {
                   ),
             )..order(SensorDataDTO_.dateTime, flags: Order.descending))
         .build();
-    var list = query.find();
+    var list = await query.findAsync();
     return list.map((e) => e.toSensorData()).toList();
   }
 
