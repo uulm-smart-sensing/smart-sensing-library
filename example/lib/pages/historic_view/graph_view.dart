@@ -4,8 +4,6 @@ import 'package:intl/intl.dart';
 import 'sensor_view_data.dart';
 
 /// Widget for displaying Graph in Historic View
-/// Widget for displaying Graph in Historic View
-///
 class GraphView extends StatefulWidget {
   final int lineDataCount;
   final List<SensorViewData> lineData;
@@ -20,7 +18,6 @@ class GraphView extends StatefulWidget {
 }
 
 class _GraphView extends State<GraphView> {
-  //variable that determines how many data points are needed
 
   @override
   Widget build(BuildContext context) => LineChart(
