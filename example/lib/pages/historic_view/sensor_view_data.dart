@@ -30,16 +30,16 @@ double getMaxY(List<SensorViewData> value) => value
     .reduce(max);
 
 double getMinY(List<SensorViewData> value) {
-  var minX = value
+  var minY = value
       .expand(
         (element) => [
           element.x,
-          element.y ?? double.negativeInfinity,
-          element.z ?? double.negativeInfinity
+          element.y ?? double.infinity,
+          element.z ?? double.infinity
         ],
       )
-      .reduce(max);
-  return minX > 0 ? 0 : minX;
+      .reduce(min);
+  return minY > 0 ? 0 : minY;
 }
 
 /// Determines the maximum of timestamp in a list and returns the maximum.
