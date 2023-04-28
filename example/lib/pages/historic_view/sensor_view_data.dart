@@ -43,18 +43,12 @@ double getMinY(List<SensorViewData> value) {
 }
 
 /// Determines the maximum of timestamp in a list and returns the maximum.
-double getMaxX(List<SensorViewData> value) => value
-    .expand(
-      (element) => [element.timestamp],
-    )
-    .reduce(max);
+double getMaxX(List<SensorViewData> value) =>
+    value.map((element) => element.timestamp).reduce(max);
 
 /// Determines the minimum of timestamp in a list and returns the maximum.
-double getMinX(List<SensorViewData> value) => value
-    .expand(
-      (element) => [element.timestamp],
-    )
-    .reduce(min);
+double getMinX(List<SensorViewData> value) =>
+    value.map((element) => element.timestamp).reduce(min);
 
 DateTime convertToDate(double value) =>
     DateTime.fromMillisecondsSinceEpoch(value.toInt());
