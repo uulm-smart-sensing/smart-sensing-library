@@ -412,42 +412,42 @@ class IOManager {
 
     return true;
   }
-}
 
-Future<bool> importSensorDataFromFile(String path) async {
-  var file = File(path);
+  Future<bool> importSensorDataFromFile(String path) async {
+    var file = File(path);
 
-  if (!await file.exists()) {
-    return false;
+    if (!await file.exists()) {
+      return false;
+    }
+
+    var format = _determineFileFormat(file.path);
+
+    if (format == null) {
+      return false;
+    }
+
+    var data = await file.readAsBytes();
+
+    var sensorData = decodeSensorData(rawData: data, format: format);
+
+    // TODO: Store data in database
+
+    return true;
   }
 
-  var format = _determineFileFormat(file.path);
-
-  if (format == null) {
-    return false;
-  }
-
-  var data = await file.readAsBytes();
-
-  var sensorData = decodeSensorData(rawData: data, format: format);
-
-  // TODO: Store data in database
-
-  return true;
-}
-
-SupportedFileFormat? _determineFileFormat(String filePath) {
-  var extension = path.extension(filePath);
-  switch (extension) {
-    case ".csv":
-      return SupportedFileFormat.csv;
-    case ".json":
-      return SupportedFileFormat.json;
-    case ".xml":
-      return SupportedFileFormat.xml;
-    case ".xlsx":
-      return SupportedFileFormat.xlsx;
-    default:
-      return null;
+  SupportedFileFormat? _determineFileFormat(String filePath) {
+    var extension = path.extension(filePath);
+    switch (extension) {
+      case ".csv":
+        return SupportedFileFormat.csv;
+      case ".json":
+        return SupportedFileFormat.json;
+      case ".xml":
+        return SupportedFileFormat.xml;
+      case ".xlsx":
+        return SupportedFileFormat.xlsx;
+      default:
+        return null;
+    }
   }
 }
