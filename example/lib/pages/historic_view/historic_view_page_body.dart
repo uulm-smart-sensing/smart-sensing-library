@@ -227,8 +227,10 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       tableRows.addAll(
         testData
             .map(
-              (sensorData) =>
-                  [_getTableRowFromSensorData(sensorData), paddingRow],
+              (sensorData) => [
+                _getTableRowFromSensorData(sensorData, numberOfDataPoints),
+                paddingRow
+              ],
             )
             .expand((row) => row)
             .toList(),
@@ -370,7 +372,10 @@ TableRow _getPaddingRow(SensorId sensorId) {
 }
 
 // ignore: unused_element
-TableRow _getTableRowFromSensorData(SensorViewData sensorData) {
+TableRow _getTableRowFromSensorData(
+  SensorViewData sensorData,
+  int numberOfDataPoints,
+) {
   var dateTime =
       DateTime.fromMillisecondsSinceEpoch(sensorData.timestamp.toInt());
   var formattedDate = formatDate(
@@ -391,6 +396,7 @@ TableRow _getTableRowFromSensorData(SensorViewData sensorData) {
         ),
       ),
       ...[sensorData.x, sensorData.y, sensorData.z]
+          .take(numberOfDataPoints)
           .map((value) => Center(child: Text(value.toString()))),
     ],
   );
