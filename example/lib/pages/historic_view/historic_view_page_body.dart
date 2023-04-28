@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -62,6 +63,20 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
 
   @override
   Widget build(BuildContext context) {
+    var maxRandomValue = 5;
+    var testData = List.generate(
+      10,
+      (index) => SensorViewData(
+        timestamp: DateTime.now()
+            .subtract(Duration(hours: index))
+            .millisecondsSinceEpoch
+            .toDouble(),
+        x: Random().nextDouble() * maxRandomValue - maxRandomValue / 2,
+        y: Random().nextDouble() * maxRandomValue - maxRandomValue / 2,
+        z: Random().nextDouble() * maxRandomValue - maxRandomValue / 2,
+      ),
+    );
+
     var divider = const VerticalDivider(thickness: 1);
 
     // Selection between different time intervals
@@ -281,7 +296,7 @@ Map<int, TableColumnWidth> _getColumnWidthsFromSensorId(SensorId sensorId) {
     case SensorId.orientation:
     case SensorId.linearAcceleration:
       columnWidths = {
-        0: const FlexColumnWidth(3),
+        0: const FlexColumnWidth(2.5),
         1: const FlexColumnWidth(),
         2: const FlexColumnWidth(),
         3: const FlexColumnWidth(),
@@ -404,7 +419,7 @@ TableRow _getTableRowFromSensorData(
       ),
       ...[sensorData.x, sensorData.y, sensorData.z]
           .take(numberOfDataPoints)
-          .map((value) => Center(child: Text(value.toString()))),
+          .map((value) => Center(child: Text(value?.toStringAsFixed(2) ?? ""))),
     ],
   );
 }
