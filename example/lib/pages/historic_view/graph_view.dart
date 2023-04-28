@@ -28,7 +28,7 @@ class _GraphView extends State<GraphView> {
           lineBarsData: chartData(widget.lineDataCount),
           minX: getMinX(widget.lineData),
           maxX: getMaxX(widget.lineData),
-          minY: getMinY(widget.lineData),
+          minY: getMinY(widget.lineData) - 1,
           maxY: getMaxY(widget.lineData) + 1,
         ),
       );
@@ -133,12 +133,16 @@ class _GraphView extends State<GraphView> {
     );
   }
 
-  SideTitles get leftTitles => SideTitles(
-        showTitles: true,
-        reservedSize: 40,
-        getTitlesWidget: leftTitleWidgets,
-        interval: getMaxY(widget.lineData) / 2.5,
-      );
+  SideTitles get leftTitles {
+    var maxY = getMaxY(widget.lineData);
+    var interval = ((maxY / 2).ceilToDouble() * 2).toDouble();
+    return SideTitles(
+      showTitles: true,
+      reservedSize: 40,
+      getTitlesWidget: leftTitleWidgets,
+      interval: interval,
+    );
+  }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
