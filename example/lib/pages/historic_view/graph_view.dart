@@ -37,13 +37,13 @@ class _GraphView extends State<GraphView> {
         ),
       );
 
-  /// Determines whether there will be 3 or 1 linechart depending on the parameter
-  List<LineChartBarData> chartData(int quantity) {
-    if (quantity != 3) {
-      return [lineChartBarDataX];
-    }
-    return [lineChartBarDataX, lineChartBarDataY, lineChartBarDataZ];
-  }
+  /// Determines whether there will be 3 or 1 linechart depending on the
+  /// parameter
+  List<LineChartBarData> chartData(int quantity) => [
+        lineChartBarDataX,
+        lineChartBarDataY,
+        lineChartBarDataZ
+      ].take(quantity).toList();
 
   LineChartBarData get lineChartBarDataX => _getLineChartBarData(
         Colors.red,

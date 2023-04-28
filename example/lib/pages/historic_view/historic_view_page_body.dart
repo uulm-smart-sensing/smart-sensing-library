@@ -62,9 +62,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    var divider = const VerticalDivider(
-      thickness: 1,
-    );
+    var divider = const VerticalDivider(thickness: 1);
 
     // Selection between different time intervals
     // When time interval is selected, new interval will be applied to table/graph
@@ -241,16 +239,26 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       children: tableRows,
     );
 
+    var visualizationSection = Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            visualizationTable,
+            selectedVisualization == _Visualization.graph
+                ? visualizationGraph
+                : const SizedBox.shrink()
+          ],
+        ),
+      ),
+    );
+
     return Column(
       children: [
         timeIntervalSelection,
         const SizedBox(height: 15),
         filterSelectionDropdown,
         const SizedBox(height: 20),
-        visualizationTable,
-        selectedVisualization == _Visualization.graph
-            ? visualizationGraph
-            : const SizedBox.shrink()
+        visualizationSection,
       ],
     );
   }
@@ -371,7 +379,6 @@ TableRow _getPaddingRow(SensorId sensorId) {
   );
 }
 
-// ignore: unused_element
 TableRow _getTableRowFromSensorData(
   SensorViewData sensorData,
   int numberOfDataPoints,
