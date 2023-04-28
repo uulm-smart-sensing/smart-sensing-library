@@ -109,17 +109,14 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
       appBar: AppBarWithHeader(titleText: "Historic View", header: header),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // The overlay contains the body and controls the tooltip which is
-              // displayed on top of the body
-              Stack(children: children),
-              const SizedBox(height: 20),
-              exampleSection,
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // The overlay contains the body and controls the tooltip which is
+            // displayed on top of the body
+            Flexible(child: Stack(children: children)),
+            exampleSection,
+          ],
         ),
       ),
     );
