@@ -48,3 +48,39 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
     },
   );
 }
+
+/// Decodes binary xml data into a list of [SensorData] points.
+List<SensorData> decodeXml(List<int> rawData) {
+  var xmlString = String.fromCharCodes(rawData);
+
+  var xmlDocument = XmlDocument.parse(xmlString);
+  var root = xmlDocument.rootElement;
+
+  var sensorDataElements = root.findElements("sensorData");
+
+  return sensorDataElements.map(_decodeSensorDataElement).toList();
+}
+
+SensorData _decodeSensorDataElement(XmlElement sensorDataElement) {
+  var data = sensorDataElement
+      .findAllElements("dataPoint")
+      .map((dataPointElement) => double.parse(dataPointElement.text))
+      .toList();
+
+  var unitString = sensorDataElement.getElement("unit")!.text;
+  var unit = Unit.values.firstWhere((element) => element.name == unitString);
+
+  var maxPrecision =
+      int.parse(sensorDataElement.getElement("maxPrecision")!.text);
+
+  var timestampInMicroseconds = int.parse(
+    sensorDataElement.getElement("timestampInMicroseconds")!.text,
+  );
+
+  return SensorData(
+    data: data,
+    unit: unit,
+    maxPrecision: maxPrecision,
+    timestampInMicroseconds: timestampInMicroseconds,
+  );
+}
