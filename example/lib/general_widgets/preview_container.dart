@@ -10,7 +10,7 @@ import '../unit_string_representation.dart';
 import 'brick_container.dart';
 
 class PreviewContainer extends StatefulWidget {
-  final SensorId id;
+  final SensorId sensorId;
   final EdgeInsets padding;
   final double mainDataFontSize;
   final double headLineFontSize;
@@ -19,7 +19,7 @@ class PreviewContainer extends StatefulWidget {
   const PreviewContainer({
     super.key,
     this.duration = const Duration(seconds: 5),
-    required this.id,
+    required this.sensorId,
     this.padding = const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
     this.mainDataFontSize = 15,
     this.headLineFontSize = 15,
@@ -46,7 +46,7 @@ class _PreviewContainerState extends State<PreviewContainer> {
       (t) async {
         var dataList = <SensorData>[];
         for (var i = 0; i < widget.filterOption.axisNumber; i++) {
-          var filter = await IOManager().getFilterFrom(widget.id);
+          var filter = await IOManager().getFilterFrom(widget.sensorId);
           dataList.addAll(
             _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
           );
@@ -67,7 +67,7 @@ class _PreviewContainerState extends State<PreviewContainer> {
             Align(
               alignment: Alignment.topRight,
               child: Icon(
-                sensorIdToIcon[widget.id],
+                sensorIdToIcon[widget.sensorId],
                 size: 15,
                 color: Colors.black,
               ),
@@ -78,7 +78,7 @@ class _PreviewContainerState extends State<PreviewContainer> {
               children: [
                 Flexible(
                   child: Text(
-                    formatPascalCase(widget.id.name),
+                    formatPascalCase(widget.sensorId.name),
                     style: TextStyle(
                       fontSize: widget.headLineFontSize,
                       color: Colors.black,
@@ -107,6 +107,7 @@ class _PreviewContainerState extends State<PreviewContainer> {
   @override
   Widget build(BuildContext context) => BrickContainer(
         width: 250,
+        color: sensorIdToColor[widget.sensorId],
         child: internalText(),
       );
 }
@@ -149,10 +150,10 @@ Widget _createDataText({
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          axisNumber == null
+          axisNumber != null
               ? Align(
                   child: Text(
-                    "Axis ${axisNumber!}",
+                    "Axis $axisNumber",
                     style: style,
                   ),
                 )
