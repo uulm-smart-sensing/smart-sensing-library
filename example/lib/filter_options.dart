@@ -1,16 +1,14 @@
-enum FilterOptions {
-  max(axisRequirement: true, shortText: "Max"),
-  min(axisRequirement: true, shortText: "Min"),
-  avg(axisRequirement: false, shortText: "Avg"),
-  sd(axisRequirement: false, shortText: "Standard dev.");
+enum FilterOption {
+  max(axisNumber: 3, shortText: "Max"),
+  min(axisNumber: 3, shortText: "Min"),
+  avg(axisNumber: 1, shortText: "Avg"),
+  sd(axisNumber: 1, shortText: "Standard dev.");
 
-
-
-  const FilterOptions({
-    required this.axisRequirement,
+  const FilterOption({
+    required this.axisNumber,
     required this.shortText,
   });
 
-  final bool axisRequirement;
+  final num axisNumber;
   final String shortText;
 }
