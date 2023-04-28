@@ -32,3 +32,31 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
   // encode excel file as string
   return excel.save()!;
 }
+
+/// Decodes binary xlsx data into a list of [SensorData] points.
+List<SensorData> decodeXlsx(List<int> rawData) {
+  var excel = Excel.decodeBytes(rawData);
+  var sheet = excel["sensor_data"];
+
+  return sheet.rows.skip(1).map(_decodeXlsxRow).toList();
+}
+
+SensorData _decodeXlsxRow(List<Data?> xlsxRow) {
+  var unitString = xlsxRow[1]!.value.toString();
+  var maxPrecisionString = xlsxRow[2]!.value.toString();
+  var timestampInMicrosecondsString = xlsxRow[3]!.value.toString();
+  var dataString = xlsxRow[4]!.value.toString();
+
+  var unit = Unit.values.firstWhere((element) => element.name == unitString);
+  var maxPrecision = int.parse(maxPrecisionString);
+  var timestampInMicroseconds = int.parse(timestampInMicrosecondsString);
+  var data =
+      dataString.split(", ").map(double.parse).whereType<double>().toList();
+
+  return SensorData(
+    unit: unit,
+    maxPrecision: maxPrecision,
+    timestampInMicroseconds: timestampInMicroseconds,
+    data: data,
+  );
+}
