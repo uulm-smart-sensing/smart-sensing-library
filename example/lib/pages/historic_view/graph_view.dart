@@ -18,7 +18,6 @@ class GraphView extends StatefulWidget {
 }
 
 class _GraphView extends State<GraphView> {
-
   @override
   Widget build(BuildContext context) => LineChart(
         LineChartData(
