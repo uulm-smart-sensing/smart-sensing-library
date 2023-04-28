@@ -33,3 +33,31 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
 
   return const ListToCsvConverter().convert(csvData).codeUnits;
 }
+
+/// Decodes binary csv data into a list of [SensorData] points.
+List<SensorData> decodeCsv(List<int> rawData) {
+  var csvString = String.fromCharCodes(rawData);
+  var lines = const CsvToListConverter().convert(csvString);
+
+  // TODO: Check whether header line is valid
+
+  return lines.skip(1).map(_decodeCsvLine).toList();
+}
+
+SensorData _decodeCsvLine(List<dynamic> line) {
+  var unitString = line[1];
+  var maxPrecision = line[2];
+  var timestampInMicroseconds = line[3];
+  var dataString = line[4];
+
+  var unit = Unit.values.firstWhere((element) => element.name == unitString);
+  var data =
+      dataString.split(", ").map(double.parse).whereType<double>().toList();
+
+  return SensorData(
+    unit: unit,
+    maxPrecision: maxPrecision,
+    timestampInMicroseconds: timestampInMicroseconds,
+    data: data,
+  );
+}
