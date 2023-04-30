@@ -67,6 +67,7 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
     var exampleSection = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
+        SizedBox(height: 10),
         Text(
           "Example",
           style: TextStyle(
@@ -92,6 +93,9 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
           TextSpan(
             text: "Show me the range of amount of datapoints a day from last "
                 "week",
+            style: TextStyle(
+              fontSize: 16,
+            ),
             children: <InlineSpan>[
               TextSpan(
                 text: "(= count(1 day).range())",
@@ -114,7 +118,7 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
           children: [
             // The overlay contains the body and controls the tooltip which is
             // displayed on top of the body
-            Stack(children: children),
+            Flexible(child: Stack(children: children)),
             exampleSection,
           ],
         ),
