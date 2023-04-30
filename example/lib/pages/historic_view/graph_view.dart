@@ -120,7 +120,7 @@ class _GraphView extends State<GraphView> {
     const style = TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.bold,
-      fontSize: 12,
+      fontSize: 14,
     );
     Widget text;
     var date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
@@ -148,7 +148,7 @@ class _GraphView extends State<GraphView> {
     const style = TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: 15,
     );
     var newValue = value.round();
     return SideTitleWidget(

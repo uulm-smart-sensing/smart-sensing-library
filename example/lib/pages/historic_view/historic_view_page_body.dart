@@ -207,17 +207,16 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     var paddingRow = _getPaddingRow(widget.sensorId);
 
     // Graph that visualize sensor data
-    var visualizationGraph = AspectRatio(
-      aspectRatio: 1.7,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 16,
-          right: 16,
-          bottom: 4,
-        ),
-        child: GraphView(
-          lineData: testData,
-          lineDataCount: numberOfDataPoints,
+    var visualizationGraph = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      width: MediaQuery.of(context).size.height,
+      child: AspectRatio(
+        aspectRatio: 1.7,
+        child: Center(
+          child: GraphView(
+            lineData: testData,
+            lineDataCount: numberOfDataPoints,
+          ),
         ),
       ),
     );
