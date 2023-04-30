@@ -19,15 +19,18 @@ class SensorViewData {
 }
 
 /// Determines the maximum of a unit in a list and returns the maximum.
-double getMaxY(List<SensorViewData> value) => value
-    .expand(
-      (element) => [
-        element.x,
-        element.y ?? double.negativeInfinity,
-        element.z ?? double.negativeInfinity
-      ],
-    )
-    .reduce(max);
+double getMaxY(List<SensorViewData> value) {
+  var maxY = value
+      .expand(
+        (element) => [
+          element.x,
+          element.y ?? double.negativeInfinity,
+          element.z ?? double.negativeInfinity
+        ],
+      )
+      .reduce(max);
+  return maxY < 0 ? 0 : maxY;
+}
 
 double getMinY(List<SensorViewData> value) {
   var minY = value
