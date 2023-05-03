@@ -357,5 +357,11 @@ class FilterTools {
   }
 
   ///Returns result of querry.
-  List<SensorData> result() => _buffer[0];
+  List<SensorData> result({Duration interval = Duration.zero}) {
+    if (interval == Duration.zero) return _buffer[0];
+
+    // select only values depending on the given [interval].
+    _splitBuffer(interval);
+    return _buffer.map((interValList) => interValList.first).toList();
+  }
 }
