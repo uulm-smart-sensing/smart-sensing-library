@@ -30,8 +30,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var deviceInformationWidget = const DeviceWidget();
-
   @override
   Widget build(BuildContext context) {
     var todayFormatted = formatDate(dateTime: DateTime.now());
@@ -117,7 +115,7 @@ class _HomePageState extends State<HomePage> {
     var devicesSectionBody = Container(
       alignment: Alignment.topLeft,
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: deviceInformationWidget,
+      child: DeviceWidget(key: UniqueKey()),
     );
 
     return Scaffold(
@@ -150,10 +148,7 @@ class _HomePageState extends State<HomePage> {
         .push(MaterialPageRoute(builder: (context) => page))
         .then(
           // Called when navigating back to the this home page
-          (value) => setState(() {
-            // rebuild device widget
-            deviceInformationWidget = const DeviceWidget();
-          }),
+          (value) => setState(() {}),
         );
   }
 }
