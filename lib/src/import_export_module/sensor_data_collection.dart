@@ -37,10 +37,16 @@ class SensorDataCollection {
 
   /// Creates a new [SensorDataCollection] from the passed [json] map.
   factory SensorDataCollection.fromJson(Map<String, dynamic> json) {
-    var sensorId =
-        SensorId.values.firstWhere((id) => id.name == json['sensorId']);
+    /// TODO: find default, if no valid sensorId is provided
+    var sensorId = SensorId.values.firstWhere(
+      (id) => id.name == json['sensorId'],
+      orElse: () => SensorId.accelerometer,
+    );
     var sensorData = <SensorData>[];
 
+    if (json['sensorData'] == null) {
+      return SensorDataCollection(sensorId, sensorData);
+    }
     for (var sensorDataJson in json['sensorData']) {
       sensorData.add(_formatSensorDataFromJson(sensorDataJson));
     }

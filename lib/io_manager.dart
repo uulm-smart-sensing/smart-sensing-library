@@ -435,15 +435,26 @@ class IOManager {
     if (format == null) return false;
 
     var data = await file.readAsBytes();
-    var sensorData = decodeSensorData(rawData: data, format: format);
+    var decodedData = decodeSensorData(rawData: data, format: format);
 
-    if (sensorData.isEmpty) return false;
+    if (decodedData.sensorData.isEmpty) return false;
 
-    // TODO: Store data in database
+    // create buffer, write data into buffer and then flush data into database
+    _bufferManager.addBuffer(decodedData.sensorId);
+    for (var element in decodedData.sensorData) {
+      await _processSensorData(element, decodedData.sensorId);
+    }
+    await flushToDatabase(decodedData.sensorId);
+    _bufferManager.removeBuffer(decodedData.sensorId);
 
     return true;
   }
 
+  /// Determines the file extension of the file located at [filePath] and
+  /// checks, whether this is a supported file format.
+  ///
+  /// If so, the correspondig [SupportedFileFormat] will be returned, otherwise
+  /// null.
   SupportedFileFormat? _determineFileFormat(String filePath) {
     var extension = path.extension(filePath);
     switch (extension) {

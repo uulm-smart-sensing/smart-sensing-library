@@ -1,6 +1,7 @@
 import 'package:excel/excel.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
+import '../sensor_data_collection.dart';
 import '../supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the corresponding xlsx string
@@ -34,11 +35,19 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Decodes binary xlsx data into a list of [SensorData] points.
-List<SensorData> decodeXlsx(List<int> rawData) {
+SensorDataCollection decodeXlsx(List<int> rawData) {
   var excel = Excel.decodeBytes(rawData);
   var sheet = excel["sensor_data"];
 
-  return sheet.rows.skip(1).map(_decodeXlsxRow).toList();
+  // get the sensorId of this data
+  var sensorIdAsString = sheet.rows.skip(1).first[0]!.value.toString();
+  var sensorId =
+      SensorId.values.firstWhere((element) => element.name == sensorIdAsString);
+
+  return SensorDataCollection(
+    sensorId,
+    sheet.rows.skip(1).map(_decodeXlsxRow).toList(),
+  );
 }
 
 SensorData _decodeXlsxRow(List<Data?> xlsxRow) {

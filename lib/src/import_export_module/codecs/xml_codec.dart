@@ -1,6 +1,7 @@
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:xml/xml.dart';
 
+import '../sensor_data_collection.dart';
 import '../supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the corresponding xml string
@@ -50,7 +51,7 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
 }
 
 /// Decodes binary xml data into a list of [SensorData] points.
-List<SensorData> decodeXml(List<int> rawData) {
+SensorDataCollection decodeXml(List<int> rawData) {
   var xmlString = String.fromCharCodes(rawData);
 
   var xmlDocument = XmlDocument.parse(xmlString);
@@ -58,7 +59,15 @@ List<SensorData> decodeXml(List<int> rawData) {
 
   var sensorDataElements = root.findElements("sensorData");
 
-  return sensorDataElements.map(_decodeSensorDataElement).toList();
+  // get the sensorId of this data
+  var sensorIdAsString = root.getElement("sensorId")!.text;
+  var sensorId =
+      SensorId.values.firstWhere((element) => element.name == sensorIdAsString);
+
+  return SensorDataCollection(
+    sensorId,
+    sensorDataElements.map(_decodeSensorDataElement).toList(),
+  );
 }
 
 SensorData _decodeSensorDataElement(XmlElement sensorDataElement) {
