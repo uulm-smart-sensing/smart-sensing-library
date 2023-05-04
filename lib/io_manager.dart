@@ -413,22 +413,31 @@ class IOManager {
     return true;
   }
 
+  /// Imports sensor data from a file (located at [path]).
+  ///
+  /// Therefore the corresponding file format is checked and if the format of
+  /// data is supported (so format is contained in [SupportedFileFormat.values])
+  /// the file is read and decoded.
+  /// The decoding is includes also a validation, so it will be checked, whether
+  /// data are correct formatted.
+  ///
+  /// Returns false, if
+  /// * there exist no file at [path]
+  /// * the file at [path] have not a supported file extension
+  /// * the list of [SensorData], which was decoded is empty, indicating, that
+  /// there was either no data to decode or an error occured.
   Future<bool> importSensorDataFromFile(String path) async {
     var file = File(path);
 
-    if (!await file.exists()) {
-      return false;
-    }
+    if (!await file.exists()) return false;
 
     var format = _determineFileFormat(file.path);
-
-    if (format == null) {
-      return false;
-    }
+    if (format == null) return false;
 
     var data = await file.readAsBytes();
-
     var sensorData = decodeSensorData(rawData: data, format: format);
+
+    if (sensorData.isEmpty) return false;
 
     // TODO: Store data in database
 
