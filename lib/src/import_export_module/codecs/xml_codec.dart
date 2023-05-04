@@ -1,6 +1,7 @@
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:xml/xml.dart';
 
+import '../../../sensor_data_dto.dart';
 import '../sensor_data_collection.dart';
 import '../supported_file_format.dart';
 
@@ -40,11 +41,11 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
             }
           },
         )
-        ..element('unit', nest: data.unit.name)
+        ..element('unit', nest: data.unit.toString())
         ..element('maxPrecision', nest: data.maxPrecision)
         ..element(
           'timestampInMicroseconds',
-          nest: data.timestampInMicroseconds,
+          nest: data.timestamp.microsecondsSinceEpoch,
         );
     },
   );
@@ -77,7 +78,7 @@ SensorData _decodeSensorDataElement(XmlElement sensorDataElement) {
       .toList();
 
   var unitString = sensorDataElement.getElement("unit")!.text;
-  var unit = Unit.values.firstWhere((element) => element.name == unitString);
+  var unit = SensorDataDTO.unitFromString(unitString);
 
   var maxPrecision =
       int.parse(sensorDataElement.getElement("maxPrecision")!.text);
@@ -90,6 +91,6 @@ SensorData _decodeSensorDataElement(XmlElement sensorDataElement) {
     data: data,
     unit: unit,
     maxPrecision: maxPrecision,
-    timestampInMicroseconds: timestampInMicroseconds,
+    timestamp: DateTime.fromMicrosecondsSinceEpoch(timestampInMicroseconds),
   );
 }

@@ -1,5 +1,7 @@
 import 'package:sensing_plugin/sensing_plugin.dart';
 
+import '../../sensor_data_dto.dart';
+
 /// A collection of [SensorData] of a sensor, which should be exported or was
 /// imported.
 ///
@@ -56,8 +58,7 @@ class SensorDataCollection {
 
   static SensorData _formatSensorDataFromJson(Map<String, dynamic> json) {
     var data = (json['data'] as List<dynamic>).whereType<double>().toList();
-    var unit =
-        Unit.values.firstWhere((element) => element.name == json['unit']);
+    var unit = SensorDataDTO.unitFromString(json['unit']);
     var maxPrecision = json['maxPrecision'] as int;
     var timestampInMicroseconds = json['timestampInMicroseconds'] as int;
 
@@ -65,7 +66,7 @@ class SensorDataCollection {
       data: data,
       unit: unit,
       maxPrecision: maxPrecision,
-      timestampInMicroseconds: timestampInMicroseconds,
+      timestamp: DateTime.fromMicrosecondsSinceEpoch(timestampInMicroseconds),
     );
   }
 }

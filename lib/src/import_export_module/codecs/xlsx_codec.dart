@@ -1,6 +1,7 @@
 import 'package:excel/excel.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
+import '../../../sensor_data_dto.dart';
 import '../sensor_data_collection.dart';
 import '../supported_file_format.dart';
 
@@ -22,9 +23,9 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
   for (var sensorData in data) {
     var sensorDataRow = [
       sensorId.name,
-      sensorData.unit.name,
+      sensorData.unit.toString(),
       sensorData.maxPrecision,
-      sensorData.timestampInMicroseconds,
+      sensorData.timestamp.microsecondsSinceEpoch,
       sensorData.data.join(", "),
     ];
     sheet.appendRow(sensorDataRow);
@@ -56,7 +57,7 @@ SensorData _decodeXlsxRow(List<Data?> xlsxRow) {
   var timestampInMicrosecondsString = xlsxRow[3]!.value.toString();
   var dataString = xlsxRow[4]!.value.toString();
 
-  var unit = Unit.values.firstWhere((element) => element.name == unitString);
+  var unit = SensorDataDTO.unitFromString(unitString);
   var maxPrecision = int.parse(maxPrecisionString);
   var timestampInMicroseconds = int.parse(timestampInMicrosecondsString);
   var data =
@@ -65,7 +66,7 @@ SensorData _decodeXlsxRow(List<Data?> xlsxRow) {
   return SensorData(
     unit: unit,
     maxPrecision: maxPrecision,
-    timestampInMicroseconds: timestampInMicroseconds,
+    timestamp: DateTime.fromMicrosecondsSinceEpoch(timestampInMicroseconds),
     data: data,
   );
 }

@@ -1,6 +1,7 @@
 import 'package:csv/csv.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
+import '../../../sensor_data_dto.dart';
 import '../sensor_data_collection.dart';
 import '../supported_file_format.dart';
 
@@ -24,9 +25,9 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
           .map(
             (sensorData) => [
               sensorId.name,
-              sensorData.unit.name,
+              sensorData.unit.toString(),
               sensorData.maxPrecision,
-              sensorData.timestampInMicroseconds,
+              sensorData.timestamp.microsecondsSinceEpoch,
               sensorData.data.join(", "),
             ],
           )
@@ -57,14 +58,14 @@ SensorData _decodeCsvLine(List<dynamic> line) {
   var timestampInMicroseconds = line[3];
   var dataString = line[4];
 
-  var unit = Unit.values.firstWhere((element) => element.name == unitString);
+  var unit = SensorDataDTO.unitFromString(unitString);
   var data =
       dataString.split(", ").map(double.parse).whereType<double>().toList();
 
   return SensorData(
     unit: unit,
     maxPrecision: maxPrecision,
-    timestampInMicroseconds: timestampInMicroseconds,
+    timestamp: DateTime.fromMicrosecondsSinceEpoch(timestampInMicroseconds),
     data: data,
   );
 }

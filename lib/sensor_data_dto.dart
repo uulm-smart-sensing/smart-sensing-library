@@ -53,7 +53,7 @@ class SensorDataDTO {
       maxPrecision: maxPrecision,
       timestamp: dateTime,
       data: (jsonDecode(data)['data'] as List<dynamic>).cast<double>(),
-      unit: _unitFromString(unit),
+      unit: unitFromString(unit),
     );
   }
 
@@ -79,7 +79,7 @@ class SensorDataDTO {
     ...Temperature.values.map(_unitToMapEntry),
   ]);
 
-  static Unit _unitFromString(String input) {
+  static Unit unitFromString(String input) {
     if (!_stringToUnit.containsKey(input)) {
       throw Exception("Could not parse unit type");
     }
