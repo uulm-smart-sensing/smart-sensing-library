@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_sensing_library/filter_tools.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../formatter/date_formatter.dart';
@@ -49,6 +50,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   late int numberOfDataPoints;
 
   var historicSensorData = <SensorViewData>[];
+  var areSensorDataExisting = false;
 
   @override
   void initState() {
@@ -254,7 +256,14 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            visualizationTable,
+            areSensorDataExisting
+                ? visualizationTable
+                : Center(
+                    child: Text(
+                      "No sensor data exist yet.",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
             selectedVisualization == _Visualization.graph
                 ? visualizationGraph
                 : const SizedBox.shrink()
@@ -277,7 +286,13 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   /// Requests the sensor data depending on the [selectedFilter] and the
   /// [selectedDuration] from the database using the library.
   Future<void> _getDataFromDatabase() async {
-    var requestedFiltertool = await IOManager().getFilterFrom(widget.sensorId);
+    FilterTools? requestedFiltertool;
+    try {
+      requestedFiltertool = await IOManager().getFilterFrom(widget.sensorId);
+      areSensorDataExisting = true;
+    } on Exception {
+      areSensorDataExisting = false;
+    }
     if (requestedFiltertool != null) {
       var sensorData = requestedFiltertool.result(interval: selectedDuration);
       var formattedSensorData = sensorData
