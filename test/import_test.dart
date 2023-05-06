@@ -9,6 +9,7 @@ import 'package:smart_sensing_library/src/import_export_module/codecs/json_codec
 import 'package:smart_sensing_library/src/import_export_module/codecs/xlsx_codec.dart';
 import 'package:smart_sensing_library/src/import_export_module/codecs/xml_codec.dart';
 import 'package:smart_sensing_library/src/import_export_module/export_tool.dart';
+import 'package:smart_sensing_library/src/import_export_module/import_result.dart';
 
 const exampleJsonFilePath = "test/example_import_files/exampleSensorData.json";
 const emptyExampleJsonFilePath =
@@ -90,37 +91,37 @@ Future<void> main() async {
     test("Import only work with valid filepath.", () async {
       var wasImportSuccessful =
           await ioManager.importSensorDataFromFile(wrongFilePath);
-      expect(wasImportSuccessful, isFalse);
+      expect(wasImportSuccessful, ImportResult.fileDoNotExist);
 
       var wasImportSuccessful2 = await ioManager.importSensorDataFromFile("./");
-      expect(wasImportSuccessful2, isFalse);
+      expect(wasImportSuccessful2, ImportResult.fileDoNotExist);
 
       expect(
         await ioManager.importSensorDataFromFile(exampleJsonFilePath),
-        isTrue,
+        ImportResult.success,
       );
       expect(
         await ioManager.importSensorDataFromFile(exampleCsvFilePath),
-        isTrue,
+        ImportResult.success,
       );
       expect(
         await ioManager.importSensorDataFromFile(exampleXlsxFilePath),
-        isTrue,
+        ImportResult.success,
       );
       expect(
         await ioManager.importSensorDataFromFile(exampleXmlFilePath),
-        isTrue,
+        ImportResult.success,
       );
     });
 
     test("Import only work files that contain data", () async {
       expect(
         await ioManager.importSensorDataFromFile(emptyExampleJsonFilePath),
-        isFalse,
+        ImportResult.noSensorDataExisting,
       );
       expect(
         await ioManager.importSensorDataFromFile(exampleJsonFilePath),
-        isTrue,
+        ImportResult.success,
       );
     });
   });
@@ -131,7 +132,7 @@ Future<void> main() async {
       () async {
         expect(
           await ioManager.importSensorDataFromFile(exampleJsonFilePath),
-          isTrue,
+          ImportResult.success,
         );
 
         expect(
@@ -156,7 +157,7 @@ Future<void> main() async {
       () async {
         expect(
           await ioManager.importSensorDataFromFile(exampleCsvFilePath),
-          isTrue,
+          ImportResult.success,
         );
 
         expect(
@@ -179,7 +180,7 @@ Future<void> main() async {
     test("XLSX decoding complies with requirements.", () async {
       expect(
         await ioManager.importSensorDataFromFile(exampleXlsxFilePath),
-        isTrue,
+        ImportResult.success,
       );
 
       expect(
@@ -203,7 +204,7 @@ Future<void> main() async {
       () async {
         expect(
           await ioManager.importSensorDataFromFile(exampleXmlFilePath),
-          isTrue,
+          ImportResult.success,
         );
 
         expect(

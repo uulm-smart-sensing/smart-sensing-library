@@ -21,8 +21,6 @@ List<int> formatData(
   SupportedFileFormat format,
 ) {
   if (data.isEmpty) {
-    /// TODO: check for a better way to handle the case, nothing exists for the
-    /// export and give the user a visual hint
     return "".codeUnits;
   }
 

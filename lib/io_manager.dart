@@ -11,7 +11,9 @@ import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
+import 'src/import_export_module/export_result.dart';
 import 'src/import_export_module/export_tool.dart';
+import 'src/import_export_module/import_result.dart';
 import 'src/import_export_module/import_tool.dart';
 import 'src/import_export_module/supported_file_format.dart';
 
@@ -377,21 +379,23 @@ class IOManager {
   /// true.
   /// TODO: add parameter to turn the spacing and line breaks of (= don't
   /// "beautify")
-  Future<bool> exportSensorDataToFile(
+  Future<ExportResult> exportSensorDataToFile(
     String directoryName,
     SupportedFileFormat format,
     List<SensorId> sensorIds, [
     DateTime? startTime,
     DateTime? endTime,
   ]) async {
-    if (!await Directory(directoryName).exists()) return false;
+    if (!await Directory(directoryName).exists()) {
+      return ExportResult.directoryDoNotExist;
+    }
 
     // Set the start and end time, if not specified by the user to
     // furthest back in time and latest time.
     startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
     endTime ??= DateTime.now();
 
-    if (sensorIds.isEmpty) return false;
+    if (sensorIds.isEmpty) return ExportResult.noSensorIdsProvided;
 
     // Fetch the data for all sensors, format them and save the result in a new
     // file.
@@ -405,12 +409,12 @@ class IOManager {
             {formattedData = formatData(sensor, sensorData, format)},
       );
 
-      if (formattedData.isEmpty) return false;
+      if (formattedData.isEmpty) return ExportResult.noSensorDataExisting;
 
       await writeFormattedData(fileName, format, formattedData);
     }
 
-    return true;
+    return ExportResult.success;
   }
 
   /// Imports sensor data from a file (located at [path]).
@@ -425,19 +429,21 @@ class IOManager {
   /// * there exist no file at [path]
   /// * the file at [path] have not a supported file extension
   /// * the list of [SensorData], which was decoded is empty, indicating, that
-  /// there was either no data to decode or an error occured.
-  Future<bool> importSensorDataFromFile(String path) async {
+  /// there was either no data to decode or an error occurred.
+  Future<ImportResult> importSensorDataFromFile(String path) async {
     var file = File(path);
 
-    if (!await file.exists()) return false;
+    if (!await file.exists()) return ImportResult.fileDoNotExist;
 
     var format = _determineFileFormat(file.path);
-    if (format == null) return false;
+    if (format == null) return ImportResult.fileFormatNotSupported;
 
     var data = await file.readAsBytes();
     var decodedData = decodeSensorData(rawData: data, format: format);
 
-    if (decodedData.sensorData.isEmpty) return false;
+    if (decodedData.sensorData.isEmpty) {
+      return ImportResult.noSensorDataExisting;
+    }
 
     // create buffer, write data into buffer and then flush data into database
     _bufferManager.addBuffer(decodedData.sensorId);
@@ -447,13 +453,13 @@ class IOManager {
     await flushToDatabase(decodedData.sensorId);
     _bufferManager.removeBuffer(decodedData.sensorId);
 
-    return true;
+    return ImportResult.success;
   }
 
   /// Determines the file extension of the file located at [filePath] and
   /// checks, whether this is a supported file format.
   ///
-  /// If so, the correspondig [SupportedFileFormat] will be returned, otherwise
+  /// If so, the corresponding [SupportedFileFormat] will be returned, otherwise
   /// null.
   SupportedFileFormat? _determineFileFormat(String filePath) {
     var extension = path.extension(filePath);
