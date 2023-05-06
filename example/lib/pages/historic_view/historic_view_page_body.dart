@@ -261,7 +261,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
                 : Center(
                     child: Text(
                       "No sensor data exist yet.",
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
             selectedVisualization == _Visualization.graph
