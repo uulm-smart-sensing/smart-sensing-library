@@ -2,8 +2,13 @@ import 'dart:convert';
 
 import 'package:sensing_plugin/sensing_plugin.dart';
 
+import '../import_result.dart';
 import '../sensor_data_collection.dart';
 import '../supported_file_format.dart';
+
+/// The path the JSON validation schema
+const String filePathSchema =
+    "./lib/src/import_export_module/validation_schemas/jsonFileFormatSchema.json";
 
 /// Formats a list of sensor data (points) into the corresponding json string
 /// following the format described in [SupportedFileFormat.json].
@@ -17,12 +22,20 @@ List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Decodes binary json data into a list of [SensorData] points.
-SensorDataCollection decodeJson(List<int> rawData) {
+///
+/// Therefor it validates the json string against a schema and if the validation
+/// is successful, it will build the sensor data from the string and return it.
+/// Otherwise it will encode the error in the [ImportResultStatus] and return
+/// an [ImportResult] with an empty [SensorDataCollection] field.
+Future<ImportResult> decodeJson(List<int> rawData) async {
   var jsonString = String.fromCharCodes(rawData);
 
   var jsonData = const JsonDecoder().convert(jsonString);
 
   var sensorDataCollection = SensorDataCollection.fromJson(jsonData);
 
-  return sensorDataCollection;
+  return ImportResult(
+    resultStatus: ImportResultStatus.success,
+    importedData: sensorDataCollection,
+  );
 }

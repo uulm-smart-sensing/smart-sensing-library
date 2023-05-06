@@ -1,5 +1,30 @@
-/// The result of the import of sensor data.
-enum ImportResult {
+import 'sensor_data_collection.dart';
+
+/// The result of the import.
+///
+/// The result is defined by the read resp. imported sensor data and a status,
+/// whether the import was successful or had any errors. If an error occurred
+/// while the import, the sensor data (stored in a [SensorDataCollection] object
+/// ) is null.
+class ImportResult {
+  /// The [ImportResultStatus] of the import, indicating the import was either
+  /// successful and had problems.
+  final ImportResultStatus resultStatus;
+
+  /// The imported data, if the import was possible
+  final SensorDataCollection? importedData;
+
+  /// Create a new [ImportResult] consisting of the [resultStatus] and the
+  /// (optionally) [importedData].
+  ///
+  /// The field [importedData] should only be set, if the status is
+  /// [ImportResultStatus.success]!
+  ImportResult({required this.resultStatus, this.importedData});
+}
+
+/// The status of the import of sensor data, so whether the import was
+/// successful or had any errors.
+enum ImportResultStatus {
   /// The import was successful and all sensor data were read.
   success(""),
 
@@ -14,10 +39,15 @@ enum ImportResult {
   /// There exist no data for the given sensors and the time interval
   noSensorDataExisting(
     "There exist no sensor data in the selected file, which can be imported",
+  ),
+
+  /// The formatting of the json file is not correct.
+  invalidJsonFormatting(
+    "The format of the json file do not conform the JSON schema",
   );
 
   /// Creates a new enum value for [ImportResult].
-  const ImportResult(this._errorMessage);
+  const ImportResultStatus(this._errorMessage);
 
   final String _errorMessage;
 

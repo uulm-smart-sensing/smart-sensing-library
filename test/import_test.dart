@@ -91,37 +91,37 @@ Future<void> main() async {
     test("Import only work with valid filepath.", () async {
       var wasImportSuccessful =
           await ioManager.importSensorDataFromFile(wrongFilePath);
-      expect(wasImportSuccessful, ImportResult.fileDoNotExist);
+      expect(wasImportSuccessful, ImportResultStatus.fileDoNotExist);
 
       var wasImportSuccessful2 = await ioManager.importSensorDataFromFile("./");
-      expect(wasImportSuccessful2, ImportResult.fileDoNotExist);
+      expect(wasImportSuccessful2, ImportResultStatus.fileDoNotExist);
 
       expect(
         await ioManager.importSensorDataFromFile(exampleJsonFilePath),
-        ImportResult.success,
+        ImportResultStatus.success,
       );
       expect(
         await ioManager.importSensorDataFromFile(exampleCsvFilePath),
-        ImportResult.success,
+        ImportResultStatus.success,
       );
       expect(
         await ioManager.importSensorDataFromFile(exampleXlsxFilePath),
-        ImportResult.success,
+        ImportResultStatus.success,
       );
       expect(
         await ioManager.importSensorDataFromFile(exampleXmlFilePath),
-        ImportResult.success,
+        ImportResultStatus.success,
       );
     });
 
     test("Import only work files that contain data", () async {
       expect(
         await ioManager.importSensorDataFromFile(emptyExampleJsonFilePath),
-        ImportResult.noSensorDataExisting,
+        ImportResultStatus.noSensorDataExisting,
       );
       expect(
         await ioManager.importSensorDataFromFile(exampleJsonFilePath),
-        ImportResult.success,
+        ImportResultStatus.success,
       );
     });
   });
@@ -132,7 +132,7 @@ Future<void> main() async {
       () async {
         expect(
           await ioManager.importSensorDataFromFile(exampleJsonFilePath),
-          ImportResult.success,
+          ImportResultStatus.success,
         );
 
         expect(
@@ -143,10 +143,16 @@ Future<void> main() async {
         );
 
         var importedSensorData =
-            decodeJson(File(exampleJsonFilePath).readAsBytesSync());
-        expect(importedSensorData.sensorId, SensorId.linearAcceleration);
+            await decodeJson(File(exampleJsonFilePath).readAsBytesSync());
         expect(
-          compareSensorDataLists(importedSensorData.sensorData, exampleData),
+          importedSensorData.importedData!.sensorId,
+          SensorId.linearAcceleration,
+        );
+        expect(
+          compareSensorDataLists(
+            importedSensorData.importedData!.sensorData,
+            exampleData,
+          ),
           isTrue,
         );
       },
@@ -157,7 +163,7 @@ Future<void> main() async {
       () async {
         expect(
           await ioManager.importSensorDataFromFile(exampleCsvFilePath),
-          ImportResult.success,
+          ImportResultStatus.success,
         );
 
         expect(
@@ -169,9 +175,15 @@ Future<void> main() async {
 
         var importedSensorData =
             decodeCsv(File(exampleCsvFilePath).readAsBytesSync());
-        expect(importedSensorData.sensorId, SensorId.linearAcceleration);
         expect(
-          compareSensorDataLists(importedSensorData.sensorData, exampleData),
+          importedSensorData.importedData!.sensorId,
+          SensorId.linearAcceleration,
+        );
+        expect(
+          compareSensorDataLists(
+            importedSensorData.importedData!.sensorData,
+            exampleData,
+          ),
           isTrue,
         );
       },
@@ -180,7 +192,7 @@ Future<void> main() async {
     test("XLSX decoding complies with requirements.", () async {
       expect(
         await ioManager.importSensorDataFromFile(exampleXlsxFilePath),
-        ImportResult.success,
+        ImportResultStatus.success,
       );
 
       expect(
@@ -192,9 +204,15 @@ Future<void> main() async {
 
       var importedSensorData =
           decodeXlsx(File(exampleXlsxFilePath).readAsBytesSync());
-      expect(importedSensorData.sensorId, SensorId.linearAcceleration);
       expect(
-        compareSensorDataLists(importedSensorData.sensorData, exampleData),
+        importedSensorData.importedData!.sensorId,
+        SensorId.linearAcceleration,
+      );
+      expect(
+        compareSensorDataLists(
+          importedSensorData.importedData!.sensorData,
+          exampleData,
+        ),
         isTrue,
       );
     });
@@ -204,7 +222,7 @@ Future<void> main() async {
       () async {
         expect(
           await ioManager.importSensorDataFromFile(exampleXmlFilePath),
-          ImportResult.success,
+          ImportResultStatus.success,
         );
 
         expect(
@@ -216,9 +234,15 @@ Future<void> main() async {
 
         var importedSensorData =
             decodeXml(File(exampleXmlFilePath).readAsBytesSync());
-        expect(importedSensorData.sensorId, SensorId.linearAcceleration);
         expect(
-          compareSensorDataLists(importedSensorData.sensorData, exampleData),
+          importedSensorData.importedData!.sensorId,
+          SensorId.linearAcceleration,
+        );
+        expect(
+          compareSensorDataLists(
+            importedSensorData.importedData!.sensorData,
+            exampleData,
+          ),
           isTrue,
         );
       },

@@ -2,6 +2,7 @@ import 'package:csv/csv.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import '../../../sensor_data_dto.dart';
+import '../import_result.dart';
 import '../sensor_data_collection.dart';
 import '../supported_file_format.dart';
 
@@ -37,7 +38,7 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Decodes binary csv data into a list of [SensorData] points.
-SensorDataCollection decodeCsv(List<int> rawData) {
+ImportResult decodeCsv(List<int> rawData) {
   var csvString = String.fromCharCodes(rawData);
   var lines = const CsvToListConverter().convert(csvString);
 
@@ -46,9 +47,12 @@ SensorDataCollection decodeCsv(List<int> rawData) {
   var sensorId =
       SensorId.values.firstWhere((element) => element.name == sensorIdAsString);
 
-  return SensorDataCollection(
-    sensorId,
-    lines.skip(1).map(_decodeCsvLine).toList(),
+  return ImportResult(
+    resultStatus: ImportResultStatus.success,
+    importedData: SensorDataCollection(
+      sensorId,
+      lines.skip(1).map(_decodeCsvLine).toList(),
+    ),
   );
 }
 

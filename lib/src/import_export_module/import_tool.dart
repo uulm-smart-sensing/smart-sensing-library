@@ -4,14 +4,14 @@ import 'codecs/csv_codec.dart';
 import 'codecs/json_codec.dart';
 import 'codecs/xlsx_codec.dart';
 import 'codecs/xml_codec.dart';
-import 'sensor_data_collection.dart';
+import 'import_result.dart';
 import 'supported_file_format.dart';
 
 /// Decodes a list of raw data into a list of [SensorData] objects.
-SensorDataCollection decodeSensorData({
+Future<ImportResult> decodeSensorData({
   required List<int> rawData,
   required SupportedFileFormat format,
-}) {
+}) async {
   switch (format) {
     case SupportedFileFormat.json:
       return decodeJson(rawData);

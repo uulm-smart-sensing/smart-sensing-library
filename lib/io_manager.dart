@@ -371,12 +371,15 @@ class IOManager {
   /// _<sensorId>\_<startTime>\_<endTime>_
   /// and be saved in the directory with the given [directoryName].
   ///
-  /// Returns false, if
-  /// * there exist no directory with the [directoryName]
-  /// * the list of [sensorIds] is empty, so actually no export is requested.
-  /// * there exist no data (for one of the sensors, eventually in the
-  /// time interval from [startTime] to [endTime]), otherwise it will return
-  /// true.
+  /// Returns
+  /// * [ExportResult.directoryDoNotExist] if there exist no directory with the
+  ///   [directoryName]
+  /// * [ExportResult.noSensorIdsProvided] if the list of [sensorIds] is empty,
+  ///   so actually no export is requested.
+  /// * [ExportResult.noSensorDataExisting] if there exist no data (for one of
+  ///   the sensors, eventually in the time interval from [startTime] to
+  ///   [endTime])
+  /// * otherwise [ExportResult.success]
   /// TODO: add parameter to turn the spacing and line breaks of (= don't
   /// "beautify")
   Future<ExportResult> exportSensorDataToFile(
@@ -425,24 +428,37 @@ class IOManager {
   /// The decoding is includes also a validation, so it will be checked, whether
   /// data are correct formatted.
   ///
-  /// Returns false, if
-  /// * there exist no file at [path]
-  /// * the file at [path] have not a supported file extension
-  /// * the list of [SensorData], which was decoded is empty, indicating, that
-  /// there was either no data to decode or an error occurred.
-  Future<ImportResult> importSensorDataFromFile(String path) async {
+  /// Returns
+  /// * [ImportResultStatus.fileDoNotExist] if there exist no file at [path]
+  /// * [ImportResultStatus.fileFormatNotSupported] if the file at [path] have
+  ///   not a supported file extension
+  /// * [ImportResultStatus.noSensorDataExisting] if the list of [SensorData],
+  ///   which was decoded is empty, indicating, that there was no data to decode
+  ///   in the file
+  /// * otherwise [ImportResultStatus.success].
+  Future<ImportResultStatus> importSensorDataFromFile(String path) async {
     var file = File(path);
 
-    if (!await file.exists()) return ImportResult.fileDoNotExist;
+    if (!await file.exists()) {
+      return ImportResultStatus.fileDoNotExist;
+    }
 
     var format = _determineFileFormat(file.path);
-    if (format == null) return ImportResult.fileFormatNotSupported;
+    if (format == null) {
+      return ImportResultStatus.fileFormatNotSupported;
+    }
 
     var data = await file.readAsBytes();
-    var decodedData = decodeSensorData(rawData: data, format: format);
+    var importResult = await decodeSensorData(rawData: data, format: format);
+
+    if (importResult.resultStatus != ImportResultStatus.success) {
+      return importResult.resultStatus;
+    }
+
+    var decodedData = importResult.importedData!;
 
     if (decodedData.sensorData.isEmpty) {
-      return ImportResult.noSensorDataExisting;
+      return ImportResultStatus.noSensorDataExisting;
     }
 
     // create buffer, write data into buffer and then flush data into database
@@ -453,7 +469,7 @@ class IOManager {
     await flushToDatabase(decodedData.sensorId);
     _bufferManager.removeBuffer(decodedData.sensorId);
 
-    return ImportResult.success;
+    return ImportResultStatus.success;
   }
 
   /// Determines the file extension of the file located at [filePath] and
