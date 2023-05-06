@@ -17,9 +17,15 @@ import 'visualization_selection_button.dart';
 
 enum _Filter {
   noFilter,
+  maximum,
+  minimum,
+  average,
+  median,
+  standardDeviation,
+  sum,
   count,
   mode,
-  min,
+  range,
 }
 
 enum _Visualization {
