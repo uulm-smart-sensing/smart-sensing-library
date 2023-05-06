@@ -305,6 +305,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
             ),
           )
           .toList();
+      if (!mounted) return;
       setState(() {
         historicSensorData = formattedSensorData;
       });
