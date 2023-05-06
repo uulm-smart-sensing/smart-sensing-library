@@ -44,6 +44,7 @@ class SelectionButton extends SizedBox {
                     ? TextDecoration.underline
                     : null,
                 color: isSelected ? selectedColor : null,
+                fontSize: 16,
               ),
             ),
           ),
