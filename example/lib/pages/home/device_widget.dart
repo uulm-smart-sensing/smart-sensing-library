@@ -124,7 +124,7 @@ Widget _getAvailableSensorsText() => FutureBuilder(
           );
         }
 
-        return const Text("Number of available sensors is being fetched ...");
+        return const Text("0");
       },
     );
 
@@ -153,6 +153,6 @@ Widget _getRunningSensorsText() => FutureBuilder(
           );
         }
 
-        return const Text("Number of running sensors is being fetched ...");
+        return const Text("0");
       },
     );

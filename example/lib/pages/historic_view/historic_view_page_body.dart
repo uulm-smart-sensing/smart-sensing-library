@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_sensing_library/filter_tools.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../formatter/date_formatter.dart';
@@ -44,10 +44,13 @@ class HistoricViewPageBody extends StatefulWidget {
 
 class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   _Filter? selectedFilter;
-  var selectedDuration = const Duration(minutes: 5);
+  var selectedDuration = const Duration(seconds: 30);
   var selectedVisualization = _Visualization.table;
   late Map<int, TableColumnWidth> columnWidths;
   late int numberOfDataPoints;
+
+  var historicSensorData = <SensorViewData>[];
+  var areSensorDataExisting = false;
 
   @override
   void initState() {
@@ -63,19 +66,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    var maxRandomValue = 5;
-    var testData = List.generate(
-      10,
-      (index) => SensorViewData(
-        timestamp: DateTime.now()
-            .subtract(Duration(hours: index))
-            .millisecondsSinceEpoch
-            .toDouble(),
-        x: Random().nextDouble() * maxRandomValue - maxRandomValue / 2,
-        y: Random().nextDouble() * maxRandomValue - maxRandomValue / 2,
-        z: Random().nextDouble() * maxRandomValue - maxRandomValue / 2,
-      ),
-    );
+    _getDataFromDatabase();
 
     var divider = const VerticalDivider(thickness: 1);
 
@@ -92,8 +83,33 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
             TimeSelectionButton(
               onPressed: () {
                 setState(() {
+                  selectedDuration = const Duration(seconds: 30);
+                });
+                _getDataFromDatabase();
+              },
+              title: "30 s",
+              isSelected:
+                  selectedDuration.compareTo(const Duration(seconds: 30)) == 0,
+            ),
+            divider,
+            TimeSelectionButton(
+              onPressed: () {
+                setState(() {
+                  selectedDuration = const Duration(minutes: 1);
+                });
+                _getDataFromDatabase();
+              },
+              title: "1 min",
+              isSelected:
+                  selectedDuration.compareTo(const Duration(minutes: 1)) == 0,
+            ),
+            divider,
+            TimeSelectionButton(
+              onPressed: () {
+                setState(() {
                   selectedDuration = const Duration(minutes: 5);
                 });
+                _getDataFromDatabase();
               },
               title: "5 min",
               isSelected:
@@ -103,45 +119,25 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
             TimeSelectionButton(
               onPressed: () {
                 setState(() {
+                  selectedDuration = const Duration(minutes: 30);
+                });
+                _getDataFromDatabase();
+              },
+              title: "30 min",
+              isSelected:
+                  selectedDuration.compareTo(const Duration(minutes: 30)) == 0,
+            ),
+            divider,
+            TimeSelectionButton(
+              onPressed: () {
+                setState(() {
                   selectedDuration = const Duration(hours: 1);
                 });
+                _getDataFromDatabase();
               },
               title: "1 h",
               isSelected:
                   selectedDuration.compareTo(const Duration(hours: 1)) == 0,
-            ),
-            divider,
-            TimeSelectionButton(
-              onPressed: () {
-                setState(() {
-                  selectedDuration = const Duration(hours: 12);
-                });
-              },
-              title: "12 h",
-              isSelected:
-                  selectedDuration.compareTo(const Duration(hours: 12)) == 0,
-            ),
-            divider,
-            TimeSelectionButton(
-              onPressed: () {
-                setState(() {
-                  selectedDuration = const Duration(days: 2);
-                });
-              },
-              title: "2 d",
-              isSelected:
-                  selectedDuration.compareTo(const Duration(days: 2)) == 0,
-            ),
-            divider,
-            TimeSelectionButton(
-              onPressed: () {
-                setState(() {
-                  selectedDuration = const Duration(days: 7);
-                });
-              },
-              title: "1 w",
-              isSelected:
-                  selectedDuration.compareTo(const Duration(days: 7)) == 0,
             ),
           ],
         ),
@@ -170,6 +166,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         setState(() {
           selectedFilter = newFilter;
         });
+        _getDataFromDatabase();
       },
     );
 
@@ -180,11 +177,13 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           VisualizationSelectionButton(
-            onPressed: () {
-              setState(() {
-                selectedVisualization = _Visualization.graph;
-              });
-            },
+            onPressed: historicSensorData.isNotEmpty
+                ? () {
+                    setState(() {
+                      selectedVisualization = _Visualization.graph;
+                    });
+                  }
+                : () => {},
             title: "Graph",
             isSelected: selectedVisualization == _Visualization.graph,
           ),
@@ -214,7 +213,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         aspectRatio: 1.7,
         child: Center(
           child: GraphView(
-            lineData: testData,
+            lineData: historicSensorData,
             lineDataCount: numberOfDataPoints,
           ),
         ),
@@ -237,7 +236,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     ];
     if (selectedVisualization == _Visualization.table) {
       tableRows.addAll(
-        testData
+        historicSensorData
             .map(
               (sensorData) => [
                 _getTableRowFromSensorData(sensorData, numberOfDataPoints),
@@ -257,7 +256,14 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            visualizationTable,
+            areSensorDataExisting
+                ? visualizationTable
+                : Center(
+                    child: Text(
+                      "No sensor data exist yet.",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
             selectedVisualization == _Visualization.graph
                 ? visualizationGraph
                 : const SizedBox.shrink()
@@ -275,6 +281,35 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         visualizationSection,
       ],
     );
+  }
+
+  /// Requests the sensor data depending on the [selectedFilter] and the
+  /// [selectedDuration] from the database using the library.
+  Future<void> _getDataFromDatabase() async {
+    FilterTools? requestedFiltertool;
+    try {
+      requestedFiltertool = await IOManager().getFilterFrom(widget.sensorId);
+      areSensorDataExisting = true;
+    } on Exception {
+      areSensorDataExisting = false;
+    }
+    if (requestedFiltertool != null) {
+      var sensorData = requestedFiltertool.result(interval: selectedDuration);
+      var formattedSensorData = sensorData
+          .map(
+            (dataEntry) => SensorViewData(
+              timestamp: dataEntry.timestampInMicroseconds / 1000.0,
+              x: dataEntry.data[0]!,
+              y: dataEntry.data[1],
+              z: dataEntry.data[2],
+            ),
+          )
+          .toList();
+      if (!mounted) return;
+      setState(() {
+        historicSensorData = formattedSensorData;
+      });
+    }
   }
 }
 

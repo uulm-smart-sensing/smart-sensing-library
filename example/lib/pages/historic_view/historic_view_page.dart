@@ -79,6 +79,9 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
           TextSpan(
             text: "Show me the (y-) minimum of all hourly averages from "
                 "yesterday ",
+            style: TextStyle(
+              fontSize: 16,
+            ),
             children: <InlineSpan>[
               TextSpan(
                 text: "(= avg(1 hour, axis = y).min())",
@@ -92,7 +95,7 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
         Text.rich(
           TextSpan(
             text: "Show me the range of amount of datapoints a day from last "
-                "week",
+                "week ",
             style: TextStyle(
               fontSize: 16,
             ),
