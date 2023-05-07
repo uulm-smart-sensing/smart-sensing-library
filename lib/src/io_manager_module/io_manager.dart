@@ -6,13 +6,13 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
+import '../import_export_module/export_tool.dart';
+import '../import_export_module/supported_file_format.dart';
+import '../storage_plugin_module/objectbox.g.dart';
+import '../storage_plugin_module/sensor_data_dto.dart';
 import 'buffer_manager.dart';
 import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
-import 'objectbox.g.dart';
-import 'sensor_data_dto.dart';
-import 'src/import_export_module/export_tool.dart';
-import 'src/import_export_module/supported_file_format.dart';
 
 /// This class is the core component of the smart sensing library.
 ///
