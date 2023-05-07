@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../formatter/text_formatter.dart';
-import '../theme.dart';
+import '../theme/theme.dart';
 
 /// This widget shows live sensor data for the given [SensorId].
 ///

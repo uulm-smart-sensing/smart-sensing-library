@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../favorite_provider.dart';
+import 'favorite_provider.dart';
 import 'sensor_toggle_list_element.dart';
 
 /// List element that wraps [SensorToggleListElement] in a [FutureBuilder].

@@ -3,7 +3,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/brick_container.dart';
 import '../../general_widgets/live_data_information.dart';
-import '../../theme.dart';
+import '../../theme/theme.dart';
 import '../historic_view/historic_view_page.dart';
 
 /// [Widget] that displays the latest data of a sensor with the passed

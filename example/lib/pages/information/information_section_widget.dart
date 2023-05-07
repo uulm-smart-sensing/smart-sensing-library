@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './information_page.dart';
-import '../../theme.dart';
+import '../../theme/theme.dart';
 
 /// Widget displaying a information section.
 ///

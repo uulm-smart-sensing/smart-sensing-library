@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../favorite_provider.dart';
 import '../../general_widgets/app_bar_with_header.dart';
 import '../../general_widgets/device_name_title.dart';
 import '../../general_widgets/stylized_container.dart';
 import 'checkbox_with_text.dart';
+import 'favorite_provider.dart';
 import 'sensor_search_page_sensor_list.dart';
 
 /// Page to (de-)activate sensor tracking, mark sensors as favorites, search

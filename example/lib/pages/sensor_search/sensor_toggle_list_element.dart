@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../sensor_default_target_unit.dart';
-import '../../theme.dart';
+import '../../sensor_unit_handler/sensor_default_target_unit.dart';
+import '../../theme/theme.dart';
 import 'sensor_toggle_element.dart';
 
 class SensorToggleListElement extends SensorToggleElement {

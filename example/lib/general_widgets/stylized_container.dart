@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme.dart';
+import '../theme/theme.dart';
 
 /// Same as [Container] but with with specified decoration:
 /// * Rounded border with radius 20

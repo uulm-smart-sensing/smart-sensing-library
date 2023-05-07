@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme.dart';
+import '../theme/theme.dart';
 import 'stylized_container.dart';
 
 /// A customized [DropdownButton] that is wrapped by a [StylizedContainer].

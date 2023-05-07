@@ -5,7 +5,7 @@ import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/section_header.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
-import '../../sensor_units.dart';
+import '../../sensor_unit_handler/sensor_units.dart';
 import 'precision_slider.dart';
 import 'time_interval_selection_button.dart';
 import 'unit_selection_button.dart';
