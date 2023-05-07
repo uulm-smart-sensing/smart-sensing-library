@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
-import 'package:smart_sensing_library/fake_sensor_manager.dart';
-import 'package:smart_sensing_library/io_manager.dart';
+import 'package:smart_sensing_library/src/io_manager_module/fake_sensor_manager.dart';
+import 'package:smart_sensing_library/src/io_manager_module/io_manager.dart';
 
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
