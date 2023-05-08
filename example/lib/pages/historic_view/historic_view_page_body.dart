@@ -300,14 +300,14 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       areSensorDataExisting = false;
     }
     if (requestedFiltertool != null) {
-      var sensorData = requestedFiltertool.result(interval: selectedDuration);
+      var sensorData = _getDataWithAppliedFilter(requestedFiltertool);
       var formattedSensorData = sensorData
           .map(
             (dataEntry) => SensorViewData(
               timestamp: dataEntry.timestamp.microsecondsSinceEpoch / 1000.0,
               x: dataEntry.data[0],
-              y: dataEntry.data[1],
-              z: dataEntry.data[2],
+              y: dataEntry.data.length > 1 ? dataEntry.data[1] : null,
+              z: dataEntry.data.length > 2 ? dataEntry.data[2] : null,
             ),
           )
           .toList();
@@ -317,149 +317,200 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       });
     }
   }
-}
 
-/// Create column widths according to the sensorId.
-///
-/// There are two types atm:
-/// * sensors with 3 axes
-/// * sensors with a single value
-///
-/// Both types need different column widths
-Map<int, TableColumnWidth> _getColumnWidthsFromSensorId(SensorId sensorId) {
-  Map<int, TableColumnWidth> columnWidths;
+  List<SensorData> _getDataWithAppliedFilter(FilterTools filterTool) {
+    if (selectedFilter == null) {
+      return filterTool.result(interval: selectedDuration);
+    }
 
-  switch (sensorId) {
-    case SensorId.accelerometer:
-    case SensorId.gyroscope:
-    case SensorId.magnetometer:
-    case SensorId.orientation:
-    case SensorId.linearAcceleration:
-      columnWidths = {
-        0: const FlexColumnWidth(2.5),
-        1: const FlexColumnWidth(),
-        2: const FlexColumnWidth(),
-        3: const FlexColumnWidth(),
-      };
-      break;
-    case SensorId.barometer:
-    case SensorId.thermometer:
-      columnWidths = {
-        0: const FlexColumnWidth(1.5),
-        1: const FlexColumnWidth(),
-      };
-      break;
+    switch (selectedFilter!) {
+      case _Filter.noFilter:
+        return filterTool.result(interval: selectedDuration);
+      case _Filter.maximum:
+        filterTool.getMax(interval: selectedDuration);
+        return filterTool.result();
+      case _Filter.minimum:
+        filterTool.getMin(interval: selectedDuration);
+        return filterTool.result();
+      case _Filter.average:
+        filterTool.getAvg(interval: selectedDuration);
+        return filterTool.result();
+      case _Filter.median:
+        filterTool.getMedian(interval: selectedDuration);
+        return filterTool.result();
+      case _Filter.standardDeviation:
+        filterTool.getSD(interval: selectedDuration);
+        return filterTool.result();
+      case _Filter.sum:
+        filterTool.getSum(interval: selectedDuration);
+        return filterTool.result();
+      case _Filter.count:
+
+        /// TODO: change this way
+        var result = filterTool.getCount(interval: selectedDuration);
+        return result
+            .map(
+              (amount) => SensorData(
+                data: [amount.roundToDouble()],
+                maxPrecision: filterTool.result().first.maxPrecision,
+                unit: filterTool.result().first.unit,
+                timestamp: DateTime.now(),
+              ),
+            )
+            .toList();
+      case _Filter.mode:
+        filterTool.getMode(interval: selectedDuration);
+        return filterTool.result();
+      case _Filter.range:
+        filterTool.getRange(interval: selectedDuration);
+        return filterTool.result();
+    }
   }
 
-  return columnWidths;
-}
+  /// Create column widths according to the sensorId.
+  ///
+  /// There are two types atm:
+  /// * sensors with 3 axes
+  /// * sensors with a single value
+  ///
+  /// Both types need different column widths
+  Map<int, TableColumnWidth> _getColumnWidthsFromSensorId(SensorId sensorId) {
+    Map<int, TableColumnWidth> columnWidths;
 
-/// Create table header elements according to the sensorId.
-///
-/// There are two types atm:
-/// * sensors with 3 axes
-/// * sensors with a single value
-///
-/// Both types need different table header elements
-List<Widget> _getTableElementsFromSensorId(
-  SensorId sensorId,
-  _Visualization selectedVisualization,
-) {
-  List<Text> elements;
+    switch (sensorId) {
+      case SensorId.accelerometer:
+      case SensorId.gyroscope:
+      case SensorId.magnetometer:
+      case SensorId.orientation:
+      case SensorId.linearAcceleration:
+        columnWidths = {
+          0: const FlexColumnWidth(2.5),
+          1: const FlexColumnWidth(),
+          2: const FlexColumnWidth(),
+          3: const FlexColumnWidth(),
+        };
+        break;
+      case SensorId.barometer:
+      case SensorId.thermometer:
+        columnWidths = {
+          0: const FlexColumnWidth(1.5),
+          1: const FlexColumnWidth(),
+        };
+        break;
+    }
 
-  switch (sensorId) {
-    case SensorId.accelerometer:
-    case SensorId.gyroscope:
-    case SensorId.magnetometer:
-    case SensorId.orientation:
-    case SensorId.linearAcceleration:
-      // Axes are colored when graph is selected
-      elements = [
-        Text(
-          "X",
-          style: TextStyle(
-            color: selectedVisualization == _Visualization.graph
-                ? Colors.red
-                : null,
-          ),
-        ),
-        Text(
-          "Y",
-          style: TextStyle(
-            color: selectedVisualization == _Visualization.graph
-                ? Colors.green
-                : null,
-          ),
-        ),
-        Text(
-          "Z",
-          style: TextStyle(
-            color: selectedVisualization == _Visualization.graph
-                ? Colors.lightBlue
-                : null,
-          ),
-        ),
-      ];
-      break;
-    case SensorId.barometer:
-    case SensorId.thermometer:
-      elements = [const Text("Value")];
-      break;
+    return columnWidths;
   }
 
-  return elements.map((element) => Center(child: element)).toList();
-}
+  /// Create table header elements according to the sensorId.
+  ///
+  /// There are two types atm:
+  /// * sensors with 3 axes
+  /// * sensors with a single value
+  ///
+  /// Both types need different table header elements
+  List<Widget> _getTableElementsFromSensorId(
+    SensorId sensorId,
+    _Visualization selectedVisualization,
+  ) {
+    List<Text> elements;
 
-TableRow _getPaddingRow(SensorId sensorId) {
-  int columns;
-  switch (sensorId) {
-    case SensorId.accelerometer:
-    case SensorId.gyroscope:
-    case SensorId.magnetometer:
-    case SensorId.orientation:
-    case SensorId.linearAcceleration:
-      columns = 4;
-      break;
-    case SensorId.barometer:
-    case SensorId.thermometer:
-      columns = 2;
-      break;
+    switch (sensorId) {
+      case SensorId.accelerometer:
+      case SensorId.gyroscope:
+      case SensorId.magnetometer:
+      case SensorId.orientation:
+      case SensorId.linearAcceleration:
+        // Axes are colored when graph is selected
+        elements = [
+          Text(
+            "X",
+            style: TextStyle(
+              color: selectedVisualization == _Visualization.graph
+                  ? Colors.red
+                  : null,
+            ),
+          ),
+          Text(
+            "Y",
+            style: TextStyle(
+              color: selectedVisualization == _Visualization.graph
+                  ? Colors.green
+                  : null,
+            ),
+          ),
+          Text(
+            "Z",
+            style: TextStyle(
+              color: selectedVisualization == _Visualization.graph
+                  ? Colors.lightBlue
+                  : null,
+            ),
+          ),
+        ];
+        break;
+      case SensorId.barometer:
+      case SensorId.thermometer:
+        elements = [const Text("Value")];
+        break;
+    }
+
+    return elements.map((element) => Center(child: element)).toList();
   }
 
-  return TableRow(
-    children: List.filled(
-      columns,
-      const SizedBox(height: 10),
-    ),
-  );
-}
+  TableRow _getPaddingRow(SensorId sensorId) {
+    int columns;
+    switch (sensorId) {
+      case SensorId.accelerometer:
+      case SensorId.gyroscope:
+      case SensorId.magnetometer:
+      case SensorId.orientation:
+      case SensorId.linearAcceleration:
+        columns = 4;
+        break;
+      case SensorId.barometer:
+      case SensorId.thermometer:
+        columns = 2;
+        break;
+    }
 
-TableRow _getTableRowFromSensorData(
-  SensorViewData sensorData,
-  int numberOfDataPoints,
-) {
-  var dateTime =
-      DateTime.fromMillisecondsSinceEpoch(sensorData.timestamp.toInt());
-  var formattedDate = formatDate(
-    dateTime: dateTime,
-    shortenYear: true,
-    extendWithDayName: true,
-  );
-  var formattedTime = DateFormat.Hms(Platform.localeName).format(dateTime);
-
-  return TableRow(
-    children: [
-      Center(
-        child: Column(
-          children: [
-            Text(formattedDate),
-            Text(formattedTime),
-          ],
-        ),
+    return TableRow(
+      children: List.filled(
+        columns,
+        const SizedBox(height: 10),
       ),
-      ...[sensorData.x, sensorData.y, sensorData.z]
-          .take(numberOfDataPoints)
-          .map((value) => Center(child: Text(value?.toStringAsFixed(2) ?? ""))),
-    ],
-  );
+    );
+  }
+
+  TableRow _getTableRowFromSensorData(
+    SensorViewData sensorData,
+    int numberOfDataPoints,
+  ) {
+    var dateTime =
+        DateTime.fromMillisecondsSinceEpoch(sensorData.timestamp.toInt());
+    var formattedDate = formatDate(
+      dateTime: dateTime,
+      shortenYear: true,
+      extendWithDayName: true,
+    );
+    var formattedTime = DateFormat.Hms(Platform.localeName).format(dateTime);
+
+    return TableRow(
+      children: [
+        Center(
+          child: Column(
+            children: [
+              Text(formattedDate),
+              Text(formattedTime),
+            ],
+          ),
+        ),
+        ...[sensorData.x, sensorData.y, sensorData.z]
+            .take(numberOfDataPoints)
+            .map(
+              (value) => Center(child: Text(value?.toStringAsFixed(2) ?? "")),
+            ),
+      ],
+    );
+  }
 }

@@ -44,7 +44,7 @@ class SensorInfoTooltip extends StatelessWidget {
       _getSensorInfoRow(
         "Time Interval (ms)",
         sensorInfo == null
-            ? "no data"
+            ? "No Data"
             : sensorInfo!.timeIntervalInMilliseconds.toString(),
       ),
     ];
