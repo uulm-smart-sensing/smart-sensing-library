@@ -128,16 +128,30 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
   }
 }
 
+/// Request the sensor information about the sensor with the [sensorId] and
+/// if the sensor is running and the information are known, a
+/// [SensorInfoTooltip] containing this data is returned.
 Widget _getTooltip(SensorId sensorId) => FutureBuilder(
-      future: IOManager().getSensorInfo(sensorId),
+      future: Future.sync(() async {
+        // Check, whether sensor is used.
+        var isSensorRunning = await IOManager()
+            .getUsedSensors()
+            .then((list) => list.contains(sensorId));
+        if (isSensorRunning) {
+          return IOManager().getSensorInfo(sensorId);
+        }
+        return null;
+      }),
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
-          return SensorInfoTooltip(
-            sensorId: sensorId,
-            sensorInfo: snapshot.data!,
-          );
+        // Check, if sensor info could be requested or if the sensor
+        // with the given id is not running.
+        if (!snapshot.hasData) {
+          // return const SizedBox.shrink();
+          /// TODO (for the reviewer): check, which method is best
+          return SensorInfoTooltip(sensorId: sensorId);
         }
 
-        return const SizedBox.shrink();
+        var sensorInfo = snapshot.data!;
+        return SensorInfoTooltip(sensorId: sensorId, sensorInfo: sensorInfo);
       },
     );
