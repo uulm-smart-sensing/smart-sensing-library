@@ -68,11 +68,11 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     } else {
       numberOfDataPoints = 3;
     }
+     _getDataFromDatabase();
   }
 
   @override
   Widget build(BuildContext context) {
-    _getDataFromDatabase();
 
     var divider = const VerticalDivider(thickness: 1);
 
