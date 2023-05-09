@@ -28,16 +28,16 @@ Future<void> main() async {
         ),
   );
 
-   test("Get max Buffer", () async {
+  test("Get max Buffer", () async {
     expect(IOManager().maxBufferSize, 1000);
   });
 
-   test("Set max Buffer", () async {
+  test("Set max Buffer", () async {
     IOManager().maxBufferSize = 10;
     expect(IOManager().maxBufferSize, 10);
   });
 
-   test("Set negativ max Buffer", () async {
+  test("Set negativ max Buffer", () async {
     IOManager().maxBufferSize = -10;
     expect(IOManager().maxBufferSize, 1);
   });

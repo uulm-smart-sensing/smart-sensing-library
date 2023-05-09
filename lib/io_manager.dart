@@ -41,8 +41,8 @@ class IOManager {
   ///Changes max buffer size of IOManager.
   ///
   ///If [size] is set <= 0, value 1 will be given.
-  set maxBufferSize(int size){
-    if(size <= 0){
+  set maxBufferSize(int size) {
+    if (size <= 0) {
       _maxBufferSize = 1;
       return;
     }
