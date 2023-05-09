@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/selection_button.dart';
-import '../../unit_string_representation.dart';
 
 /// [SelectionButton] to select the target unit of a sensors output data.
 ///
@@ -30,7 +29,7 @@ class UnitSelectionButton extends Expanded {
               child: SelectionButton(
                 height: 50,
                 onPressed: onPressed,
-                title: unitToUnitStringRepresentation[unit]!,
+                title: unit.toTextDisplay(isShort: true),
                 isSelected: isSelected,
                 underlineTitleWhenSelected: false,
               ),

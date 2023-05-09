@@ -9,6 +9,7 @@
 /// sensing library. But the files do not only need to match the filename
 /// extension but also the correct syntax (see the documentation of the
 /// particular file formats for more detailed information).
+/// TODO: update this to reflect changes from new unit system
 enum SupportedFileFormat {
   /// Using the `json` file format means, the sensor data need to be / are
   /// encoded in the following way (example values!):

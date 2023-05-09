@@ -30,14 +30,14 @@ Future<void> main() async {
     SensorData(
       data: [1.4, 0, 9.81],
       maxPrecision: 5,
-      unit: Unit.metersPerSecondSquared,
-      timestampInMicroseconds: 1681561948,
+      unit: Acceleration.meterPerSecondSquared,
+      timestamp: DateTime.fromMicrosecondsSinceEpoch(1681561948),
     ),
     SensorData(
       data: [0.2, 0, 1],
       maxPrecision: 5,
-      unit: Unit.gravitationalForce,
-      timestampInMicroseconds: 1681562008,
+      unit: Acceleration.gravity,
+      timestamp: DateTime.fromMicrosecondsSinceEpoch(1681562008),
     ),
   ];
 
@@ -55,7 +55,7 @@ Future<void> main() async {
     await ioManager.addSensor(
       id: SensorId.accelerometer,
       config: const SensorConfig(
-        targetUnit: Unit.metersPerSecondSquared,
+        targetUnit: Acceleration.meterPerSecondSquared,
         targetPrecision: 2,
         timeInterval: Duration(milliseconds: 1000),
       ),
@@ -172,7 +172,7 @@ Future<void> main() async {
       );
       expect(
         sensorDataCollection.toJson()["sensorData"][1]["unit"],
-        equals("gravitationalForce"),
+        equals("Acceleration.gravity"),
       );
     });
   });
@@ -265,7 +265,7 @@ Future<void> main() async {
               .map((e) => e!.value)
               .toList()
               .toString(),
-          "[sensorId, unit, maxPrecision, timestampInMicroseconds, data]",
+          "[sensorId, unit, maxPrecision, timestamp, data]",
         );
         expect(
           expectedData.tables["sensor_data"]!
@@ -273,8 +273,7 @@ Future<void> main() async {
               .map((e) => e!.value)
               .toList()
               .toString(),
-          "[linearAcceleration, metersPerSecondSquared, 5, "
-          "1681561948, 1.4, 0.0, 9.81]",
+          '''[linearAcceleration, Acceleration.meterPerSecondSquared, 5, ${DateTime.fromMicrosecondsSinceEpoch(1681561948)}, 1.4, 0.0, 9.81]''',
         );
         expect(
           expectedData.tables["sensor_data"]!
@@ -282,8 +281,7 @@ Future<void> main() async {
               .map((e) => e!.value)
               .toList()
               .toString(),
-          "[linearAcceleration, gravitationalForce, 5, "
-          "1681562008, 0.2, 0.0, 1.0]",
+          '''[linearAcceleration, Acceleration.gravity, 5, ${DateTime.fromMicrosecondsSinceEpoch(1681562008)}, 0.2, 0.0, 1.0]''',
         );
       },
     );

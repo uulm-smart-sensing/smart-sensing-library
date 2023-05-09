@@ -1,12 +1,22 @@
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 /// A [Unit] assigned for each [SensorId].
-const sensorIdToDefaultTargetUnit = {
-  SensorId.accelerometer: Unit.metersPerSecondSquared,
-  SensorId.gyroscope: Unit.degreesPerSecond,
-  SensorId.magnetometer: Unit.microTeslas,
-  SensorId.orientation: Unit.degrees,
-  SensorId.linearAcceleration: Unit.metersPerSecondSquared,
-  SensorId.barometer: Unit.hectoPascal,
-  SensorId.thermometer: Unit.celsius,
+const sensorIdToDefaultTargetUnit = <SensorId, Unit>{
+  SensorId.accelerometer: Acceleration.meterPerSecondSquared,
+  SensorId.gyroscope: AngularVelocity.degreesPerSecond,
+  SensorId.magnetometer: MagneticFluxDensity.microTesla,
+  SensorId.orientation: Angle.degrees,
+  SensorId.linearAcceleration: Acceleration.meterPerSecondSquared,
+  SensorId.barometer: Pressure.hectoPascal,
+  SensorId.thermometer: Temperature.celsius,
+};
+
+const sensorIdToUnitCategory = <SensorId, List<Unit>>{
+  SensorId.accelerometer: Acceleration.values,
+  SensorId.gyroscope: AngularVelocity.values,
+  SensorId.magnetometer: MagneticFluxDensity.values,
+  SensorId.orientation: Angle.values,
+  SensorId.linearAcceleration: Acceleration.values,
+  SensorId.barometer: Pressure.values,
+  SensorId.thermometer: Temperature.values
 };

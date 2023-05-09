@@ -61,8 +61,8 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
     "sensorId",
     "unit",
     "maxPrecision",
-    "timestampInMicroseconds",
-    "data"
+    "timestamp",
+    "data",
   ];
 
   var csvData = <List<dynamic>>[headerRow] +
@@ -70,9 +70,9 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
           .map(
             (sensorData) => [
               sensorId.name,
-              sensorData.unit.name,
+              sensorData.unit.toString(),
               sensorData.maxPrecision,
-              sensorData.timestampInMicroseconds,
+              sensorData.timestamp.microsecondsSinceEpoch,
               sensorData.data.join(", "),
             ],
           )
@@ -92,16 +92,16 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
       "sensorId",
       "unit",
       "maxPrecision",
-      "timestampInMicroseconds",
+      "timestamp",
       "data",
     ]);
 
   for (var sensorData in data) {
     var sensorDataRow = [
       sensorId.name,
-      sensorData.unit.name,
+      sensorData.unit.toString(),
       sensorData.maxPrecision,
-      sensorData.timestampInMicroseconds,
+      sensorData.timestamp.microsecondsSinceEpoch,
       sensorData.data.join(", "),
     ];
     sheet.appendRow(sensorDataRow);
@@ -147,11 +147,11 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
             }
           },
         )
-        ..element('unit', nest: data.unit.name)
+        ..element('unit', nest: data.unit.toString())
         ..element('maxPrecision', nest: data.maxPrecision)
         ..element(
-          'timestampInMicroseconds',
-          nest: data.timestampInMicroseconds,
+          'timestamp',
+          nest: data.timestamp.microsecondsSinceEpoch,
         );
     },
   );
