@@ -30,10 +30,24 @@ class IOManager {
   late final Store? _objectStore;
   late final SensorManager _sensorManager;
 
-  final int _maxBufferSize = 10000;
+  int _maxBufferSize = 1000;
   final HashMap _subscriptions = HashMap<SensorId, StreamSubscription?>();
 
   var _sensorThreadLock = false;
+
+  ///The max buffer size, that the IOManager saves per sensor.
+  int get maxBufferSize => _maxBufferSize;
+
+  ///Changes max buffer size of IOManager.
+  ///
+  ///If [size] is set <= 0, value 1 will be given.
+  set maxBufferSize(int size){
+    if(size <= 0){
+      _maxBufferSize = 1;
+      return;
+    }
+    _maxBufferSize = size;
+  }
 
   ///Returns instance of IOManager
   factory IOManager() => _instance;
