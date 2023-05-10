@@ -33,7 +33,7 @@ Future<void> main() async {
     expect(IOManager().maxBufferSize, 10);
   });
 
-  test("Set negativ max Buffer", () async {
+  test("Set negative max Buffer", () async {
     IOManager().maxBufferSize = -10;
     expect(IOManager().maxBufferSize, 1);
   });
