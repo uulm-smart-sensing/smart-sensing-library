@@ -11,6 +11,7 @@ const sensorIdToDefaultTargetUnit = <SensorId, Unit>{
   SensorId.thermometer: Temperature.celsius,
 };
 
+/// A list of all valid [Unit]s for a given [SensorId].
 const sensorIdToUnitCategory = <SensorId, List<Unit>>{
   SensorId.accelerometer: Acceleration.values,
   SensorId.gyroscope: AngularVelocity.values,
