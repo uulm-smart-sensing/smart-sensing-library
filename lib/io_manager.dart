@@ -14,6 +14,21 @@ import 'sensor_data_dto.dart';
 import 'src/import_export_module/export_tool.dart';
 import 'src/import_export_module/supported_file_format.dart';
 
+///
+enum ExportResult {
+  ///
+  succesful,
+
+  ///
+  directoryNotExists,
+
+  ///
+  sensorIdEmpty,
+
+  ///
+  formattedDataEmpty,
+}
+
 /// This class is the core component of the smart sensing library.
 ///
 /// The IOManager is the main access point for getting and saving sensor data.
@@ -376,21 +391,23 @@ class IOManager {
   /// true.
   /// TODO: add parameter to turn the spacing and line breaks of (= don't
   /// "beautify")
-  Future<bool> exportSensorDataToFile(
+  Future<ExportResult> exportSensorDataToFile(
     String directoryName,
     SupportedFileFormat format,
     List<SensorId> sensorIds, [
     DateTime? startTime,
     DateTime? endTime,
   ]) async {
-    if (!await Directory(directoryName).exists()) return false;
+    if (!await Directory(directoryName).exists()) {
+      return ExportResult.directoryNotExists;
+    }
 
     // Set the start and end time, if not specified by the user to
     // furthest back in time and latest time.
     startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
     endTime ??= DateTime.now();
 
-    if (sensorIds.isEmpty) return false;
+    if (sensorIds.isEmpty) return ExportResult.sensorIdEmpty;
 
     // Fetch the data for all sensors, format them and save the result in a new
     // file.
@@ -404,11 +421,11 @@ class IOManager {
             {formattedData = formatData(sensor, sensorData, format)},
       );
 
-      if (formattedData.isEmpty) return false;
+      if (formattedData.isEmpty) return ExportResult.formattedDataEmpty;
 
       await writeFormattedData(fileName, format, formattedData);
     }
 
-    return true;
+    return ExportResult.succesful;
   }
 }
