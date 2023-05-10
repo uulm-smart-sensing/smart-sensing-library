@@ -28,6 +28,16 @@ Future<void> main() async {
         ),
   );
 
+  test("Get and set max Buffer", () async {
+    IOManager().maxBufferSize = 10;
+    expect(IOManager().maxBufferSize, 10);
+  });
+
+  test("Set negative max Buffer", () async {
+    IOManager().maxBufferSize = -10;
+    expect(IOManager().maxBufferSize, 1);
+  });
+
   ///The fakeSensorManager cancels the Stream after 10 seconds,
   ///so after 15 seconds all data is saved in the database.
   test("Add sensor and get from database", () async {
