@@ -29,7 +29,7 @@ class SensorInfoTooltip extends StatelessWidget {
       _getSensorInfoRow("Sensor ID", formatPascalCase(sensorId.name)),
       _getSensorInfoRow(
         "Unit",
-        formatPascalCase(sensorInfo.unit.toTextDisplay(isShort: true)),
+        formatPascalCase(sensorInfo.unit.toTextDisplay(isShort: false)),
       ),
       _getSensorInfoRow("Accuracy", formatPascalCase(sensorInfo.accuracy.name)),
       _getSensorInfoRow(
