@@ -1,6 +1,6 @@
 /// The result of the export of sensor data.
 enum ExportResult {
-  /// The export was sucessful and all required sensor data were saved.
+  /// The export was successful and all required sensor data were saved.
   success(""),
 
   /// The provided directory for the export do not exist.
