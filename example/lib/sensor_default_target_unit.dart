@@ -1,6 +1,6 @@
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-/// A [Unit] assigned for each [SensorId].
+/// A default [Unit] assigned for each [SensorId].
 const sensorIdToDefaultTargetUnit = <SensorId, Unit>{
   SensorId.accelerometer: Acceleration.meterPerSecondSquared,
   SensorId.gyroscope: AngularVelocity.degreesPerSecond,
