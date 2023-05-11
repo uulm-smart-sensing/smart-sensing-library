@@ -60,7 +60,6 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
 
   @override
   void initState() {
-    columnWidths = _getColumnWidthsFromSensorId(widget.sensorId);
     super.initState();
     if (widget.sensorId == SensorId.thermometer ||
         widget.sensorId == SensorId.barometer) {
@@ -68,11 +67,12 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     } else {
       numberOfDataPoints = 3;
     }
-     _getDataFromDatabase();
+    _getDataFromDatabase();
   }
 
   @override
   Widget build(BuildContext context) {
+    columnWidths = _getColumnWidthsFromSensorId(widget.sensorId);
 
     var divider = const VerticalDivider(thickness: 1);
 
@@ -220,7 +220,8 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         child: Center(
           child: GraphView(
             lineData: historicSensorData,
-            lineDataCount: numberOfDataPoints,
+            lineDataCount:
+                selectedFilter == _Filter.count ? 1 : numberOfDataPoints,
           ),
         ),
       ),
@@ -245,7 +246,10 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         historicSensorData
             .map(
               (sensorData) => [
-                _getTableRowFromSensorData(sensorData, numberOfDataPoints),
+                _getTableRowFromSensorData(
+                  sensorData,
+                  selectedFilter == _Filter.count ? 1 : numberOfDataPoints,
+                ),
                 paddingRow
               ],
             )
@@ -345,19 +349,24 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         filterTool.getSum(interval: selectedDuration);
         return filterTool.result();
       case _Filter.count:
-
-        /// TODO: change this way
         var result = filterTool.getCount(interval: selectedDuration);
-        return result
-            .map(
-              (amount) => SensorData(
-                data: [amount.roundToDouble()],
-                maxPrecision: filterTool.result().first.maxPrecision,
-                unit: filterTool.result().first.unit,
-                timestamp: DateTime.now(),
+        var countValues = <SensorData>[];
+        result.asMap().forEach(
+              (index, value) => countValues.add(
+                SensorData(
+                  data: [value.roundToDouble()],
+                  maxPrecision: filterTool.result().first.maxPrecision,
+                  unit: filterTool.result().first.unit,
+                  timestamp: DateTime.now().subtract(
+                    Duration(
+                      microseconds: selectedDuration.inMicroseconds *
+                          (result.length - index),
+                    ),
+                  ),
+                ),
               ),
-            )
-            .toList();
+            );
+        return countValues;
       case _Filter.mode:
         filterTool.getMode(interval: selectedDuration);
         return filterTool.result();
@@ -377,6 +386,12 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   Map<int, TableColumnWidth> _getColumnWidthsFromSensorId(SensorId sensorId) {
     Map<int, TableColumnWidth> columnWidths;
 
+    if (selectedFilter == _Filter.count) {
+      return {
+        0: const FlexColumnWidth(1.5),
+        1: const FlexColumnWidth(),
+      };
+    }
     switch (sensorId) {
       case SensorId.accelerometer:
       case SensorId.gyroscope:
@@ -415,6 +430,15 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   ) {
     List<Text> elements;
 
+    if (selectedFilter == _Filter.count) {
+      return [
+        const Center(
+          child: Text(
+            "Count",
+          ),
+        ),
+      ];
+    }
     switch (sensorId) {
       case SensorId.accelerometer:
       case SensorId.gyroscope:
@@ -460,18 +484,23 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
 
   TableRow _getPaddingRow(SensorId sensorId) {
     int columns;
-    switch (sensorId) {
-      case SensorId.accelerometer:
-      case SensorId.gyroscope:
-      case SensorId.magnetometer:
-      case SensorId.orientation:
-      case SensorId.linearAcceleration:
-        columns = 4;
-        break;
-      case SensorId.barometer:
-      case SensorId.thermometer:
-        columns = 2;
-        break;
+
+    if (selectedFilter == _Filter.count) {
+      columns = 2;
+    } else {
+      switch (sensorId) {
+        case SensorId.accelerometer:
+        case SensorId.gyroscope:
+        case SensorId.magnetometer:
+        case SensorId.orientation:
+        case SensorId.linearAcceleration:
+          columns = 4;
+          break;
+        case SensorId.barometer:
+        case SensorId.thermometer:
+          columns = 2;
+          break;
+      }
     }
 
     return TableRow(

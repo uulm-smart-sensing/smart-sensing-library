@@ -48,12 +48,16 @@ class _GraphView extends State<GraphView> {
 
   LineChartBarData get lineChartBarDataY => _getLineChartBarData(
         Colors.green,
-        widget.lineData.map((data) => FlSpot(data.timestamp, data.y!)).toList(),
+        widget.lineData
+            .map((data) => FlSpot(data.timestamp, data.y ?? 0))
+            .toList(),
       );
 
   LineChartBarData get lineChartBarDataZ => _getLineChartBarData(
         Colors.blue,
-        widget.lineData.map((data) => FlSpot(data.timestamp, data.z!)).toList(),
+        widget.lineData
+            .map((data) => FlSpot(data.timestamp, data.z ?? 0))
+            .toList(),
       );
   FlGridData get gridData => FlGridData(show: false);
 
