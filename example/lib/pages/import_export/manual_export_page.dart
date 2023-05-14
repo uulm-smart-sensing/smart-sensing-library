@@ -1,10 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_sensing_library/io_manager.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/custom_datetime_picker_widget.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
+import 'import_export_dialog.dart';
 import 'import_export_page.dart';
 
 /// Page for manually set the timeinterval for exporting sensor data the smart
@@ -101,7 +103,13 @@ class _ManualExportPageState extends State<ManualExportPage> {
                 child: _isSelectedTimeIntervalValid()
                     ? CustomTextButton(
                         text: "Export",
-                        onPressed: _exportWithCustomTimeInterval,
+                        onPressed: () async {
+                          await _exportWithCustomTimeInterval();
+
+                          if (!mounted) return;
+                          showExportDialog(
+                              context, "Export Results", exportResults);
+                        },
                       )
                     : const Text(
                         "End time must be after start time and times can not"
@@ -157,10 +165,13 @@ class _ManualExportPageState extends State<ManualExportPage> {
   Future<void> _exportWithCustomTimeInterval() async {
     var selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
-    if (selectedDirectory == null) return;
+    if (selectedDirectory == null) {
+      exportResults.add(ExportResult.notselectedDirectory);
+      return;
+    }
 
     if (widget.exportForAllSensorIds) {
-      await IOManager().exportSensorDataToFile(
+      exportResults = await IOManager().exportSensorDataToFile(
         selectedDirectory,
         widget.selectedFileFormat,
         SensorId.values,
@@ -168,7 +179,7 @@ class _ManualExportPageState extends State<ManualExportPage> {
         endDatetime,
       );
     } else {
-      await IOManager().exportSensorDataToFile(
+      exportResults = await IOManager().exportSensorDataToFile(
         selectedDirectory,
         widget.selectedFileFormat,
         [widget.selectedSensorIdForExport],
