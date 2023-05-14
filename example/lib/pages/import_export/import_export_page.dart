@@ -1,10 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_sensing_library/io_manager.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../settings/settings_page.dart';
+import 'import_export_dialog.dart';
 import 'import_export_section_widget.dart';
 import 'manual_export_page.dart';
 
@@ -114,17 +116,20 @@ class _ImportExportPageState extends State<ImportExportPage> {
   Future<void> _exportData() async {
     var selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
-    if (selectedDirectory == null) return;
+    if (selectedDirectory == null) {
+      exportResults.add(ExportResult.notselectedDirectory);
+      return;
+    }
 
     if (_exportForAllSensorIds) {
-      await IOManager().exportSensorDataToFile(
+      exportResults = await IOManager().exportSensorDataToFile(
         selectedDirectory,
         _selectedFileFormat!,
         SensorId.values,
       );
     } else if (_selectedSensorIdForExport != null &&
         _selectedFileFormat != null) {
-      await IOManager().exportSensorDataToFile(
+      exportResults = await IOManager().exportSensorDataToFile(
         selectedDirectory,
         _selectedFileFormat!,
         [_selectedSensorIdForExport!],
@@ -178,7 +183,13 @@ class _ImportExportPageState extends State<ImportExportPage> {
         SizedBox(
           width: 120,
           child: CustomTextButton(
-            onPressed: _allNeededValuesForExportSet() ? _exportData : null,
+            onPressed: () async {
+              if (_allNeededValuesForExportSet()) {
+                await _exportData();
+                if (!mounted) return;
+                showExportDialog(context, "Export Results", exportResults);
+              }
+            },
             text: "All",
             style: TextStyle(
               color: (_selectedSensorIdForExport != null &&
