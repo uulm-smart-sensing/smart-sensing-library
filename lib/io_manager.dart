@@ -20,6 +20,9 @@ enum ExportResult {
   succesful,
 
   ///
+  notselectedDirectory,
+
+  ///
   directoryNotExists,
 
   ///
@@ -391,15 +394,16 @@ class IOManager {
   /// true.
   /// TODO: add parameter to turn the spacing and line breaks of (= don't
   /// "beautify")
-  Future<ExportResult> exportSensorDataToFile(
+  Future<List<ExportResult>> exportSensorDataToFile(
     String directoryName,
     SupportedFileFormat format,
     List<SensorId> sensorIds, [
     DateTime? startTime,
     DateTime? endTime,
   ]) async {
+    var results = <ExportResult>[];
     if (!await Directory(directoryName).exists()) {
-      return ExportResult.directoryNotExists;
+      results.add(ExportResult.directoryNotExists);
     }
 
     // Set the start and end time, if not specified by the user to
@@ -407,7 +411,7 @@ class IOManager {
     startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
     endTime ??= DateTime.now();
 
-    if (sensorIds.isEmpty) return ExportResult.sensorIdEmpty;
+    if (sensorIds.isEmpty) results.add(ExportResult.sensorIdEmpty);
 
     // Fetch the data for all sensors, format them and save the result in a new
     // file.
@@ -421,11 +425,15 @@ class IOManager {
             {formattedData = formatData(sensor, sensorData, format)},
       );
 
-      if (formattedData.isEmpty) return ExportResult.formattedDataEmpty;
+      if (formattedData.isEmpty) results.add(ExportResult.formattedDataEmpty);
 
       await writeFormattedData(fileName, format, formattedData);
     }
 
-    return ExportResult.succesful;
+    if (results.isEmpty) {
+      return [ExportResult.succesful];
+    }
+
+    return results;
   }
 }
