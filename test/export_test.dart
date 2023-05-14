@@ -78,7 +78,7 @@ Future<void> main() async {
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful2, [ExportResult.formattedDataEmpty]);
+      expect(wasExportSuccessful2, isTrue);
     });
 
     test("Export only work with at least one sensor (id)", () async {
@@ -94,7 +94,7 @@ Future<void> main() async {
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful2, [ExportResult.succesful]);
+      expect(wasExportSuccessful2, [ExportResult.successful]);
     });
 
     test("Export only works, if sensor data really exist.", () async {
@@ -110,7 +110,7 @@ Future<void> main() async {
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful2, [ExportResult.succesful]);
+      expect(wasExportSuccessful2, [ExportResult.successful]);
     });
 
     test(
@@ -131,7 +131,7 @@ Future<void> main() async {
         [SensorId.accelerometer],
         DateTime.now().add(const Duration(seconds: -10)),
       );
-      expect(wasExportSuccessful2, [ExportResult.succesful]);
+      expect(wasExportSuccessful2, [ExportResult.successful]);
     });
 
     test(
