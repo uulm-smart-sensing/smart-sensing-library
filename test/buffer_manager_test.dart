@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
-import 'package:smart_sensing_library/buffer_manager.dart';
+import 'package:smart_sensing_library/src/io_manager_module/buffer_manager.dart';
 
 void main() {
   var bufferManager = BufferManager();

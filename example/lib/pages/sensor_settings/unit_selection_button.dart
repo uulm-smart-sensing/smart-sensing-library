@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/selection_button.dart';
-import '../../unit_string_representation.dart';
+import '../../sensor_unit_handler/unit_string_representation.dart';
 
 /// [SelectionButton] to select the target unit of a sensors output data.
 ///

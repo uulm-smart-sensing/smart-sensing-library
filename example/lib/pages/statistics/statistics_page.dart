@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../favorite_provider.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/text_formatter.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../general_widgets/stylized_container.dart';
 import '../historic_view/historic_view_page.dart';
 import '../home/home_page.dart';
+import '../sensor_search/favorite_provider.dart';
 
 /// Page containing a list of all implemented sensors and enables navigation
 /// to the [HistoricViewPage]s of this sensors.
