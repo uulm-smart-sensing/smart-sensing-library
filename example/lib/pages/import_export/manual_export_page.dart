@@ -108,7 +108,10 @@ class _ManualExportPageState extends State<ManualExportPage> {
 
                           if (!mounted) return;
                           showExportDialog(
-                              context, "Export Results", exportResults);
+                            context,
+                            "Export Results",
+                            exportResults,
+                          );
                         },
                       )
                     : const Text(
