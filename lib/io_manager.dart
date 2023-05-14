@@ -17,7 +17,7 @@ import 'src/import_export_module/supported_file_format.dart';
 ///
 enum ExportResult {
   ///
-  succesful,
+  successful,
 
   ///
   notselectedDirectory,
@@ -431,7 +431,7 @@ class IOManager {
     }
 
     if (results.isEmpty) {
-      return [ExportResult.succesful];
+      return [ExportResult.successful];
     }
 
     return results;

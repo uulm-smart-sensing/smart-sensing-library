@@ -32,7 +32,7 @@ String alertmessages(List<ExportResult> results) {
   var message = "";
   for (var result in results) {
     switch (result) {
-      case ExportResult.succesful:
+      case ExportResult.successful:
         message += "Data was successfully exported\n";
         break;
       case ExportResult.directoryNotExists:
