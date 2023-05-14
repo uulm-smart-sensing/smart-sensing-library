@@ -71,14 +71,14 @@ Future<void> main() async {
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful, isFalse);
+      expect(wasExportSuccessful, [ExportResult.directoryNotExists]);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
         testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful2, isTrue);
+      expect(wasExportSuccessful2, [ExportResult.successful]);
     });
 
     test("Export only work with at least one sensor (id)", () async {
