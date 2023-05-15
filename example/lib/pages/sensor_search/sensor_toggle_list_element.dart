@@ -24,10 +24,11 @@ class SensorToggleListElement extends SensorToggleElement {
     super.key,
   }) : super(
           color: isDisabled
-              ? HSLColor.fromColor(sensorIdToColor[sensorId]!.withAlpha(128))
+              ? const Color.fromARGB(255, 51, 50, 52)
+              /*HSLColor.fromColor(sensorIdToColor[sensorId]!.withAlpha(128))
                   .withSaturation(0.5)
-                  .toColor()
-              : sensorIdToColor[sensorId]!,
+                  .toColor()*/
+              : secondaryColor,
           activeColor: const Color.fromARGB(255, 217, 217, 217),
           activeTrackColor: const Color.fromARGB(255, 66, 234, 7),
           inactiveColor: const Color.fromARGB(255, 217, 217, 217),
@@ -35,7 +36,7 @@ class SensorToggleListElement extends SensorToggleElement {
           isDisabled: isDisabled || isTogglingDisabled,
           disabledColor: const Color.fromARGB(255, 158, 162, 157),
           disabledTrackColor: const Color.fromARGB(255, 144, 149, 142),
-          textColor: Colors.black,
+          textColor: Colors.white,
           onChanged: (isToggledOn) async {
             if (isTogglingDisabled) {
               return;
