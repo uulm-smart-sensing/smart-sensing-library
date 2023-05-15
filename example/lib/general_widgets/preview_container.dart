@@ -9,6 +9,27 @@ import '../theme.dart';
 import '../unit_string_representation.dart';
 import 'brick_container.dart';
 
+/// Creates a preview for the given [filterOption].
+///
+/// The created preview shows all relevant axles form the data.
+/// E.g. the maximum filter shows the maximum of all three axles,
+/// while the average shows only one:
+///
+/// Max ->
+/// ```
+/// Axis 1    Axis 2    Axis 3
+///    1         1         1
+///    2         2         2
+///    3         3         3
+/// ```
+///
+/// Avg ->
+/// ```
+/// Axis 1
+///    1
+///    2
+///    3
+/// ```
 class PreviewContainer extends StatefulWidget {
   final SensorId sensorId;
   final EdgeInsets padding;
@@ -41,6 +62,7 @@ class _PreviewContainerState extends State<PreviewContainer> {
   @override
   void initState() {
     super.initState();
+    //Creates the timer that periodically gets updated.
     timer = Timer.periodic(
       widget.duration,
       (t) async {
@@ -112,6 +134,9 @@ class _PreviewContainerState extends State<PreviewContainer> {
       );
 }
 
+/// Creates the main data inside this widget.
+///
+/// If no data is loaded at the moment, the content is empty.
 Widget mainData({
   required List<SensorData> data,
   required TextStyle style,
@@ -125,7 +150,7 @@ Widget mainData({
               : [_createDataText(data: data[0].data, style: style)]),
     );
 
-String createStringFromData(List<double?> data, Unit unit) {
+String _createStringFromData(List<double?> data, Unit unit) {
   var values = data.whereType<double>().toList();
 
   if (values.isEmpty) {
@@ -139,6 +164,7 @@ String createStringFromData(List<double?> data, Unit unit) {
       .join("\n");
 }
 
+/// Creates a flexible [Text] with the data given.
 Widget _createDataText({
   required List<double?> data,
   Unit unit = Unit.metersPerSecondSquared,
@@ -160,7 +186,7 @@ Widget _createDataText({
               : const SizedBox.shrink(),
           Align(
             child: Text(
-              createStringFromData(data, unit),
+              _createStringFromData(data, unit),
               textAlign: TextAlign.right,
               style: style,
             ),
@@ -169,6 +195,7 @@ Widget _createDataText({
       ),
     );
 
+/// Returns the filtered data from given [option].
 List<SensorData>? _getFromFilter(
   FilterOption option,
   FilterTools? filterTool, {
@@ -203,6 +230,7 @@ List<SensorData>? _getFromFilter(
   return filterTool?.result();
 }
 
+/// Creates a list for each [data] given.
 List<Widget> _createWidgetList({
   required List<SensorData> data,
   required TextStyle style,
