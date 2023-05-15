@@ -106,7 +106,7 @@ class _PreviewContainerState extends State<PreviewContainer> {
 
   @override
   Widget build(BuildContext context) => BrickContainer(
-        width: 250,
+        width: 300,
         color: sensorIdToColor[widget.sensorId],
         child: internalText(),
       );
