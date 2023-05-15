@@ -200,8 +200,8 @@ class IOManager {
     var query = (_objectStore!.box<SensorDataDTO>().query(
               SensorDataDTO_.sensorID.equals(id.index).and(
                     SensorDataDTO_.dateTime.between(
-                      from.millisecondsSinceEpoch,
-                      to.millisecondsSinceEpoch,
+                      from.microsecondsSinceEpoch * 1000,
+                      to.microsecondsSinceEpoch * 1000,
                     ),
                   ),
             )..order(SensorDataDTO_.dateTime, flags: Order.descending))
@@ -259,26 +259,18 @@ class IOManager {
       //Check if first entry is older then given from.
       //If so, then the whole buffer contains all needed data.
       if (buffer.isNotEmpty) {
-        if (DateTime.fromMicrosecondsSinceEpoch(
-          buffer.first.timestampInMicroseconds,
-          isUtc: true,
-        ).isBefore(from)) {
+        if (buffer.first.timestamp.isBefore(from)) {
           return FilterTools(_splitWithDateTime(from, to, buffer));
         }
         //Check if first entry is older then given to.
         //If so, then the buffer contains partial data.
-        if (DateTime.fromMicrosecondsSinceEpoch(
-          buffer.first.timestampInMicroseconds,
-          isUtc: true,
-        ).isBefore(to)) {
+        if (buffer.first.timestamp.isBefore(to)) {
           buffer = _splitWithDateTime(from, to, buffer);
         }
       }
       var dbBuffer = await _getFromDatabase(
         from,
-        DateTime.fromMicrosecondsSinceEpoch(
-          buffer.first.timestampInMicroseconds,
-        ),
+        buffer.first.timestamp,
         id,
       );
       dbBuffer.addAll(buffer);
@@ -307,15 +299,13 @@ class IOManager {
   ) {
     var start = buffer.length, stop = 0;
     for (var i = 0; i < buffer.length; i++) {
-      if (DateTime.fromMicrosecondsSinceEpoch(buffer[i].timestampInMicroseconds)
-          .isAfter(from)) {
+      if (buffer[i].timestamp.isAfter(from)) {
         start = i;
         break;
       }
     }
     for (var i = buffer.length - 1; i >= 0; i--) {
-      if (DateTime.fromMicrosecondsSinceEpoch(buffer[i].timestampInMicroseconds)
-          .isBefore(to)) {
+      if (buffer[i].timestamp.isBefore(to)) {
         stop = i;
         break;
       }
@@ -355,8 +345,8 @@ class IOManager {
     await (_objectStore!.box<SensorDataDTO>().query(
           SensorDataDTO_.sensorID.equals(id.index).and(
                 SensorDataDTO_.dateTime.between(
-                  from.millisecondsSinceEpoch,
-                  to.millisecondsSinceEpoch,
+                  from.microsecondsSinceEpoch * 1000,
+                  to.microsecondsSinceEpoch * 1000,
                 ),
               ),
         )).build().removeAsync();

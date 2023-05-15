@@ -298,8 +298,8 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       var formattedSensorData = sensorData
           .map(
             (dataEntry) => SensorViewData(
-              timestamp: dataEntry.timestampInMicroseconds / 1000.0,
-              x: dataEntry.data[0]!,
+              timestamp: dataEntry.timestamp.microsecondsSinceEpoch / 1000.0,
+              x: dataEntry.data[0],
               y: dataEntry.data[1],
               z: dataEntry.data[2],
             ),

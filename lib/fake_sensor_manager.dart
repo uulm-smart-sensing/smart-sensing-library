@@ -113,8 +113,8 @@ class FakeSensorManager extends Fake implements SensorManager {
   SensorData _createTestData(int i) => SensorData(
         data: [i + 0.1, i + 0.2, i + 0.3],
         maxPrecision: 2,
-        unit: Unit.fahrenheit,
-        timestampInMicroseconds: DateTime.now().toUtc().microsecondsSinceEpoch,
+        unit: Temperature.fahrenheit,
+        timestamp: DateTime.now().toUtc(),
       );
 
   ///Creates a testing stream with fake data.

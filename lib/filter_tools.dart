@@ -60,15 +60,7 @@ class FilterTools {
         _buffer[bufferCounter].add(tmpList[i]);
         intervalCount += interval;
       }
-      tmpDuration += DateTime.fromMicrosecondsSinceEpoch(
-        tmpList[i + 1].timestampInMicroseconds,
-        isUtc: true,
-      ).difference(
-        DateTime.fromMicrosecondsSinceEpoch(
-          tmpList[i].timestampInMicroseconds,
-          isUtc: true,
-        ),
-      );
+      tmpDuration += tmpList[i + 1].timestamp.difference(tmpList[i].timestamp);
     }
     //Is used for the last entry in the list.
     if (tmpDuration < intervalCount) {
@@ -111,7 +103,7 @@ class FilterTools {
       _buffer[currinterval] = <SensorData>[
         _buffer[currinterval].reduce(
           (current, next) =>
-              (current.data[axis]! > next.data[axis]!) ? current : next,
+              (current.data[axis] > next.data[axis]) ? current : next,
         ),
       ];
     }
@@ -125,7 +117,7 @@ class FilterTools {
       _buffer[currinterval] = <SensorData>[
         _buffer[currinterval].reduce(
           (current, next) =>
-              (current.data[axis]! < next.data[axis]!) ? current : next,
+              (current.data[axis] < next.data[axis]) ? current : next,
         ),
       ];
     }
@@ -143,7 +135,7 @@ class FilterTools {
           currEntry < _buffer[currinterval].length;
           currEntry++) {
         for (var r = 0; r < axisAmount; r++) {
-          avgData[r] += _buffer[currinterval][currEntry].data[r]!;
+          avgData[r] += _buffer[currinterval][currEntry].data[r];
         }
       }
       for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
@@ -155,8 +147,8 @@ class FilterTools {
       var avgEntry = SensorData(
         data: avgData,
         maxPrecision: lastEntry.maxPrecision,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
         unit: lastEntry.unit,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
@@ -173,7 +165,7 @@ class FilterTools {
       var sumData = List<double>.generate(axisAmount, (index) => 0);
       for (var j = 0; j < _buffer[i].length; j++) {
         for (var r = 0; r < axisAmount; r++) {
-          sumData[r] += _buffer[i][j].data[r]!;
+          sumData[r] += _buffer[i][j].data[r];
         }
       }
       for (var r = 0; r < axisAmount; r++) {
@@ -183,8 +175,8 @@ class FilterTools {
       var sumEntry = SensorData(
         data: sumData,
         maxPrecision: lastEntry.maxPrecision,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
         unit: lastEntry.unit,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[i]
         ..clear()
@@ -209,7 +201,7 @@ class FilterTools {
   void getMode({Duration interval = Duration.zero, int axis = 0}) {
     _splitBuffer(interval);
     var maxCount = 0;
-    var modeData = <double?>[];
+    var modeData = <double>[];
     for (var currinterval = 0; currinterval < _buffer.length; currinterval++) {
       for (var currEntry = 0;
           currEntry < _buffer[currinterval].length;
@@ -232,8 +224,8 @@ class FilterTools {
       var modeEntry = SensorData(
         data: modeData,
         maxPrecision: lastEntry.maxPrecision,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
         unit: lastEntry.unit,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
@@ -257,14 +249,12 @@ class FilterTools {
           currEntry++) {
         for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
           if (maxData[currAxis] <
-              _buffer[currinterval][currEntry].data[currAxis]!) {
-            maxData[currAxis] =
-                _buffer[currinterval][currEntry].data[currAxis]!;
+              _buffer[currinterval][currEntry].data[currAxis]) {
+            maxData[currAxis] = _buffer[currinterval][currEntry].data[currAxis];
           }
           if (minData[currAxis] >
-              _buffer[currinterval][currEntry].data[currAxis]!) {
-            minData[currAxis] =
-                _buffer[currinterval][currEntry].data[currAxis]!;
+              _buffer[currinterval][currEntry].data[currAxis]) {
+            minData[currAxis] = _buffer[currinterval][currEntry].data[currAxis];
           }
         }
       }
@@ -278,8 +268,8 @@ class FilterTools {
       var rangeEntry = SensorData(
         data: rangeData,
         maxPrecision: lastEntry.maxPrecision,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
         unit: lastEntry.unit,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
@@ -298,7 +288,7 @@ class FilterTools {
       for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
         var tmpAxisData = <double>[];
         for (var currEntry = 0; currEntry < tmpList.length; currEntry++) {
-          tmpAxisData.add(tmpList[currEntry].data[currAxis]!);
+          tmpAxisData.add(tmpList[currEntry].data[currAxis]);
         }
         medianData.add(_calculateMedian(tmpAxisData));
       }
@@ -307,7 +297,7 @@ class FilterTools {
         data: medianData,
         maxPrecision: lastEntry.maxPrecision,
         unit: lastEntry.unit,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()
@@ -331,8 +321,8 @@ class FilterTools {
         for (var currAxis = 0; currAxis < axisAmount; currAxis++) {
           varianceList[currAxis] += (1 / _buffer[currinterval].length) *
               pow(
-                averageData[currAxis]! -
-                    _buffer[currinterval][currEntry].data[currAxis]!,
+                averageData[currAxis] -
+                    _buffer[currinterval][currEntry].data[currAxis],
                 2,
               );
         }
@@ -347,7 +337,7 @@ class FilterTools {
         data: sdData.toList(),
         maxPrecision: lastEntry.maxPrecision,
         unit: lastEntry.unit,
-        timestampInMicroseconds: lastEntry.timestampInMicroseconds,
+        timestamp: lastEntry.timestamp,
       );
       _buffer[currinterval]
         ..clear()

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
@@ -131,21 +129,15 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
 }
 
 Widget _getTooltip(SensorId sensorId) => FutureBuilder(
-      future: Future.sync(() async {
-        // TODO: Replace with call to smart sensing library
-        var sensorInfo = SensorInfo(
-          unit: Unit.celsius,
-          accuracy: SensorAccuracy.high,
-          timeIntervalInMilliseconds: 100,
-        );
-        return jsonEncode(sensorInfo.encode());
-      }),
+      future: IOManager().getSensorInfo(sensorId),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox.shrink();
+        if (snapshot.hasData && snapshot.data != null) {
+          return SensorInfoTooltip(
+            sensorId: sensorId,
+            sensorInfo: snapshot.data!,
+          );
         }
 
-        var sensorInfo = SensorInfo.decode(jsonDecode(snapshot.data!));
-        return SensorInfoTooltip(sensorId: sensorId, sensorInfo: sensorInfo);
+        return const SizedBox.shrink();
       },
     );

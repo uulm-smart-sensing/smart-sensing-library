@@ -5,7 +5,7 @@ import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/section_header.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
-import '../../sensor_units.dart';
+import '../../sensor_default_target_unit.dart';
 import 'precision_slider.dart';
 import 'time_interval_selection_button.dart';
 import 'unit_selection_button.dart';
@@ -38,7 +38,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     // TODO: Make call to smart sensing library to initialize values
     selectedPrecision = 2;
     selectedTimeIntervalInMilliseconds = 100;
-    selectedUnit = getUnitsFromSensorId(widget.sensorId).first;
+    selectedUnit = sensorIdToDefaultTargetUnit[widget.sensorId]!;
     super.initState();
   }
 
@@ -46,7 +46,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
   Widget build(BuildContext context) {
     var unitHeader = SectionHeader("Unit");
 
-    var units = getUnitsFromSensorId(widget.sensorId);
+    var units = sensorIdToUnitCategory[widget.sensorId]!;
     var unitSelection = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: units.map(_getUnitSelectionButtonFromUnit).toList(),
