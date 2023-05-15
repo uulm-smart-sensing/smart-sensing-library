@@ -187,6 +187,18 @@ List<SensorData>? _getFromFilter(
     case FilterOption.sd:
       filterTool?.getSD();
       break;
+    case FilterOption.mode:
+      filterTool?.getMode(axis: axis);
+      break;
+    case FilterOption.range:
+      filterTool?.getRange();
+      break;
+    case FilterOption.median:
+      filterTool?.getMedian();
+      break;
+    case FilterOption.sum:
+      filterTool?.getSum();
+      break;
   }
   return filterTool?.result();
 }
