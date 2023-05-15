@@ -150,6 +150,7 @@ Widget mainData({
               : [_createDataText(data: data[0].data, style: style)]),
     );
 
+/// Transforms [data] into a usable [String] format for [PreviewContainer].
 String _createStringFromData(List<double?> data, Unit unit) {
   var values = data.whereType<double>().toList();
 
