@@ -1,3 +1,3 @@
-sensorId,unit,maxPrecision,timestampInMicroseconds,data
-linearAcceleration,metersPerSecondSquared,5,1681561948,"1.4, 0.0, 9.81"
-linearAcceleration,gravitationalForce,5,1681562008,"0.2, 0.0, 1.0"
+sensorId,unit,maxPrecision,timestamp,data
+linearAcceleration,Acceleration.meterPerSecondSquared,5,1681561948,"1.4, 0.0, 9.81"
+linearAcceleration,Acceleration.gravity,5,1681562008,"0.2, 0.0, 1.0"

@@ -41,15 +41,7 @@ class BufferManager {
 
   ///Comparison method that compares Sensordata timestamp [a] with [b]
   int _sortComparison(SensorData a, SensorData b) =>
-      DateTime.fromMicrosecondsSinceEpoch(
-        a.timestampInMicroseconds,
-        isUtc: true,
-      ).compareTo(
-        DateTime.fromMicrosecondsSinceEpoch(
-          b.timestampInMicroseconds,
-          isUtc: true,
-        ),
-      );
+      a.timestamp.compareTo(b.timestamp);
 }
 
 ///Custom exception for wrong buffer

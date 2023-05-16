@@ -28,9 +28,9 @@ class SensorDataCollection {
   Map<String, dynamic> _formatSensorDataToJson(SensorData sensorData) {
     var data = <String, dynamic>{};
     data['data'] = sensorData.data;
-    data['unit'] = sensorData.unit.name;
+    data['unit'] = sensorData.unit.toString();
     data['maxPrecision'] = sensorData.maxPrecision;
-    data['timestampInMicroseconds'] = sensorData.timestampInMicroseconds;
+    data['timestamp'] = sensorData.timestamp.microsecondsSinceEpoch;
 
     return data;
   }

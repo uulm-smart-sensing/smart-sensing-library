@@ -17,7 +17,7 @@ Future<void> main() async {
   }
 
   const exampleConfig = SensorConfig(
-    targetUnit: Unit.celsius,
+    targetUnit: Temperature.celsius,
     targetPrecision: 2,
     timeInterval: Duration(milliseconds: 1000),
   );
