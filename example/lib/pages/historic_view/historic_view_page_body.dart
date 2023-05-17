@@ -77,7 +77,8 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     var divider = const VerticalDivider(thickness: 1);
 
     // Selection between different time intervals
-    // When time interval is selected, new interval will be applied to table/graph
+    // When time interval is selected, new interval will be applied to
+    // table/graph.
     var timeIntervalSelection = StylizedContainer(
       padding: const EdgeInsets.symmetric(
         horizontal: 12,
