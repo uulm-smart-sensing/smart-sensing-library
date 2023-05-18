@@ -61,34 +61,57 @@ ImportResult decodeXml(List<int> rawData) {
 
   var sensorDataElements = root.findElements("sensorData");
 
+  if (sensorDataElements.isEmpty) {
+    return ImportResult(resultStatus: ImportResultStatus.invalidXMLFormatting);
+  }
+
   // get the sensorId of this data
-  var sensorIdAsString = root.getElement("sensorId")!.text;
-  var sensorId =
-      SensorId.values.firstWhere((element) => element.name == sensorIdAsString);
+  var sensorIdAsString = root.getElement("sensorId");
+
+  // check sensorId
+  if (!_validateSensorId(sensorIdAsString)) {
+    return ImportResult(resultStatus: ImportResultStatus.invalidXMLFormatting);
+  }
+
+  var sensorId = SensorId.values
+      .firstWhere((element) => element.name == sensorIdAsString!.text);
+
+  var sensorData = sensorDataElements.map(_decodeSensorDataElement).toList();
+
+  if (sensorData.contains(null)) {
+    return ImportResult(resultStatus: ImportResultStatus.invalidXMLFormatting);
+  }
 
   return ImportResult(
     resultStatus: ImportResultStatus.success,
     importedData: SensorDataCollection(
       sensorId,
-      sensorDataElements.map(_decodeSensorDataElement).toList(),
+      sensorData.map((e) => e!).toList(),
     ),
   );
 }
 
-SensorData _decodeSensorDataElement(XmlElement sensorDataElement) {
-  var data = sensorDataElement
-      .findAllElements("dataPoint")
+SensorData? _decodeSensorDataElement(XmlElement sensorDataElement) {
+  var datapointElements = sensorDataElement.findAllElements("dataPoint");
+
+  if (!_validateDataPoints(datapointElements)) return null;
+  var data = datapointElements
       .map((dataPointElement) => double.parse(dataPointElement.text))
       .toList();
 
-  var unitString = sensorDataElement.getElement("unit")!.text;
+  var unitElement = sensorDataElement.getElement("unit");
+  if (!_validateUnit(unitElement)) return null;
+  var unitString = unitElement!.text;
   var unit = unitFromString(unitString);
 
-  var maxPrecision =
-      int.parse(sensorDataElement.getElement("maxPrecision")!.text);
+  var precisionElement = sensorDataElement.getElement("maxPrecision");
+  if (!_validatePrecision(precisionElement)) return null;
+  var maxPrecision = int.parse(precisionElement!.text);
 
+  var timestampElement = sensorDataElement.getElement("timestamp");
+  if (!_validateTimestamp(timestampElement)) return null;
   var timestampInMicroseconds = int.parse(
-    sensorDataElement.getElement("timestamp")!.text,
+    timestampElement!.text,
   );
 
   return SensorData(
@@ -97,4 +120,46 @@ SensorData _decodeSensorDataElement(XmlElement sensorDataElement) {
     maxPrecision: maxPrecision,
     timestamp: DateTime.fromMicrosecondsSinceEpoch(timestampInMicroseconds),
   );
+}
+
+bool _validateSensorId(XmlElement? sensorId) {
+  if (sensorId == null) return false;
+
+  return SensorId.values.map((id) => id.name).toList().contains(sensorId.text);
+}
+
+bool _validateUnit(XmlElement? unit) {
+  if (unit == null) return false;
+
+  return stringToUnit.containsKey(unit.text);
+}
+
+bool _validatePrecision(XmlElement? precision) {
+  if (precision == null) return false;
+
+  var precisionAsInt = int.tryParse(precision.text);
+
+  if (precisionAsInt == null) return false;
+
+  return precisionAsInt >= 0 && precisionAsInt <= 9;
+}
+
+bool _validateTimestamp(XmlElement? timestamp) {
+  if (timestamp == null) return false;
+
+  var timestampAsInt = int.tryParse(timestamp.text);
+
+  if (timestampAsInt == null) return false;
+
+  return timestampAsInt >= 0;
+}
+
+bool _validateDataPoints(Iterable<XmlElement> datapoints) {
+  if (datapoints.isEmpty) return false;
+
+  for (var datapoint in datapoints) {
+    if (double.tryParse(datapoint.text) == null) return false;
+  }
+
+  return true;
 }

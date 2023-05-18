@@ -44,6 +44,11 @@ enum ImportResultStatus {
   /// The formatting of the json file is not correct.
   invalidJsonFormatting(
     "The format of the json file do not conform the JSON schema",
+  ),
+
+  /// The formatting of the xml file is not correct.
+  invalidXMLFormatting(
+    "The format of the xml file do not conform the XSD schema",
   );
 
   /// Creates a new enum value for [ImportResult].

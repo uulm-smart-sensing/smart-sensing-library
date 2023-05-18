@@ -14,7 +14,7 @@ import 'package:smart_sensing_library/src/import_export_module/import_result.dar
 const exampleJsonFilePath = "test/example_import_files/exampleSensorData.json";
 const emptyExampleCSVFilePath =
     "test/example_import_files/emptyExampleSensorData.csv";
-const exampleFilePathWrongFormattedJson =
+const exampleFilePathWrongFormatted =
     "test/example_import_files/wrong_formatted_files/";
 const exampleCsvFilePath = "test/example_import_files/exampleSensorData.csv";
 const exampleXlsxFilePath = "test/example_import_files/exampleSensorData.xlsx";
@@ -166,31 +166,31 @@ Future<void> main() async {
       () async => {
         expect(
           await ioManager.importSensorDataFromFile(
-            "${exampleFilePathWrongFormattedJson}missingSensorId.json",
+            "${exampleFilePathWrongFormatted}missingSensorId.json",
           ),
           ImportResultStatus.invalidJsonFormatting,
         ),
         expect(
           await ioManager.importSensorDataFromFile(
-            "${exampleFilePathWrongFormattedJson}wrongData.json",
+            "${exampleFilePathWrongFormatted}wrongData.json",
           ),
           ImportResultStatus.invalidJsonFormatting,
         ),
         expect(
           await ioManager.importSensorDataFromFile(
-            "${exampleFilePathWrongFormattedJson}wrongPrecision.json",
+            "${exampleFilePathWrongFormatted}wrongPrecision.json",
           ),
           ImportResultStatus.invalidJsonFormatting,
         ),
         expect(
           await ioManager.importSensorDataFromFile(
-            "${exampleFilePathWrongFormattedJson}wrongTimestamp.json",
+            "${exampleFilePathWrongFormatted}wrongTimestamp.json",
           ),
           ImportResultStatus.invalidJsonFormatting,
         ),
         expect(
           await ioManager.importSensorDataFromFile(
-            "${exampleFilePathWrongFormattedJson}wrongUnit.json",
+            "${exampleFilePathWrongFormatted}wrongUnit.json",
           ),
           ImportResultStatus.invalidJsonFormatting,
         )
@@ -262,6 +262,41 @@ Future<void> main() async {
         expect(
           await ioManager.importSensorDataFromFile(exampleXmlFilePath),
           ImportResultStatus.success,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}missingSensorId.xml",
+          ),
+          ImportResultStatus.invalidXMLFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongData.xml",
+          ),
+          ImportResultStatus.invalidXMLFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongPrecision.xml",
+          ),
+          ImportResultStatus.invalidXMLFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongTimestamp.xml",
+          ),
+          ImportResultStatus.invalidXMLFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongUnit.xml",
+          ),
+          ImportResultStatus.invalidXMLFormatting,
         );
 
         expect(
