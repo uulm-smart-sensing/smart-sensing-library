@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:json_schema2/json_schema2.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import '../import_result.dart';
@@ -30,6 +31,11 @@ List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
 Future<ImportResult> decodeJson(List<int> rawData) async {
   var jsonString = String.fromCharCodes(rawData);
 
+  var validationResult = await _validateJsonFile(jsonString);
+  if (!validationResult) {
+    return ImportResult(resultStatus: ImportResultStatus.invalidJsonFormatting);
+  }
+
   var jsonData = const JsonDecoder().convert(jsonString);
 
   var sensorDataCollection = SensorDataCollection.fromJson(jsonData);
@@ -38,4 +44,12 @@ Future<ImportResult> decodeJson(List<int> rawData) async {
     resultStatus: ImportResultStatus.success,
     importedData: sensorDataCollection,
   );
+}
+
+Future<bool> _validateJsonFile(String jsonString) async {
+  // read schema file
+  var schemaString = await File(filePathSchema).readAsString();
+
+  var schema = JsonSchema.createSchema(schemaString);
+  return schema.validate(json.decode(jsonString));
 }

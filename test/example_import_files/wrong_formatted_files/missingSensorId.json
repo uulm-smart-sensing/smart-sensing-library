@@ -1,0 +1,21 @@
+{
+  "sensorData": [
+    {
+      "data": [
+      ],
+      "unit": "metersPerSecondSquared",
+      "maxPrecision": 5,
+      "timestampInMicroseconds": 1681561948
+    },
+    {
+      "data": [
+        0.2,
+        0.0,
+        1.0
+      ],
+      "unit": "gravitationalForce",
+      "maxPrecision": -1,
+      "timestampInMicroseconds": 1681562008
+    }
+  ]
+}
