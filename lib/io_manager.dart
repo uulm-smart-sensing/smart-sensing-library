@@ -14,21 +14,21 @@ import 'sensor_data_dto.dart';
 import 'src/import_export_module/export_tool.dart';
 import 'src/import_export_module/supported_file_format.dart';
 
-///
+/// Handles the Result from Export
 enum ExportResult {
-  ///
+  /// Export was successful and the data was exported
   successful,
 
-  ///
+  /// Export was not successful because no folder was selected
   notselectedDirectory,
 
-  ///
+  /// Export was not successful because directory not exists
   directoryNotExists,
 
-  ///
+  /// Export was not successful because sensorId is empty
   sensorIdEmpty,
 
-  ///
+  /// Export was not successful because formatted Data is empty
   formattedDataEmpty,
 }
 
