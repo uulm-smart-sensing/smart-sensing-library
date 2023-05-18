@@ -13,13 +13,7 @@ import '../supported_file_format.dart';
 /// format.
 List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
   // create first row
-  var headerRow = [
-    "sensorId",
-    "unit",
-    "maxPrecision",
-    "timestamp",
-    "data"
-  ];
+  var headerRow = ["sensorId", "unit", "maxPrecision", "timestamp", "data"];
 
   var csvData = <List<dynamic>>[headerRow] +
       data
