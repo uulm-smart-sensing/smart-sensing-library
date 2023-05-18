@@ -60,7 +60,7 @@ class SensorDataCollection {
     var data = (json['data'] as List<dynamic>).whereType<double>().toList();
     var unit = unitFromString(json['unit']);
     var maxPrecision = json['maxPrecision'] as int;
-    var timestampInMicroseconds = json['timestampInMicroseconds'] as int;
+    var timestampInMicroseconds = json['timestamp'] as int;
 
     return SensorData(
       data: data,
