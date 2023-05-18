@@ -17,7 +17,7 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
     "sensorId",
     "unit",
     "maxPrecision",
-    "timestampInMicroseconds",
+    "timestamp",
     "data"
   ];
 

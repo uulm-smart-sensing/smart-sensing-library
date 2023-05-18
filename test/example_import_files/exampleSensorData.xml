@@ -9,7 +9,7 @@
 		</data>
 		<unit>Acceleration.meterPerSecondSquared</unit>
 		<maxPrecision>5</maxPrecision>
-		<timestampInMicroseconds>1681561948</timestampInMicroseconds>
+		<timestamp>1681561948</timestamp>
 	</sensorData>
 	<sensorData>
 		<data>
@@ -19,6 +19,6 @@
 		</data>
 		<unit>Acceleration.gravity</unit>
 		<maxPrecision>5</maxPrecision>
-		<timestampInMicroseconds>1681562008</timestampInMicroseconds>
+		<timestamp>1681562008</timestamp>
 	</sensorData>
 </root>

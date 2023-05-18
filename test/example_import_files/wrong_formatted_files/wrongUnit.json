@@ -7,9 +7,9 @@
         0.0,
         9.81
       ],
-      "unit": "meterPerSecondSquared",
+      "unit": "Acceleration.meterPerSecond",
       "maxPrecision": 5,
-      "timestampInMicroseconds": 1681561948
+      "timestamp": 1681561948
     },
     {
       "data": [
@@ -17,9 +17,9 @@
         0.0,
         1.0
       ],
-      "unit": "gravitationalForce",
+      "unit": "Acceleration.gravitie",
       "maxPrecision": 5,
-      "timestampInMicroseconds": 1681562008
+      "timestamp": 1681562008
     }
   ]
 }

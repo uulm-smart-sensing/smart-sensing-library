@@ -45,7 +45,7 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
         ..element('unit', nest: data.unit.toString())
         ..element('maxPrecision', nest: data.maxPrecision)
         ..element(
-          'timestampInMicroseconds',
+          'timestamp',
           nest: data.timestamp.microsecondsSinceEpoch,
         );
     },
@@ -88,7 +88,7 @@ SensorData _decodeSensorDataElement(XmlElement sensorDataElement) {
       int.parse(sensorDataElement.getElement("maxPrecision")!.text);
 
   var timestampInMicroseconds = int.parse(
-    sensorDataElement.getElement("timestampInMicroseconds")!.text,
+    sensorDataElement.getElement("timestamp")!.text,
   );
 
   return SensorData(
