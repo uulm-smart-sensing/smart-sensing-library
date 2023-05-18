@@ -1,9 +1,9 @@
 import 'package:csv/csv.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
-import '../../../sensor_data_dto.dart';
 import '../import_result.dart';
 import '../sensor_data_collection.dart';
+import '../string_to_unit_converter.dart';
 import '../supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the corresponding csv string
@@ -62,7 +62,7 @@ SensorData _decodeCsvLine(List<dynamic> line) {
   var timestampInMicroseconds = line[3];
   var dataString = line[4];
 
-  var unit = SensorDataDTO.unitFromString(unitString);
+  var unit = unitFromString(unitString);
   var data =
       dataString.split(", ").map(double.parse).whereType<double>().toList();
 

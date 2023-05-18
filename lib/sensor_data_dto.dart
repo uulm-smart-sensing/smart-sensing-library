@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
+import 'src/import_export_module/string_to_unit_converter.dart';
+
 ///DTO class for SensorData
 @Entity()
 class SensorDataDTO {
@@ -65,25 +67,5 @@ class SensorDataDTO {
     assert(SensorId.linearAcceleration.index == 4, "Test if enum still stable");
     assert(SensorId.barometer.index == 5, "Test if enum still stable");
     assert(SensorId.thermometer.index == 6, "Test if enum still stable");
-  }
-
-  static MapEntry<String, Unit> _unitToMapEntry(Unit unit) =>
-      MapEntry(unit.toString(), unit);
-
-  static final _stringToUnit = Map.fromEntries([
-    ...Acceleration.values.map(_unitToMapEntry),
-    ...Angle.values.map(_unitToMapEntry),
-    ...AngularVelocity.values.map(_unitToMapEntry),
-    ...MagneticFluxDensity.values.map(_unitToMapEntry),
-    ...Pressure.values.map(_unitToMapEntry),
-    ...Temperature.values.map(_unitToMapEntry),
-  ]);
-
-  static Unit unitFromString(String input) {
-    if (!_stringToUnit.containsKey(input)) {
-      throw Exception("Could not parse unit type");
-    }
-
-    return _stringToUnit[input]!;
   }
 }

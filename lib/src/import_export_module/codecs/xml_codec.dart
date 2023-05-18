@@ -1,9 +1,9 @@
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:xml/xml.dart';
 
-import '../../../sensor_data_dto.dart';
 import '../import_result.dart';
 import '../sensor_data_collection.dart';
+import '../string_to_unit_converter.dart';
 import '../supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the corresponding xml string
@@ -82,7 +82,7 @@ SensorData _decodeSensorDataElement(XmlElement sensorDataElement) {
       .toList();
 
   var unitString = sensorDataElement.getElement("unit")!.text;
-  var unit = SensorDataDTO.unitFromString(unitString);
+  var unit = unitFromString(unitString);
 
   var maxPrecision =
       int.parse(sensorDataElement.getElement("maxPrecision")!.text);

@@ -1,9 +1,9 @@
 import 'package:excel/excel.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
-import '../../../sensor_data_dto.dart';
 import '../import_result.dart';
 import '../sensor_data_collection.dart';
+import '../string_to_unit_converter.dart';
 import '../supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the corresponding xlsx string
@@ -17,7 +17,7 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
       "sensorId",
       "unit",
       "maxPrecision",
-      "timestampInMicroseconds",
+      "timestamp",
       "data",
     ]);
 
@@ -61,7 +61,7 @@ SensorData _decodeXlsxRow(List<Data?> xlsxRow) {
   var timestampInMicrosecondsString = xlsxRow[3]!.value.toString();
   var dataString = xlsxRow[4]!.value.toString();
 
-  var unit = SensorDataDTO.unitFromString(unitString);
+  var unit = unitFromString(unitString);
   var maxPrecision = int.parse(maxPrecisionString);
   var timestampInMicroseconds = int.parse(timestampInMicrosecondsString);
   var data =

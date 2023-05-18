@@ -1,6 +1,6 @@
 import 'package:sensing_plugin/sensing_plugin.dart';
 
-import '../../sensor_data_dto.dart';
+import 'string_to_unit_converter.dart';
 
 /// A collection of [SensorData] of a sensor, which should be exported or was
 /// imported.
@@ -58,7 +58,7 @@ class SensorDataCollection {
 
   static SensorData _formatSensorDataFromJson(Map<String, dynamic> json) {
     var data = (json['data'] as List<dynamic>).whereType<double>().toList();
-    var unit = SensorDataDTO.unitFromString(json['unit']);
+    var unit = unitFromString(json['unit']);
     var maxPrecision = json['maxPrecision'] as int;
     var timestampInMicroseconds = json['timestampInMicroseconds'] as int;
 
