@@ -6,7 +6,7 @@ import 'pages/preview_settings/sensor_preview_settings.dart';
 /// Handles the Preview settings management.
 /// The class uses the preference shared by the database. With shared preference
 /// it is possible to store the data globally and to modify it.
-class PreviewSettings{
+class PreviewSettings {
   /// List of all preview settings
   final Map<SensorId, SensorPreviewSetting> _sensorPreviewSetting = {};
   Map<SensorId, SensorPreviewSetting> get sensorPreviewSettings =>
