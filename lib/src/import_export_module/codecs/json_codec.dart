@@ -7,7 +7,7 @@ import '../import_result.dart';
 import '../sensor_data_collection.dart';
 import '../supported_file_format.dart';
 
-/// The path the JSON validation schema
+/// The path the JSON validation schema.
 const String filePathSchema =
     "./lib/src/import_export_module/validation_schemas/jsonFileFormatSchema.json";
 
@@ -22,7 +22,8 @@ List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
   return encoder.convert(sensorDataCollection).codeUnits;
 }
 
-/// Decodes binary json data into a list of [SensorData] points.
+/// Decodes binary json data into a list of [SensorData] objects with a
+/// correspondig [SensorId].
 ///
 /// Therefor it validates the json string against a schema and if the validation
 /// is successful, it will build the sensor data from the string and return it.

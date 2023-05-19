@@ -36,7 +36,13 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
   return excel.save()!;
 }
 
-/// Decodes binary xlsx data into a list of [SensorData] points.
+/// Decodes binary csv data into a list of [SensorData] objects with a
+/// correspondig [SensorId] using the [Excel] package.
+///
+/// Therefor it reads the raw data and validate it. If the
+/// validation is successful, the sensor data objects will be created and
+/// returned. Otherwise it will encode the error in the [ImportResultStatus] and
+/// return an [ImportResult] with an empty [SensorDataCollection] field.
 ImportResult decodeXlsx(List<int> rawData) {
   var excel = Excel.decodeBytes(rawData);
   var sheet = excel["sensor_data"];

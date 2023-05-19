@@ -52,7 +52,13 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
   );
 }
 
-/// Decodes binary xml data into a list of [SensorData] points.
+/// Decodes binary xml data into a list of [SensorData] objects with a
+/// correspondig [SensorId].
+///
+/// Therefor it builds an XML document from the raw data and validates it. If
+/// the validation is successful, the sensor data objects will be created and
+/// returned. Otherwise it will encode the error in the [ImportResultStatus] and
+/// return an [ImportResult] with an empty [SensorDataCollection] field.
 ImportResult decodeXml(List<int> rawData) {
   var xmlString = String.fromCharCodes(rawData);
 

@@ -31,7 +31,13 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
   return const ListToCsvConverter().convert(csvData).codeUnits;
 }
 
-/// Decodes binary csv data into a list of [SensorData] points.
+/// Decodes binary csv data into a list of [SensorData] objects with a
+/// correspondig [SensorId] using the [CsvToListConverter].
+///
+/// Therefor it reads the raw data and validate it. If the
+/// validation is successful, the sensor data objects will be created and
+/// returned. Otherwise it will encode the error in the [ImportResultStatus] and
+/// return an [ImportResult] with an empty [SensorDataCollection] field.
 ImportResult decodeCsv(List<int> rawData) {
   var csvString = String.fromCharCodes(rawData);
   var lines = const CsvToListConverter().convert(csvString);

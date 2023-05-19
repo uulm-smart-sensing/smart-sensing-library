@@ -3,6 +3,7 @@ import '../../smart_sensing_library.dart';
 MapEntry<String, Unit> _unitToMapEntry(Unit unit) =>
     MapEntry(unit.toString(), unit);
 
+/// Maps the string representation to a [Unit].
 final stringToUnit = Map.fromEntries([
   ...Acceleration.values.map(_unitToMapEntry),
   ...Angle.values.map(_unitToMapEntry),
