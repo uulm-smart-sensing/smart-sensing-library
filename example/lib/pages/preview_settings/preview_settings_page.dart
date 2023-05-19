@@ -5,7 +5,7 @@ import '../../formatter/text_formatter.dart';
 import '../../general_widgets/brick_container.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../home/home_page.dart';
-import 'sensor_preview_settings.dart';
+import 'sensor_preview_settings_page.dart';
 
 /// Page containing a list of all currently tracked sensors and enables
 /// navigation to the [SensorPreviewSettingsPage]s of this sensors.
