@@ -38,7 +38,7 @@ List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Decodes binary csv data into a list of [SensorData] objects with a
-/// correspondig [SensorId] using the [Excel] package.
+/// corresponding [SensorId] using the [Excel] package.
 ///
 /// Therefor it reads the raw data and validate it. If the
 /// validation is successful, the sensor data objects will be created and

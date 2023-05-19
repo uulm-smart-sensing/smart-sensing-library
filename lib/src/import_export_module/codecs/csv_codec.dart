@@ -33,7 +33,7 @@ List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Decodes binary csv data into a list of [SensorData] objects with a
-/// correspondig [SensorId] using the [CsvToListConverter].
+/// corresponding [SensorId] using the [CsvToListConverter].
 ///
 /// Therefor it reads the raw data and validate it. If the
 /// validation is successful, the sensor data objects will be created and

@@ -53,7 +53,7 @@ void _buildSensorData(XmlBuilder builder, SensorData data) {
 }
 
 /// Decodes binary xml data into a list of [SensorData] objects with a
-/// correspondig [SensorId].
+/// corresponding [SensorId].
 ///
 /// Therefor it builds an XML document from the raw data and validates it. If
 /// the validation is successful, the sensor data objects will be created and

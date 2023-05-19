@@ -23,7 +23,7 @@ List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
 }
 
 /// Decodes binary json data into a list of [SensorData] objects with a
-/// correspondig [SensorId].
+/// corresponding [SensorId].
 ///
 /// Therefor it validates the json string against a schema and if the validation
 /// is successful, it will build the sensor data from the string and return it.
