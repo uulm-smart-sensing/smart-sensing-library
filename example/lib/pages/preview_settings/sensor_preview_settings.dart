@@ -31,13 +31,11 @@ class SensorPreviewSettingsPage extends StatefulWidget {
 
 class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
   late int selectedPrecision;
-  late int selectedTimeIntervalInMilliseconds;
   late Unit selectedUnit;
   late SensorPreviewSetting sensorSettings;
 
   @override
   void initState() {
-    selectedTimeIntervalInMilliseconds = 100;
     selectedUnit = getUnitsFromSensorId(widget.sensorId).first;
     sensorSettings = SensorPreviewSetting();
     super.initState();
@@ -48,7 +46,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
     var filterHeader = SectionHeader("Filters");
     var filterSelection = Expanded(
       flex: 1,
-      child: _getFilterSliderFromData(),
+      child: _getFilterfromData(),
     );
 
     var timeIntervalHeader = SectionHeader(
@@ -57,10 +55,10 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
     var timeIntervalSelection = Align(
       alignment: Alignment.topCenter,
       child: TimeIntervalSelectionButton(
-        timeIntervalInMilliseconds: selectedTimeIntervalInMilliseconds,
+        timeIntervalInMilliseconds: sensorSettings.timeInterval.inMilliseconds,
         onChanged: (newValue) {
           setState(() {
-            selectedTimeIntervalInMilliseconds = newValue;
+            sensorSettings.timeInterval = Duration(milliseconds: newValue);
           });
         },
       ),
@@ -76,8 +74,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
           fontSize: 24,
         ),
         onPressed: () {
-          // TODO: Validate settings
-          // TODO: Apply settings
+
         },
       ),
     );
@@ -114,7 +111,11 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
     );
   }
 
-  Widget _getFilterSliderFromData() {
+ /// Creates a [GridView] with clickable [BrickContainer]s
+ /// correspoding to the saved [SensorPreviewSetting].
+ ///
+ /// If no data is available, creates an empty [SensorPreviewSetting].
+  Widget _getFilterfromData() {
     var itemList = <Widget>[];
 
     for (var filter in FilterOption.values) {
@@ -131,6 +132,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
               : inactiveTrackColor,
           alignment: Alignment.center,
           onClick: () {
+            // Switches each filter from on to off.
             setState(() {
               if (sensorSettings.active.containsKey(filter)) {
                 sensorSettings.active[filter] = !sensorSettings.active[filter]!;
@@ -144,6 +146,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
       );
     }
 
+    // Creates a grit view for each filter.
     return GridView.count(
       crossAxisCount: 3,
       childAspectRatio: 1.5,
@@ -156,8 +159,9 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
   }
 }
 
+/// Class to save preview settings.
 class SensorPreviewSetting {
-  final Duration timeInterval;
+  Duration timeInterval;
   late final Map<FilterOption, bool> active;
   SensorPreviewSetting({
     this.timeInterval = const Duration(seconds: 5),
