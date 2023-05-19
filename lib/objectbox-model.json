@@ -4,38 +4,38 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:1005590483894409821",
-      "lastPropertyId": "6:1674753164041785553",
+      "id": "1:1538453120673462338",
+      "lastPropertyId": "6:8260803006663513912",
       "name": "SensorDataDTO",
       "properties": [
         {
-          "id": "1:879358615324409168",
+          "id": "1:2873348814096516111",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:3235285827333141686",
+          "id": "2:3971663214164513386",
           "name": "data",
           "type": 9
         },
         {
-          "id": "3:5429526712865523690",
+          "id": "3:7827033167997835057",
           "name": "maxPrecision",
           "type": 6
         },
         {
-          "id": "4:5926249556305270489",
+          "id": "4:167695331811199266",
           "name": "sensorID",
           "type": 6
         },
         {
-          "id": "5:229223020683813580",
+          "id": "5:5648445049606352324",
           "name": "dateTime",
           "type": 12
         },
         {
-          "id": "6:1674753164041785553",
+          "id": "6:8260803006663513912",
           "name": "unit",
           "type": 9
         }
@@ -43,7 +43,7 @@
       "relations": []
     }
   ],
-  "lastEntityId": "1:1005590483894409821",
+  "lastEntityId": "1:1538453120673462338",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
