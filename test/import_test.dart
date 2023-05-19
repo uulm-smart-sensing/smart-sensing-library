@@ -277,6 +277,41 @@ Future<void> main() async {
       );
 
       expect(
+        await ioManager.importSensorDataFromFile(
+          "${exampleFilePathWrongFormatted}noData.xlsx",
+        ),
+        ImportResultStatus.invalidXLSXFormatting,
+      );
+
+      expect(
+        await ioManager.importSensorDataFromFile(
+          "${exampleFilePathWrongFormatted}wrongUnit.xlsx",
+        ),
+        ImportResultStatus.invalidXLSXFormatting,
+      );
+
+      expect(
+        await ioManager.importSensorDataFromFile(
+          "${exampleFilePathWrongFormatted}wrongPrecision.xlsx",
+        ),
+        ImportResultStatus.invalidXLSXFormatting,
+      );
+
+      expect(
+        await ioManager.importSensorDataFromFile(
+          "${exampleFilePathWrongFormatted}wrongTimestamp.xlsx",
+        ),
+        ImportResultStatus.invalidXLSXFormatting,
+      );
+
+      expect(
+        await ioManager.importSensorDataFromFile(
+          "${exampleFilePathWrongFormatted}wrongData.xlsx",
+        ),
+        ImportResultStatus.invalidXLSXFormatting,
+      );
+
+      expect(
         await ioManager
             .getFilterFrom(SensorId.linearAcceleration)
             .then((value) => value!.result()),
