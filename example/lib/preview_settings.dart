@@ -33,6 +33,7 @@ class PreviewSettings {
     SensorId sensorId,
     SensorPreviewSetting settings,
   ) async {
+    _sensorPreviewSetting[sensorId] = settings;
     await _prefs!.setStringList(
       'previewSetting_$sensorId',
       [settings.toJson()],
