@@ -4,6 +4,7 @@ import '../../general_widgets/smart_sensing_appbar.dart';
 import '../home/home_page.dart';
 import '../import_export/import_export_page.dart';
 import '../information/information_page.dart';
+import '../preview_settings/preview_settings_page.dart';
 import '../license_page/app_license_page.dart';
 import '../preview_settings/preview_settings_page.dart';
 import '../sensor_search/sensor_search_page.dart';
@@ -19,7 +20,7 @@ final List<SettingsWidget> settings = [
   ),
   const SettingsWidget(
     title: 'Previews',
-    subtitle: 'preview control of home page',
+    subtitle: 'preview controll of home page',
     icon: Icons.preview,
     direction: PreviewSettingsPage(),
   ),
