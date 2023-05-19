@@ -5,7 +5,7 @@ import '../../formatter/text_formatter.dart';
 import '../../general_widgets/brick_container.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../home/home_page.dart';
-import 'sensor_preview_settings_page.dart';
+import 'sensor_preview_settings.dart';
 
 /// Page containing a list of all currently tracked sensors and enables
 /// navigation to the [SensorPreviewSettingsPage]s of this sensors.
@@ -44,14 +44,12 @@ class PreviewSettingsPage extends StatelessWidget {
   /// Creates [ListView] from the passed [sensorIds].
   ///
   /// If [sensorIds] is empty, [noSensorsText] is shown.
-  /// Uses [separator] to separate each Item.
+  /// Uses [seperator] to seperate each Item.
   Widget _getSensorsListFromIds({
     required List<SensorId> sensorIds,
     String noSensorsText = "No sensors are tracked right now.",
     required BuildContext context,
-    Widget separator = const SizedBox(
-      height: 15,
-    ),
+    Widget seperator = const SizedBox(height: 15,),
   }) =>
       Expanded(
         flex: 1,
@@ -73,9 +71,10 @@ class PreviewSettingsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-          separatorBuilder: (context, index) => separator,
+          separatorBuilder: (context, index) => seperator,
         ),
       );
+
 
   /// Creates a list item for the sensor with the given [sensorId].
   ///
@@ -89,8 +88,6 @@ class PreviewSettingsPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              maintainState: false,
-              allowSnapshotting: false,
               builder: (context) => SensorPreviewSettingsPage(
                 sensorId: sensorId,
               ),
