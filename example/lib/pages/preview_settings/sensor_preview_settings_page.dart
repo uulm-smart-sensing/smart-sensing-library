@@ -10,6 +10,7 @@ import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../sensor_units.dart';
 import '../../theme.dart';
 import '../sensor_settings/time_interval_selection_button.dart';
+import 'sensor_preview_settings.dart';
 
 /// Page to configure the sensor preview with the passed [sensorId].
 ///
@@ -73,9 +74,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
         style: const TextStyle(
           fontSize: 24,
         ),
-        onPressed: () {
-
-        },
+        onPressed: () {},
       ),
     );
 
@@ -111,10 +110,10 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
     );
   }
 
- /// Creates a [GridView] with clickable [BrickContainer]s
- /// correspoding to the saved [SensorPreviewSetting].
- ///
- /// If no data is available, creates an empty [SensorPreviewSetting].
+  /// Creates a [GridView] with clickable [BrickContainer]s
+  /// correspoding to the saved [SensorPreviewSetting].
+  ///
+  /// If no data is available, creates an empty [SensorPreviewSetting].
   Widget _getFilterfromData() {
     var itemList = <Widget>[];
 
@@ -156,26 +155,5 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
       shrinkWrap: true,
       children: itemList,
     );
-  }
-}
-
-/// Class to save preview settings.
-class SensorPreviewSetting {
-  Duration timeInterval;
-  late final Map<FilterOption, bool> active;
-  SensorPreviewSetting({
-    this.timeInterval = const Duration(seconds: 5),
-    Map<FilterOption, bool>? activeMap,
-  }) {
-    activeMap ??= _createEmptyMap();
-    active = activeMap;
-  }
-
-  Map<FilterOption, bool> _createEmptyMap() {
-    var map = <FilterOption, bool>{};
-    for (var filter in FilterOption.values) {
-      map[filter] = false;
-    }
-    return map;
   }
 }
