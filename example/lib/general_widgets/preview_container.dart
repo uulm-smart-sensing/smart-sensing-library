@@ -153,7 +153,13 @@ Widget mainData({
           ? [const SizedBox.shrink()]
           : (data.length != 1
               ? _createWidgetList(data: data, style: style)
-              : [_createDataText(data: data[0].data, style: style)]),
+              : [
+                  _createDataText(
+                    data: data[0].data,
+                    style: style,
+                    unit: data[0].unit,
+                  )
+                ]),
     );
 
 /// Transforms [data] into a usable [String] format for [PreviewContainer].
@@ -166,7 +172,7 @@ String _createStringFromData(List<double?> data, Unit unit) {
   return values
       .map(
         (value) => "${value.toStringAsFixed(3)} "
-            "${unitToUnitStringRepresentation[unit]}",
+            "${unit.toTextDisplay(isShort: true)}",
       )
       .join("\n");
 }
@@ -174,7 +180,7 @@ String _createStringFromData(List<double?> data, Unit unit) {
 /// Creates a flexible [Text] with the data given.
 Widget _createDataText({
   required List<double?> data,
-  Unit unit = Unit.metersPerSecondSquared,
+  required Unit unit,
   required TextStyle style,
   int? axisNumber,
 }) =>
@@ -249,6 +255,7 @@ List<Widget> _createWidgetList({
         data: data[i].data,
         style: style,
         axisNumber: i,
+        unit: data[i].unit,
       ),
     );
   }
