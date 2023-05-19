@@ -7,11 +7,9 @@ import '../../general_widgets/brick_container.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/section_header.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
-import '../../preview_settings.dart';
 import '../../sensor_units.dart';
 import '../../theme.dart';
 import '../sensor_settings/time_interval_selection_button.dart';
-import 'sensor_preview_settings.dart';
 
 /// Page to configure the sensor preview with the passed [sensorId].
 ///
@@ -34,47 +32,21 @@ class SensorPreviewSettingsPage extends StatefulWidget {
 class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
   late int selectedPrecision;
   late Unit selectedUnit;
-  late Future<PreviewSettings> provider = PreviewSettings.getProvider();
-  late Future<SensorPreviewSetting> previewSettings;
+  late SensorPreviewSetting sensorSettings;
 
   @override
   void initState() {
     selectedUnit = getUnitsFromSensorId(widget.sensorId).first;
-    previewSettings = provider.then(
-      (value) =>
-          value.sensorPreviewSettings[widget.sensorId] ??
-          SensorPreviewSetting(),
-    );
+    sensorSettings = SensorPreviewSetting();
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: previewSettings,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _buildSettingsPage(snapshot.data!);
-          } else {
-            return const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-              child: Center(
-                child: Text(
-                  "Waiting for Data",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            );
-          }
-        },
-      );
-
-  Widget _buildSettingsPage(SensorPreviewSetting settings) {
+  Widget build(BuildContext context) {
     var filterHeader = SectionHeader("Filters");
     var filterSelection = Expanded(
       flex: 1,
-      child: _getFilterfromData(settings),
+      child: _getFilterfromData(),
     );
 
     var timeIntervalHeader = SectionHeader(
@@ -83,10 +55,10 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
     var timeIntervalSelection = Align(
       alignment: Alignment.topCenter,
       child: TimeIntervalSelectionButton(
-        timeIntervalInMilliseconds: settings.timeInterval.inMilliseconds,
+        timeIntervalInMilliseconds: sensorSettings.timeInterval.inMilliseconds,
         onChanged: (newValue) {
           setState(() {
-            settings.timeInterval = Duration(milliseconds: newValue);
+            sensorSettings.timeInterval = Duration(milliseconds: newValue);
           });
         },
       ),
@@ -101,11 +73,8 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
         style: const TextStyle(
           fontSize: 24,
         ),
-        onPressed: () async {
-          await (await provider).updateSensorPreviewSettings(
-            widget.sensorId,
-            settings,
-          );
+        onPressed: () {
+
         },
       ),
     );
@@ -142,12 +111,13 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
     );
   }
 
-  /// Creates a [GridView] with clickable [BrickContainer]s
-  /// correspoding to the saved [SensorPreviewSetting].
-  ///
-  /// If no data is available, creates an empty [SensorPreviewSetting].
-  Widget _getFilterfromData(SensorPreviewSetting previewSettings) {
+ /// Creates a [GridView] with clickable [BrickContainer]s
+ /// correspoding to the saved [SensorPreviewSetting].
+ ///
+ /// If no data is available, creates an empty [SensorPreviewSetting].
+  Widget _getFilterfromData() {
     var itemList = <Widget>[];
+
     for (var filter in FilterOption.values) {
       var textContainer = Container(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -157,18 +127,17 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
       );
       itemList.add(
         BrickContainer(
-          color: previewSettings.active[filter]!
+          color: sensorSettings.active[filter]!
               ? activeTrackColor
               : inactiveTrackColor,
           alignment: Alignment.center,
           onClick: () {
             // Switches each filter from on to off.
             setState(() {
-              if (previewSettings.active.containsKey(filter)) {
-                previewSettings.active[filter] =
-                    !previewSettings.active[filter]!;
+              if (sensorSettings.active.containsKey(filter)) {
+                sensorSettings.active[filter] = !sensorSettings.active[filter]!;
               } else {
-                previewSettings.active[filter] = false;
+                sensorSettings.active[filter] = false;
               }
             });
           },
@@ -187,5 +156,26 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
       shrinkWrap: true,
       children: itemList,
     );
+  }
+}
+
+/// Class to save preview settings.
+class SensorPreviewSetting {
+  Duration timeInterval;
+  late final Map<FilterOption, bool> active;
+  SensorPreviewSetting({
+    this.timeInterval = const Duration(seconds: 5),
+    Map<FilterOption, bool>? activeMap,
+  }) {
+    activeMap ??= _createEmptyMap();
+    active = activeMap;
+  }
+
+  Map<FilterOption, bool> _createEmptyMap() {
+    var map = <FilterOption, bool>{};
+    for (var filter in FilterOption.values) {
+      map[filter] = false;
+    }
+    return map;
   }
 }
