@@ -23,12 +23,6 @@ final List<SettingsWidget> settings = [
     direction: PreviewSettingsPage(),
   ),
   const SettingsWidget(
-    title: 'Previews',
-    subtitle: 'preview controll of home page',
-    icon: Icons.preview,
-    direction: PreviewSettingsPage(),
-  ),
-  const SettingsWidget(
     title: 'Import/Export',
     subtitle: 'import & export of Sensor Data',
     icon: Icons.ios_share_outlined,
