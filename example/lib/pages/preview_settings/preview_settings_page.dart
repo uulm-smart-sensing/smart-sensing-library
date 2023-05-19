@@ -89,6 +89,8 @@ class PreviewSettingsPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
+              maintainState: false,
+              allowSnapshotting: false,
               builder: (context) => SensorPreviewSettingsPage(
                 sensorId: sensorId,
               ),
