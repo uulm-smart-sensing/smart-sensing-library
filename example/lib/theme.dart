@@ -42,6 +42,8 @@ final primaryMaterialColor = MaterialColor(
 );
 
 const secondaryColor = Color.fromARGB(255, 34, 0, 77);
+const activeTrackColor = Color.fromARGB(255, 66, 234, 7);
+const inactiveTrackColor = Color.fromARGB(255, 144, 149, 142);
 
 /// Theme used for the app-
 final theme = ThemeData(
