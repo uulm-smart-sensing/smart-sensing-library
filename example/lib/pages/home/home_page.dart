@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../formatter/date_formatter.dart';
+import '../../general_widgets/preview_container.dart';
+import '../../preview_settings.dart';
 import '../live_view/live_view_page.dart';
 import '../live_view/live_view_sensor_widget.dart';
 import '../settings/settings_page.dart';
 import '../statistics/statistics_page.dart';
-import 'demo_sensor_widget.dart';
 import 'device_widget.dart';
 import 'home_page_section_body.dart';
 import 'home_page_section_header.dart';
@@ -98,9 +99,22 @@ class _HomePageState extends State<HomePage> {
       title: "sensors",
       onPressed: () => _navigateToPage(context, const StatisticsPage()),
     );
-    var sensorsSectionBody = HomePageSectionBody(
-      children:
-          SensorId.values.map((id) => DemoSensorWidget(sensorId: id)).toList(),
+    var sensorsSectionBody = FutureBuilder(
+      future: Future.wait(
+        [
+          IOManager().getUsedSensors(),
+          PreviewSettings.getProvider(),
+        ],
+      ),
+      builder: (context, snapshot) => HomePageSectionBody(
+        noChildrenText: "No sensors are currently being tracked.",
+        children: snapshot.data != null
+            ? _createPreviewList(
+                snapshot.data![0] as List<SensorId>,
+                snapshot.data![1] as PreviewSettings,
+              )
+            : [],
+      ),
     );
 
     var devicesSectionHeader = Container(
@@ -142,6 +156,27 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  List<Widget> _createPreviewList(
+    List<SensorId> sensorIds,
+    PreviewSettings settings,
+  ) {
+    var previewList = <Widget>[];
+    var entries = settings.sensorPreviewSettings.entries;
+    for (var settings in entries) {
+      previewList.addAll(
+        settings.value.active.entries
+            .where(
+              (element) => element.value && sensorIds.contains(settings.key),
+            )
+            .map(
+              (e) =>
+                  PreviewContainer(sensorId: settings.key, filterOption: e.key),
+            ),
+      );
+    }
+    return previewList;
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
