@@ -152,7 +152,10 @@ Widget mainData({
     Row(
       children: data.isEmpty
           ? [
-              const Text("Data is loading."),
+              Text(
+                "Data is loading.",
+                style: style,
+              ),
             ]
           : (data.length != 1
               ? _createWidgetList(data: data, style: style)
