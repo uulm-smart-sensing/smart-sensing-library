@@ -6,7 +6,6 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../filter_options.dart';
 import '../formatter/text_formatter.dart';
 import '../theme.dart';
-import '../unit_string_representation.dart';
 import 'brick_container.dart';
 
 /// Creates a preview for the given [filterOption].
