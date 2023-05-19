@@ -104,7 +104,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
         onPressed: () async {
           await (await provider).updateSensorPreviewSettings(
             widget.sensorId,
-            await previewSettings,
+            settings,
           );
         },
       ),
