@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
@@ -13,12 +15,19 @@ class PreviewSettingsProvider extends ChangeNotifier {
   Map<SensorId, SensorPreviewSetting> get sensorPreviewSettings =>
       _sensorPreviewSetting;
 
-  final Future<SharedPreferences> _prefs;
+  static late final SharedPreferences? _prefs;
+  static late final PreviewSettingsProvider? _instance;
 
   /// Initializes the `SharedPreferences` and loads the
   /// previously stored list of favorites.
-  PreviewSettingsProvider() : _prefs = SharedPreferences.getInstance() {
+  PreviewSettingsProvider._create() {
     loadPreviewSettings();
+  }
+
+  static Future<PreviewSettingsProvider> getProvider() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    _instance ??= PreviewSettingsProvider._create();
+    return _instance!;
   }
 
   /// Adds or removes a sensor[sensorId] to the [_sensorPreviewSetting] depending on whether
@@ -28,18 +37,16 @@ class PreviewSettingsProvider extends ChangeNotifier {
     SensorPreviewSetting settings,
   ) async {
     notifyListeners();
-    var pref = await _prefs;
-    await pref.setStringList(
+    await _prefs!.setStringList(
       'previewSetting_$sensorId',
       [settings.toJson()],
     );
   }
 
   /// Loads the list of favorite sensors from SharedPreferences
-  Future<void> loadPreviewSettings() async {
-    var pref = await _prefs;
+  void loadPreviewSettings() {
     for (var sensorId in SensorId.values) {
-      var previewSettings = pref.getStringList('previewSetting_$sensorId');
+      var previewSettings = _prefs!.getStringList('previewSetting_$sensorId');
       if (previewSettings != null) {
         _sensorPreviewSetting[sensorId] =
             SensorPreviewSetting.fromJson(previewSettings.first);
