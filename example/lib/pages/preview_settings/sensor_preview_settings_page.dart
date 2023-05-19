@@ -8,7 +8,6 @@ import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/section_header.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../../preview_settings.dart';
-import '../../sensor_units.dart';
 import '../../theme.dart';
 import '../sensor_settings/time_interval_selection_button.dart';
 import 'sensor_preview_settings.dart';
@@ -33,13 +32,11 @@ class SensorPreviewSettingsPage extends StatefulWidget {
 
 class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
   late int selectedPrecision;
-  late Unit selectedUnit;
   late Future<PreviewSettings> provider = PreviewSettings.getProvider();
   late Future<SensorPreviewSetting> previewSettings;
 
   @override
   void initState() {
-    selectedUnit = getUnitsFromSensorId(widget.sensorId).first;
     previewSettings = provider.then(
       (value) =>
           value.sensorPreviewSettings[widget.sensorId] ??
