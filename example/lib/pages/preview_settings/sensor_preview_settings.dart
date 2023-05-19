@@ -25,13 +25,16 @@ class SensorPreviewSetting {
   SensorPreviewSetting.fromJson(String jsonString) {
     var json = jsonDecode(jsonString);
     timeInterval = Duration(microseconds: json['timeInterval']);
-    active = (json['activeMap'] as Map<dynamic,dynamic>).cast<String,bool>().map(
-      (key, value) =>
-    MapEntry(FilterOption.values[int.parse(key)], value),);
+    active =
+        (json['activeMap'] as Map<dynamic, dynamic>).cast<String, bool>().map(
+              (key, value) =>
+                  MapEntry(FilterOption.values[int.parse(key)], value),
+            );
   }
 
   String toJson() => json.encode({
-    'timeInterval': timeInterval.inMicroseconds,
-    'activeMap': active.map((key, value) => MapEntry(key.index.toString(), value)),
-  });
+        'timeInterval': timeInterval.inMicroseconds,
+        'activeMap':
+            active.map((key, value) => MapEntry(key.index.toString(), value)),
+      });
 }
