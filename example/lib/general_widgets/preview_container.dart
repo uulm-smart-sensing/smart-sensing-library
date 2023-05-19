@@ -82,6 +82,12 @@ class _PreviewContainerState extends State<PreviewContainer> {
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
+
   Widget internalText() => Padding(
         padding: widget.padding,
         child: Stack(
