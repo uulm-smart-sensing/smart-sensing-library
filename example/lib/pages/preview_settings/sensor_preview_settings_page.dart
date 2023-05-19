@@ -34,8 +34,7 @@ class SensorPreviewSettingsPage extends StatefulWidget {
 class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
   late int selectedPrecision;
   late Unit selectedUnit;
-  late Future<PreviewSettings> provider =
-      PreviewSettings.getProvider();
+  late Future<PreviewSettings> provider = PreviewSettings.getProvider();
   late Future<SensorPreviewSetting> previewSettings;
 
   @override
