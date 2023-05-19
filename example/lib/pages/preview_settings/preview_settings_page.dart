@@ -49,7 +49,9 @@ class PreviewSettingsPage extends StatelessWidget {
     required List<SensorId> sensorIds,
     String noSensorsText = "No sensors are tracked right now.",
     required BuildContext context,
-    Widget seperator = const SizedBox(height: 15,),
+    Widget seperator = const SizedBox(
+      height: 15,
+    ),
   }) =>
       Expanded(
         flex: 1,
@@ -74,7 +76,6 @@ class PreviewSettingsPage extends StatelessWidget {
           separatorBuilder: (context, index) => seperator,
         ),
       );
-
 
   /// Creates a list item for the sensor with the given [sensorId].
   ///
