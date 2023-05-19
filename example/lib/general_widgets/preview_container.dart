@@ -151,7 +151,9 @@ Widget mainData({
 }) =>
     Row(
       children: data.isEmpty
-          ? [const SizedBox.shrink()]
+          ? [
+              const Text("Data is loading."),
+            ]
           : (data.length != 1
               ? _createWidgetList(data: data, style: style)
               : [
@@ -166,7 +168,6 @@ Widget mainData({
 /// Transforms [data] into a usable [String] format for [PreviewContainer].
 String _createStringFromData(List<double?> data, Unit unit) {
   var values = data.whereType<double>().toList();
-
   if (values.isEmpty) {
     return "No Data";
   }
