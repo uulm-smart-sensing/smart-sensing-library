@@ -206,6 +206,48 @@ Future<void> main() async {
         );
 
         expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongFirstLine.csv",
+          ),
+          ImportResultStatus.invalidCSVFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}noData.csv",
+          ),
+          ImportResultStatus.invalidCSVFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongUnit.csv",
+          ),
+          ImportResultStatus.invalidCSVFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongPrecision.csv",
+          ),
+          ImportResultStatus.invalidCSVFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongTimestamp.csv",
+          ),
+          ImportResultStatus.invalidCSVFormatting,
+        );
+
+        expect(
+          await ioManager.importSensorDataFromFile(
+            "${exampleFilePathWrongFormatted}wrongData.csv",
+          ),
+          ImportResultStatus.invalidCSVFormatting,
+        );
+
+        expect(
           await ioManager
               .getFilterFrom(SensorId.linearAcceleration)
               .then((value) => value!.result()),

@@ -46,6 +46,16 @@ enum ImportResultStatus {
     "The format of the json file do not conform the JSON schema",
   ),
 
+  /// The formatting of the csv file is not correct.
+  invalidCSVFormatting(
+    "The format of the csv file is not valid",
+  ),
+
+  /// The formatting of the xlsx file is not correct.
+  invalidXLSXFormatting(
+    "The format of the xlsx file is not valid",
+  ),
+
   /// The formatting of the xml file is not correct.
   invalidXMLFormatting(
     "The format of the xml file do not conform the XSD schema",
