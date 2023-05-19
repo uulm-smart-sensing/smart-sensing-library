@@ -68,10 +68,10 @@ class _PreviewContainerState extends State<PreviewContainer> {
         var dataList = <SensorData>[];
         for (var i = 0; i < widget.filterOption.axisNumber; i++) {
           var filter = await IOManager().getFilterFrom(widget.sensorId);
-          if(filter != null){
-          dataList.addAll(
-            _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
-          );
+          if (filter != null) {
+            dataList.addAll(
+              _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
+            );
           }
         }
         setState(() {
@@ -193,7 +193,7 @@ Widget _createDataText({
           axisNumber != null
               ? Align(
                   child: Text(
-                    "Axis $axisNumber",
+                    _fromAxisNumberToAxis(axisNumber),
                     style: style,
                   ),
                 )
@@ -242,6 +242,19 @@ List<SensorData>? _getFromFilter(
       break;
   }
   return filterTool.result();
+}
+
+/// Translates [number] to corresponding axes X, Y or Z.
+String _fromAxisNumberToAxis(int number) {
+  switch (number) {
+    case 0:
+      return 'X';
+    case 1:
+      return 'Y';
+    case 2:
+      return 'Z';
+  }
+  return 'X';
 }
 
 /// Creates a list for each [data] given.
