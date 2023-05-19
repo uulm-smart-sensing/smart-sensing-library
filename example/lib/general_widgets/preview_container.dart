@@ -10,8 +10,8 @@ import 'brick_container.dart';
 
 /// Creates a preview for the given [filterOption].
 ///
-/// The created preview shows all relevant axles form the data.
-/// E.g. the maximum filter shows the maximum of all three axles,
+/// The created preview shows all relevant axes form the data.
+/// E.g. the maximum filter shows the maximum of all three axes,
 /// while the average shows only one:
 ///
 /// Max ->
@@ -68,9 +68,11 @@ class _PreviewContainerState extends State<PreviewContainer> {
         var dataList = <SensorData>[];
         for (var i = 0; i < widget.filterOption.axisNumber; i++) {
           var filter = await IOManager().getFilterFrom(widget.sensorId);
+          if(filter != null){
           dataList.addAll(
             _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
           );
+          }
         }
         setState(() {
           data
@@ -210,36 +212,36 @@ Widget _createDataText({
 /// Returns the filtered data from given [option].
 List<SensorData>? _getFromFilter(
   FilterOption option,
-  FilterTools? filterTool, {
+  FilterTools filterTool, {
   int axis = 0,
 }) {
   switch (option) {
     case FilterOption.max:
-      filterTool?.getMax(axis: axis);
+      filterTool.getMax(axis: axis);
       break;
     case FilterOption.min:
-      filterTool?.getMin(axis: axis);
+      filterTool.getMin(axis: axis);
       break;
     case FilterOption.avg:
-      filterTool?.getAvg();
+      filterTool.getAvg();
       break;
     case FilterOption.sd:
-      filterTool?.getSD();
+      filterTool.getSD();
       break;
     case FilterOption.mode:
-      filterTool?.getMode(axis: axis);
+      filterTool.getMode(axis: axis);
       break;
     case FilterOption.range:
-      filterTool?.getRange();
+      filterTool.getRange();
       break;
     case FilterOption.median:
-      filterTool?.getMedian();
+      filterTool.getMedian();
       break;
     case FilterOption.sum:
-      filterTool?.getSum();
+      filterTool.getSum();
       break;
   }
-  return filterTool?.result();
+  return filterTool.result();
 }
 
 /// Creates a list for each [data] given.
