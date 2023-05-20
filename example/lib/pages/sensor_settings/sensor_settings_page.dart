@@ -47,9 +47,12 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     var unitHeader = SectionHeader("Unit");
 
     var units = sensorIdToUnitCategory[widget.sensorId]!;
-    var unitSelection = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: units.map(_getUnitSelectionButtonFromUnit).toList(),
+    var unitSelection = SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: units.map(_getUnitSelectionButtonFromUnit).toList(),
+      ),
     );
 
     var precisionHeader = SectionHeader("Precision");
