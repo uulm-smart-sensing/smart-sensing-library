@@ -15,20 +15,25 @@ class PreviewSettings {
   static SharedPreferences? _prefs;
   static PreviewSettings? _instance;
 
-  /// Initializes the `SharedPreferences` and loads the
-  /// previously stored list of favorites.
+  /// Private singleton constructor to initialize [SharedPreferences]
+  /// and init. [SensorPreviewSetting].
   PreviewSettings._create() {
     loadPreviewSettings();
   }
 
+  /// Factory Method for getting [PreviewSettings].
+  ///
+  /// Will only create one instance of [PreviewSettings]
+  /// and returns only that afterwards.
   static Future<PreviewSettings> getProvider() async {
     _prefs ??= await SharedPreferences.getInstance();
     _instance ??= PreviewSettings._create();
     return _instance!;
   }
 
-  /// Adds or removes a sensor[sensorId] to the [_sensorPreviewSetting] depending on whether
-  /// the sensor (with [sensorId]) was already been added (= remove) or not (= add).
+  /// Updates the [SensorPreviewSetting] of sensor [sensorId] with [settings].
+  ///
+  /// Gets updated in [SharedPreferences] afterwards.
   Future<void> updateSensorPreviewSettings(
     SensorId sensorId,
     SensorPreviewSetting settings,
@@ -40,7 +45,7 @@ class PreviewSettings {
     );
   }
 
-  /// Loads the list of favorite sensors from SharedPreferences
+  /// Loads the Map of [SensorPreviewSetting] from [SharedPreferences].
   void loadPreviewSettings() {
     for (var sensorId in SensorId.values) {
       var previewSettings = _prefs!.getStringList('previewSetting_$sensorId');
