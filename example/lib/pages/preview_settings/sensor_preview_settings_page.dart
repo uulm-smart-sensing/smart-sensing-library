@@ -16,7 +16,6 @@ import 'sensor_preview_settings.dart';
 ///
 /// The settings which can be configured are:
 /// * filter of sensor data
-/// * target unit of sensor data
 /// * time interval of sensor update events
 class SensorPreviewSettingsPage extends StatefulWidget {
   final SensorId sensorId;
@@ -35,6 +34,10 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
   late Future<PreviewSettings> provider = PreviewSettings.getProvider();
   late Future<SensorPreviewSetting> previewSettings;
 
+  /// Loads the initial [SensorPreviewSetting]
+  /// for sensor with given [SensorId] from disk.
+  ///
+  /// If there are none, loads empty [SensorPreviewSetting].
   @override
   void initState() {
     previewSettings = provider.then(
@@ -45,6 +48,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
     super.initState();
   }
 
+  // Only builds when [previewSettings] are loaded from disk.
   @override
   Widget build(BuildContext context) => FutureBuilder(
         future: previewSettings,
@@ -67,6 +71,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
         },
       );
 
+  /// Creates the main page.
   Widget _buildSettingsPage(SensorPreviewSetting settings) {
     var filterHeader = SectionHeader("Filters");
     var filterSelection = Expanded(
