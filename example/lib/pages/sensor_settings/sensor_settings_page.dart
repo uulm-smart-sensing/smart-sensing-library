@@ -35,10 +35,17 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
 
   @override
   void initState() {
-    // TODO: Make call to smart sensing library to initialize values
-    selectedPrecision = 2;
-    selectedTimeIntervalInMilliseconds = 100;
-    selectedUnit = sensorIdToDefaultTargetUnit[widget.sensorId]!;
+    // request sensor config for this sensor
+    var config = IOManager().getSensorConfig(widget.sensorId);
+    if (config != null) {
+      selectedPrecision = config.targetPrecision;
+      selectedTimeIntervalInMilliseconds = config.timeInterval.inMilliseconds;
+      selectedUnit = config.targetUnit;
+    } else {
+      selectedPrecision = 1;
+      selectedTimeIntervalInMilliseconds = 500;
+      selectedUnit = sensorIdToDefaultTargetUnit[widget.sensorId]!;
+    }
     super.initState();
   }
 
@@ -86,10 +93,18 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         style: const TextStyle(
           fontSize: 24,
         ),
-        onPressed: () {
-          // TODO: Validate settings
-          // TODO: Apply settings
-        },
+        onPressed: _checkSettings()
+            ? () {
+                IOManager().editSensorConfig(
+                  widget.sensorId,
+                  targetUnit: selectedUnit,
+                  targetPrecision: selectedPrecision,
+                  timeInterval: Duration(
+                    milliseconds: selectedTimeIntervalInMilliseconds,
+                  ),
+                );
+              }
+            : null,
       ),
     );
 
@@ -129,4 +144,26 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         unit: unit,
         isSelected: selectedUnit == unit,
       );
+
+  bool _checkSettings() {
+    var newConfig = SensorConfig(
+      targetUnit: selectedUnit,
+      targetPrecision: selectedPrecision,
+      timeInterval: Duration(milliseconds: selectedTimeIntervalInMilliseconds),
+    );
+
+    var validationResult =
+        IOManager().validateSettings(widget.sensorId, newConfig);
+
+    switch (validationResult) {
+      case SensorTaskResult.success:
+        return true;
+      case SensorTaskResult.invalidTimeInterval:
+      case SensorTaskResult.invalidPrecision:
+      case SensorTaskResult.invalidUnit:
+        return false;
+      default:
+        return false;
+    }
+  }
 }
