@@ -2,5 +2,5 @@
 * text=auto
 
 # Set eol of example import files to LF
-./test/example_import/files/*.json text eol=lf
-./test/example_import/files/*.xml text eol=lf
+./test/example_import_files/*.json text eol=lf
+./test/example_import_files/*.xml text eol=lf
