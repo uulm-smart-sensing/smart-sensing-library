@@ -95,7 +95,9 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
 
     /// show all Favorites
     var favoritesBody = _getSensorsListFromIds(
-      sensorIds: provider.sensorList,
+      sensorIds: sensorIdsToDisplay
+          .where((id) => provider.sensorList.contains(id))
+          .toList(),
       containerFlex: provider.sensorList.length,
       sensorNameFilter: sensorNameFilter,
       provider: provider,
