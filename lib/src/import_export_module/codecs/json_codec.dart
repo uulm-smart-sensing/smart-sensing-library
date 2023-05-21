@@ -1,9 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:json_schema2/json_schema2.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import '../import_result.dart';
