@@ -6,11 +6,10 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../favorite_provider.dart';
 import '../../formatter/date_formatter.dart';
-import '../../formatter/text_formatter.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
-import '../../general_widgets/stylized_container.dart';
 import '../historic_view/historic_view_page.dart';
 import '../home/home_page.dart';
+import 'statistics_page_body.dart';
 
 /// Page containing a list of all implemented sensors and enables navigation
 /// to the [HistoricViewPage]s of this sensors.
@@ -26,45 +25,48 @@ class StatisticsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = Provider.of<FavoriteProvider>(context);
 
+    var allSensorList = FutureBuilder(
+      future: IOManager().getAvailableSensors(),
+      builder: (context, snapshot) => StatisticsPageBody(
+        noChildrenText: "No sensors are currently being available.",
+        children: snapshot.data != null
+            ? snapshot.data!
+                .where((id) => !provider.sensorList.contains(id))
+                .map((id) => getSensorListItem(id, context))
+                .toList()
+            : [],
+      ),
+    );
+
+    var favoriteSensorList = FutureBuilder(
+      future: IOManager().getAvailableSensors(),
+      builder: (context, snapshot) => StatisticsPageBody(
+        noChildrenText: "No sensors are currently favoured",
+        children: snapshot.data != null
+            ? snapshot.data!
+                .where((id) => provider.sensorList.contains(id))
+                .map((id) => getSensorListItem(id, context))
+                .toList()
+            : [],
+      ),
+    );
     // The list containing the buttons for all implemented sensors
     // for navigation to the [HistoricViewPage]s.
     var sensorList = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text("Favorites", style: TextStyle(fontSize: 24)),
-            ),
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: provider.sensorList
-                  .map((id) => _getSensorListItem(id, context))
-                  .toList(),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text("All", style: TextStyle(fontSize: 24)),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: SensorId.values
-                  .where((sensorId) => !provider.sensorList.contains(sensorId))
-                  .map((id) => _getSensorListItem(id, context))
-                  .toList(),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
+      child: Column(
+        children: [
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text("Favorites", style: TextStyle(fontSize: 24)),
+          ),
+          Expanded(child: SingleChildScrollView(child: favoriteSensorList)),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text("All", style: TextStyle(fontSize: 24)),
+          ),
+          Expanded(child: SingleChildScrollView(child: allSensorList)),
+        ],
       ),
     );
 
@@ -76,42 +78,6 @@ class StatisticsPage extends StatelessWidget {
         extendWithDayName: true,
       ),
       body: sensorList,
-    );
-  }
-
-  // Create the button (= List item) for a sensor with [sensorId]
-  Widget _getSensorListItem(SensorId sensorId, BuildContext context) {
-    var sensorButton = StylizedContainer(
-      height: 50,
-      width: 330,
-      padding: const EdgeInsets.all(15),
-      child: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HistoricViewPage(
-                sensorId: sensorId,
-              ),
-            ),
-          );
-        },
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            formatPascalCase(sensorId.name),
-          ),
-        ),
-      ),
-    );
-
-    return Column(
-      children: [
-        const SizedBox(
-          height: 15,
-        ),
-        sensorButton,
-      ],
     );
   }
 }
