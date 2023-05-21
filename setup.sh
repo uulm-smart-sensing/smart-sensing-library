@@ -2,6 +2,7 @@ git submodule update --init
 
 cd sensing-plugin
 bash setup.sh
+cd ..
 
 bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh)
 
