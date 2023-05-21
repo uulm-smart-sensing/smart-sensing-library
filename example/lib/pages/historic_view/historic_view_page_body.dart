@@ -358,6 +358,9 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
                   data: [value.roundToDouble()],
                   maxPrecision: filterTool.result().first.maxPrecision,
                   unit: filterTool.result().first.unit,
+
+                  /// TODO: do not use DateTime.now() which only works, if the
+                  /// latest data points are from now
                   timestamp: DateTime.now().subtract(
                     Duration(
                       microseconds: selectedDuration.inMicroseconds *

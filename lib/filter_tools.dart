@@ -60,7 +60,7 @@ class FilterTools {
         _buffer[bufferCounter].add(tmpList[i]);
         intervalCount += interval;
       }
-      tmpDuration += tmpList[i].timestamp.difference(tmpList[i + 1].timestamp);
+      tmpDuration += tmpList[i+1].timestamp.difference(tmpList[i].timestamp);
     }
     //Is used for the last entry in the list.
     if (tmpDuration < intervalCount) {
