@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:json_schema2/json_schema2.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
 import '../import_result.dart';
@@ -9,7 +12,7 @@ import '../supported_file_format.dart';
 
 /// The path the JSON validation schema.
 const String filePathSchema =
-    "./lib/src/import_export_module/validation_schemas/jsonFileFormatSchema.json";
+    "lib/src/import_export_module/validation_schemas/jsonFileFormatSchema.json";
 
 /// Formats a list of sensor data (points) into the corresponding json string
 /// following the format described in [SupportedFileFormat.json].
@@ -49,7 +52,9 @@ Future<ImportResult> decodeJson(List<int> rawData) async {
 
 Future<bool> _validateJsonFile(String jsonString) async {
   // read schema file
-  var schemaString = await File(filePathSchema).readAsString();
+  var schemaString = await rootBundle.loadString(
+    "../lib/src/import_export_module/validation_schemas/jsonFileFormatSchema.json",
+  );
 
   var schema = JsonSchema.createSchema(schemaString);
   return schema.validate(json.decode(jsonString));
