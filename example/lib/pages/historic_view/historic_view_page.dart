@@ -64,49 +64,50 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
 
     var exampleSection = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        SizedBox(height: 10),
-        Text(
+      children: [
+        const SizedBox(height: 10),
+        const Text(
           "Example",
           style: TextStyle(
             fontSize: 24,
           ),
         ),
-        Divider(thickness: 2),
-        Text.rich(
+        const Divider(thickness: 2),
+        const Text.rich(
           TextSpan(
             text: "Show me the (y-) minimum of all hourly averages from "
-                "yesterday ",
+                "yesterday: ",
             style: TextStyle(
               fontSize: 16,
             ),
             children: <InlineSpan>[
               TextSpan(
-                text: "(= avg(1 hour, axis = y).min())",
+                text: "(= avg(1 hour).min(axis = y))",
                 style: TextStyle(fontSize: 12),
               )
             ],
           ),
         ),
-        // TODO: Make call to smart sensing library
-        SizedBox(height: 10),
-        Text.rich(
+        const SizedBox(height: 5),
+        _getTextForExample1(),
+        const SizedBox(height: 10),
+        const Text.rich(
           TextSpan(
-            text: "Show me the range of amount of datapoints a day from last "
-                "week ",
+            text: "Show me the range of 1 min maxima (in x-axis) of datapoints "
+                "from last hour: ",
             style: TextStyle(
               fontSize: 16,
             ),
             children: <InlineSpan>[
               TextSpan(
-                text: "(= count(1 day).range())",
+                text: "(= max(1 min).range())",
                 style: TextStyle(fontSize: 12),
               )
             ],
           ),
         ),
-        // TODO: Make call to smart sensing library
-        SizedBox(height: 20),
+        _getTextForExample2(),
+        const SizedBox(height: 20),
       ],
     );
 
@@ -126,18 +127,99 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
       ),
     );
   }
-}
 
-Widget _getTooltip(SensorId sensorId) => FutureBuilder(
-      future: IOManager().getSensorInfo(sensorId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
-          return SensorInfoTooltip(
-            sensorId: sensorId,
-            sensorInfo: snapshot.data!,
+  /// Fetching data from the database and filter them corresponding to the
+  /// description of example one in the "Example" section.
+  ///
+  /// The result value will be displayed within [Text] widget.
+  Widget _getTextForExample1() => FutureBuilder(
+        future: Future.sync(() async {
+          var filterTool = await IOManager().getFilterFrom(
+            widget.sensorId,
+            from: DateTime.now().subtract(const Duration(days: 1)),
           );
-        }
 
-        return const SizedBox.shrink();
-      },
-    );
+          var filteredData = filterTool!
+            ..getAvg(interval: const Duration(hours: 1))
+            ..getMin(axis: 1);
+
+          return filteredData.result().first;
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var sensorData = snapshot.data!.data;
+            var resultText = sensorData.length > 1
+                ? sensorData[1]
+                : "y-value does not exist";
+            return Text(
+              "    Result: $resultText",
+              style: const TextStyle(fontSize: 16),
+            );
+          }
+          return const Text(
+            "    Could not get data!",
+            style: TextStyle(fontSize: 14),
+          );
+        },
+      );
+
+  /// Fetching data from the database and filter them corresponding to the
+  /// description of example two in the "Example" section.
+  ///
+  /// The result value will be displayed within [Text] widget.
+  Widget _getTextForExample2() => FutureBuilder(
+        future: Future.sync(() async {
+          var filterTool = await IOManager().getFilterFrom(
+            widget.sensorId,
+            from: DateTime.now().subtract(const Duration(hours: 1)),
+          );
+
+          var filteredData = filterTool!
+            ..getMax(interval: const Duration(minutes: 1), axis: 0)
+            ..getRange();
+
+          return filteredData.result().first;
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var sensorData = snapshot.data!.data;
+            return Text(
+              "    Result: ${sensorData[0]}",
+              style: const TextStyle(fontSize: 16),
+            );
+          }
+          return const Text(
+            "    Could not get data!",
+            style: TextStyle(fontSize: 14),
+          );
+        },
+      );
+
+  /// Request the sensor information about the sensor with the [sensorId] and
+  /// if the sensor is running and the information are known, a
+  /// [SensorInfoTooltip] containing this data is returned.
+  Widget _getTooltip(SensorId sensorId) => FutureBuilder(
+        future: Future.sync(() async {
+          // Check, whether sensor is used.
+          var isSensorRunning = await IOManager()
+              .getUsedSensors()
+              .then((list) => list.contains(sensorId));
+          if (isSensorRunning) {
+            return IOManager().getSensorInfo(sensorId);
+          }
+          return null;
+        }),
+        builder: (context, snapshot) {
+          // Check, if sensor info could be requested or if the sensor
+          // with the given id is not running.
+          if (!snapshot.hasData) {
+            // return const SizedBox.shrink();
+            /// TODO (for the reviewer): check, which method is best
+            return SensorInfoTooltip(sensorId: sensorId);
+          }
+
+          var sensorInfo = snapshot.data!;
+          return SensorInfoTooltip(sensorId: sensorId, sensorInfo: sensorInfo);
+        },
+      );
+}

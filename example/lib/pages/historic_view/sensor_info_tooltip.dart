@@ -15,12 +15,12 @@ import 'historic_view_page.dart';
 /// * [SensorInfo.timeIntervalInMilliseconds]
 class SensorInfoTooltip extends StatelessWidget {
   final SensorId sensorId;
-  final SensorInfo sensorInfo;
+  final SensorInfo? sensorInfo;
 
   const SensorInfoTooltip({
     super.key,
     required this.sensorId,
-    required this.sensorInfo,
+    this.sensorInfo,
   });
 
   @override
@@ -29,12 +29,23 @@ class SensorInfoTooltip extends StatelessWidget {
       _getSensorInfoRow("Sensor ID", formatPascalCase(sensorId.name)),
       _getSensorInfoRow(
         "Unit",
-        formatPascalCase(sensorInfo.unit.toTextDisplay(isShort: false)),
+        formatPascalCase(
+          sensorInfo == null
+              ? "no data"
+              : sensorInfo!.unit.toTextDisplay(isShort: true),
+        ),
       ),
-      _getSensorInfoRow("Accuracy", formatPascalCase(sensorInfo.accuracy.name)),
+      _getSensorInfoRow(
+        "Accuracy",
+        formatPascalCase(
+          sensorInfo == null ? "no data" : sensorInfo!.accuracy.name,
+        ),
+      ),
       _getSensorInfoRow(
         "Time Interval (ms)",
-        sensorInfo.timeIntervalInMilliseconds.toString(),
+        sensorInfo == null
+            ? "No Data"
+            : sensorInfo!.timeIntervalInMilliseconds.toString(),
       ),
     ];
 
