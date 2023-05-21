@@ -45,13 +45,6 @@ class InformationPage extends StatelessWidget {
       ),
     );
 
-    // The section containing the license for this demo app and
-    // the smart sensing library.
-    var licenseSection = const InformationSectionWidget(
-      sectionTitle: "License",
-      content: Text("MIT"),
-    );
-
     // The section containing the current version of the demo app and
     // the smart sensing library.
     var versionSection = const InformationSectionWidget(
@@ -79,7 +72,6 @@ class InformationPage extends StatelessWidget {
     Widget body = ListView(
       children: <Widget>[
         deviceSection,
-        licenseSection,
         versionSection,
         developerSection,
       ],
