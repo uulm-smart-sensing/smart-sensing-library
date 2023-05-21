@@ -48,6 +48,7 @@ final theme = ThemeData(
   primarySwatch: primaryMaterialColor,
   scaffoldBackgroundColor: primaryColor,
   dividerColor: Colors.white,
+  cardColor: primaryColor,
   iconTheme: const IconThemeData(
     color: Colors.white,
   ),
@@ -64,6 +65,9 @@ final theme = ThemeData(
     ),
     // Style used for small text in Import/Export page
     bodySmall: TextStyle(
+      color: Colors.white,
+    ),
+    headlineSmall: TextStyle(
       color: Colors.white,
     ),
   ),
