@@ -171,8 +171,11 @@ class _HomePageState extends State<HomePage> {
               (element) => element.value && sensorIds.contains(settings.key),
             )
             .map(
-              (e) =>
-                  PreviewContainer(sensorId: settings.key, filterOption: e.key),
+              (e) => PreviewContainer(
+                key: ValueKey(settings.key),
+                sensorId: settings.key,
+                filterOption: e.key,
+              ),
             ),
       );
     }
