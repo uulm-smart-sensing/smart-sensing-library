@@ -25,9 +25,6 @@ class SensorToggleListElement extends SensorToggleElement {
   }) : super(
           color: isDisabled
               ? const Color.fromARGB(255, 51, 50, 52)
-              /*HSLColor.fromColor(sensorIdToColor[sensorId]!.withAlpha(128))
-                  .withSaturation(0.5)
-                  .toColor()*/
               : secondaryColor,
           activeColor: const Color.fromARGB(255, 217, 217, 217),
           activeTrackColor: const Color.fromARGB(255, 66, 234, 7),
@@ -43,7 +40,7 @@ class SensorToggleListElement extends SensorToggleElement {
             }
 
             if (isToggledOn) {
-              var result = await IOManager().addSensor(
+              await IOManager().addSensor(
                 id: sensorId,
                 config: SensorConfig(
                   targetUnit: sensorIdToDefaultTargetUnit[sensorId]!,
@@ -51,10 +48,8 @@ class SensorToggleListElement extends SensorToggleElement {
                   timeInterval: const Duration(milliseconds: 100),
                 ),
               );
-              log("Started sensor ${sensorId.name} with result ${result.name}");
             } else {
-              var result = await IOManager().removeSensor(sensorId);
-              log("Stopped sensor ${sensorId.name} with result ${result.name}");
+              await IOManager().removeSensor(sensorId);
             }
           },
         );
