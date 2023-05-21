@@ -14,6 +14,24 @@ import 'sensor_data_dto.dart';
 import 'src/import_export_module/export_tool.dart';
 import 'src/import_export_module/supported_file_format.dart';
 
+/// Handles the Result from Export
+enum ExportResult {
+  /// Export was successful and the data was exported
+  successful,
+
+  /// Export was not successful because no folder was selected
+  notselectedDirectory,
+
+  /// Export was not successful because directory not exists
+  directoryNotExists,
+
+  /// Export was not successful because sensorId is empty
+  sensorIdEmpty,
+
+  /// Export was not successful because formatted Data is empty
+  formattedDataEmpty,
+}
+
 /// This class is the core component of the smart sensing library.
 ///
 /// The IOManager is the main access point for getting and saving sensor data.
@@ -376,21 +394,24 @@ class IOManager {
   /// true.
   /// TODO: add parameter to turn the spacing and line breaks of (= don't
   /// "beautify")
-  Future<bool> exportSensorDataToFile(
+  Future<List<ExportResult>> exportSensorDataToFile(
     String directoryName,
     SupportedFileFormat format,
     List<SensorId> sensorIds, [
     DateTime? startTime,
     DateTime? endTime,
   ]) async {
-    if (!await Directory(directoryName).exists()) return false;
+    var results = <ExportResult>[];
+    if (!await Directory(directoryName).exists()) {
+      results.add(ExportResult.directoryNotExists);
+    }
 
     // Set the start and end time, if not specified by the user to
     // furthest back in time and latest time.
     startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
     endTime ??= DateTime.now();
 
-    if (sensorIds.isEmpty) return false;
+    if (sensorIds.isEmpty) results.add(ExportResult.sensorIdEmpty);
 
     // Fetch the data for all sensors, format them and save the result in a new
     // file.
@@ -404,11 +425,15 @@ class IOManager {
             {formattedData = formatData(sensor, sensorData, format)},
       );
 
-      if (formattedData.isEmpty) return false;
+      if (formattedData.isEmpty) results.add(ExportResult.formattedDataEmpty);
 
       await writeFormattedData(fileName, format, formattedData);
     }
 
-    return true;
+    if (results.isEmpty) {
+      return [ExportResult.successful];
+    }
+
+    return results;
   }
 }
