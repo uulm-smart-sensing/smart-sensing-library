@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
@@ -49,9 +50,13 @@ Future<ImportResult> decodeJson(List<int> rawData) async {
 
 Future<bool> _validateJsonFile(String jsonString) async {
   // read schema file
-  var schemaString = await rootBundle.loadString(
-    "../lib/src/import_export_module/validation_schemas/jsonFileFormatSchema.json",
-  );
+  var schemaString = await rootBundle
+      .loadString(
+        "../lib/src/import_export_module/validation_schemas/jsonFileFormatSchema.json",
+      )
+      .onError(
+        (error, stackTrace) async => File(filePathSchema).readAsString(),
+      );
 
   var schema = JsonSchema.createSchema(schemaString);
   return schema.validate(json.decode(jsonString));
