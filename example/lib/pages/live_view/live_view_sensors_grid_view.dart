@@ -16,7 +16,10 @@ class LiveViewSensorsGridView extends StatelessWidget {
             .map(
               (id) => Padding(
                 padding: const EdgeInsets.all(12),
-                child: LiveViewSensorWidget(sensorId: id),
+                child: LiveViewSensorWidget(
+                  key: ValueKey(id),
+                  sensorId: id,
+                ),
               ),
             )
             .toList(),

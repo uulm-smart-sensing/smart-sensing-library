@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                 .where((id) => SensorId.values.contains(id))
                 .map(
                   (id) => LiveViewSensorWidget(
+                    key: ValueKey(id),
                     sensorId: id,
                     isShortFormat: true,
                   ),
