@@ -2,7 +2,7 @@
     package="de.uniulm.smart_sensing_library_example">
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
    <application
-        android:label="smart_sensing_library_example"
+        android:label="Smart Sensing Library"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
