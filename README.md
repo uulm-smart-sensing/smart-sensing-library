@@ -101,7 +101,7 @@ On Windows run:
     flutter run
     ```
 
-Note: Please ensure you have a stable internet connection to successfully download the dependencies during installation. Make sure all required SDKs and tools are up to date to ensure a smooth installation process.
+> **Note**: Please ensure you have a stable internet connection to successfully download the dependencies during installation. Make sure all required SDKs and tools are up to date to ensure a smooth installation process.
 
 <!-- Development setup-->
 ## Development setup
