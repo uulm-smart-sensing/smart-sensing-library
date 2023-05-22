@@ -5,6 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
+import 'package:smart_sensing_library/src/import_export_module/codecs/csv_codec.dart';
+import 'package:smart_sensing_library/src/import_export_module/codecs/json_codec.dart';
+import 'package:smart_sensing_library/src/import_export_module/codecs/xlsx_codec.dart';
+import 'package:smart_sensing_library/src/import_export_module/codecs/xml_codec.dart';
+import 'package:smart_sensing_library/src/import_export_module/export_result.dart';
 import 'package:smart_sensing_library/src/import_export_module/export_tool.dart';
 import 'package:smart_sensing_library/src/import_export_module/sensor_data_collection.dart';
 
@@ -70,14 +75,14 @@ Future<void> main() async {
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful, isFalse);
+      expect(wasExportSuccessful, ExportResult.directoryDoNotExist);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
         testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful2, isTrue);
+      expect(wasExportSuccessful2, ExportResult.success);
     });
 
     test("Export only work with at least one sensor (id)", () async {
@@ -86,14 +91,14 @@ Future<void> main() async {
         SupportedFileFormat.json,
         [],
       );
-      expect(wasExportSuccessful, isFalse);
+      expect(wasExportSuccessful, ExportResult.noSensorIdsProvided);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
         testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful2, isTrue);
+      expect(wasExportSuccessful2, ExportResult.success);
     });
 
     test("Export only works, if sensor data really exist.", () async {
@@ -102,14 +107,14 @@ Future<void> main() async {
         SupportedFileFormat.json,
         [SensorId.gyroscope, SensorId.accelerometer],
       );
-      expect(wasExportSuccessful, isFalse);
+      expect(wasExportSuccessful, ExportResult.noSensorDataExisting);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
         testFilesOutputPath,
         SupportedFileFormat.json,
         [SensorId.accelerometer],
       );
-      expect(wasExportSuccessful2, isTrue);
+      expect(wasExportSuccessful2, ExportResult.success);
     });
 
     test(
@@ -122,7 +127,7 @@ Future<void> main() async {
         DateTime.fromMicrosecondsSinceEpoch(0),
         DateTime.now().add(const Duration(seconds: -60)),
       );
-      expect(wasExportSuccessful, isFalse);
+      expect(wasExportSuccessful, ExportResult.noSensorDataExisting);
 
       var wasExportSuccessful2 = await ioManager.exportSensorDataToFile(
         testFilesOutputPath,
@@ -130,7 +135,7 @@ Future<void> main() async {
         [SensorId.accelerometer],
         DateTime.now().add(const Duration(seconds: -10)),
       );
-      expect(wasExportSuccessful2, isTrue);
+      expect(wasExportSuccessful2, ExportResult.success);
     });
 
     test(

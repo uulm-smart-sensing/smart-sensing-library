@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<sensorData>
+		<data>
+			<dataPoint>1.4</dataPoint>
+			<dataPoint>0.0</dataPoint>
+			<dataPoint>9.81</dataPoint>
+		</data>
+		<unit>Acceleration.meterPerSecond</unit>
+		<maxPrecision>5</maxPrecision>
+		<timestamp>1681561948</timestamp>
+	</sensorData>
+	<sensorData>
+		<data>
+			<dataPoint>0.2</dataPoint>
+			<dataPoint>0.0</dataPoint>
+			<dataPoint>1.0</dataPoint>
+		</data>
+		<unit>Acceleration.gravity</unit>
+		<maxPrecision>5</maxPrecision>
+		<timestamp>1681562008</timestamp>
+	</sensorData>
+</root>
