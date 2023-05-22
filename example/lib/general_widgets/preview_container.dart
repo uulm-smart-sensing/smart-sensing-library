@@ -170,18 +170,43 @@ Widget mainData({
                 ]),
     );
 
-/// Transforms [data] into a usable [String] format for [PreviewContainer].
-String _createStringFromData(List<double?> data, Unit unit) {
+/// Transforms [data] into a list of [TextSpan] for [PreviewContainer].
+///
+/// Creates a list of given [data] and gives an emphasis to the relevant [axis].
+List<TextSpan> _createStringFromData(
+  List<double?> data,
+  Unit unit,
+  int? axis,
+  TextStyle style,
+) {
   var values = data.whereType<double>().toList();
+  var spanList = <TextSpan>[];
   if (values.isEmpty) {
-    return "No Data";
+    return [const TextSpan(text: "No Data")];
   }
-  return values
-      .map(
-        (value) => "${value.toStringAsFixed(3)} "
-            "${unit.toTextDisplay(isShort: true)}",
-      )
-      .join("\n");
+
+  for (var i = 0; i < values.length; i++) {
+    var inputText = "${values[i].toStringAsFixed(3)} "
+        "${unit.toTextDisplay(isShort: true)}";
+    // Leaves out the last line break.
+    if (i != values.length - 1) {
+      inputText += "\n";
+    }
+
+    spanList.add(
+      TextSpan(
+        text: inputText,
+        style: (axis != null && axis == i)
+            ? style.copyWith(
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              )
+            : style,
+      ),
+    );
+  }
+
+  return spanList;
 }
 
 /// Creates a flexible [Text] with the data given.
@@ -205,10 +230,12 @@ Widget _createDataText({
                 )
               : const SizedBox.shrink(),
           Align(
-            child: Text(
-              _createStringFromData(data, unit),
+            child: RichText(
+              text: TextSpan(
+                children: _createStringFromData(data, unit, axisNumber, style),
+                style: style,
+              ),
               textAlign: TextAlign.right,
-              style: style,
             ),
           ),
         ],
