@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
@@ -92,15 +94,17 @@ class _ImportExportPageState extends State<ImportExportPage> {
 
     if (result == null) return;
 
+    var files = <File>[];
     if (_importEntireDirectory) {
-      // List<File> files = result.paths.map((path) => File(path!)).toList();
-      // TODO: call smart sensing library with 'files'
+      files = result.paths.map((path) => File(path!)).toList();
     } else if (_selectedSensorIdForImport != null) {
-      // var file = File(result.files.single.path!);
-      // TODO: call smart sensing library with 'file' and
-      // 'selectedSensorIdForImport'
+      files.add(File(result.files.single.path!));
     } else {
       // TODO: provide hint, that user need to select sensorId
+    }
+
+    for (var file in files) {
+      await IOManager().importSensorDataFromFile(file.path);
     }
   }
 

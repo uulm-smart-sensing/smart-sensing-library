@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 
@@ -11,7 +11,10 @@ import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
+import 'src/import_export_module/export_result.dart';
 import 'src/import_export_module/export_tool.dart';
+import 'src/import_export_module/import_result.dart';
+import 'src/import_export_module/import_tool.dart';
 import 'src/import_export_module/supported_file_format.dart';
 
 /// This class is the core component of the smart sensing library.
@@ -69,7 +72,7 @@ class IOManager {
       (dir) => {
         _objectStore = Store(
           getObjectBoxModel(),
-          directory: join(dir.path, 'smart_sensing_library.db'),
+          directory: path.join(dir.path, 'smart_sensing_library.db'),
         )
       },
     );
@@ -368,29 +371,34 @@ class IOManager {
   /// _<sensorId>\_<startTime>\_<endTime>_
   /// and be saved in the directory with the given [directoryName].
   ///
-  /// Returns false, if
-  /// * there exist no directory with the [directoryName]
-  /// * the list of [sensorIds] is empty, so actually no export is requested.
-  /// * there exist no data (for one of the sensors, eventually in the
-  /// time interval from [startTime] to [endTime]), otherwise it will return
-  /// true.
+  /// Returns
+  /// * [ExportResult.directoryDoNotExist] if there exist no directory with the
+  ///   [directoryName]
+  /// * [ExportResult.noSensorIdsProvided] if the list of [sensorIds] is empty,
+  ///   so actually no export is requested.
+  /// * [ExportResult.noSensorDataExisting] if there exist no data (for one of
+  ///   the sensors, eventually in the time interval from [startTime] to
+  ///   [endTime])
+  /// * otherwise [ExportResult.success]
   /// TODO: add parameter to turn the spacing and line breaks of (= don't
   /// "beautify")
-  Future<bool> exportSensorDataToFile(
+  Future<ExportResult> exportSensorDataToFile(
     String directoryName,
     SupportedFileFormat format,
     List<SensorId> sensorIds, [
     DateTime? startTime,
     DateTime? endTime,
   ]) async {
-    if (!await Directory(directoryName).exists()) return false;
+    if (!await Directory(directoryName).exists()) {
+      return ExportResult.directoryDoNotExist;
+    }
 
     // Set the start and end time, if not specified by the user to
     // furthest back in time and latest time.
     startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
     endTime ??= DateTime.now();
 
-    if (sensorIds.isEmpty) return false;
+    if (sensorIds.isEmpty) return ExportResult.noSensorIdsProvided;
 
     // Fetch the data for all sensors, format them and save the result in a new
     // file.
@@ -404,11 +412,84 @@ class IOManager {
             {formattedData = formatData(sensor, sensorData, format)},
       );
 
-      if (formattedData.isEmpty) return false;
+      if (formattedData.isEmpty) return ExportResult.noSensorDataExisting;
 
       await writeFormattedData(fileName, format, formattedData);
     }
 
-    return true;
+    return ExportResult.success;
+  }
+
+  /// Imports sensor data from a file (located at [path]).
+  ///
+  /// Therefore the corresponding file format is checked and if the format of
+  /// data is supported (so format is contained in [SupportedFileFormat.values])
+  /// the file is read and decoded.
+  /// The decoding is includes also a validation, so it will be checked, whether
+  /// data are correct formatted.
+  ///
+  /// Returns
+  /// * [ImportResultStatus.fileDoNotExist] if there exist no file at [path]
+  /// * [ImportResultStatus.fileFormatNotSupported] if the file at [path] have
+  ///   not a supported file extension
+  /// * [ImportResultStatus.noSensorDataExisting] if the list of [SensorData],
+  ///   which was decoded is empty, indicating, that there was no data to decode
+  ///   in the file
+  /// * otherwise [ImportResultStatus.success].
+  Future<ImportResultStatus> importSensorDataFromFile(String path) async {
+    var file = File(path);
+
+    if (!await file.exists()) {
+      return ImportResultStatus.fileDoNotExist;
+    }
+
+    var format = _determineFileFormat(file.path);
+    if (format == null) {
+      return ImportResultStatus.fileFormatNotSupported;
+    }
+
+    var data = await file.readAsBytes();
+    var importResult = await decodeSensorData(rawData: data, format: format);
+
+    if (importResult.resultStatus != ImportResultStatus.success) {
+      return importResult.resultStatus;
+    }
+
+    var decodedData = importResult.importedData!;
+
+    if (decodedData.sensorData.isEmpty) {
+      return ImportResultStatus.noSensorDataExisting;
+    }
+
+    // create buffer, write data into buffer and then flush data into database
+    _bufferManager.addBuffer(decodedData.sensorId);
+    for (var element in decodedData.sensorData) {
+      await _processSensorData(element, decodedData.sensorId);
+    }
+    await flushToDatabase(decodedData.sensorId);
+    _bufferManager.removeBuffer(decodedData.sensorId);
+
+    return ImportResultStatus.success;
+  }
+
+  /// Determines the file extension of the file located at [filePath] and
+  /// checks, whether this is a supported file format.
+  ///
+  /// If so, the corresponding [SupportedFileFormat] will be returned, otherwise
+  /// null.
+  SupportedFileFormat? _determineFileFormat(String filePath) {
+    var extension = path.extension(filePath);
+    switch (extension) {
+      case ".csv":
+        return SupportedFileFormat.csv;
+      case ".json":
+        return SupportedFileFormat.json;
+      case ".xml":
+        return SupportedFileFormat.xml;
+      case ".xlsx":
+        return SupportedFileFormat.xlsx;
+      default:
+        return null;
+    }
   }
 }

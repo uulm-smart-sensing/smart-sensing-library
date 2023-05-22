@@ -29,20 +29,37 @@
                     "unit": {
                         "type": "string",
                         "enum": [
-                            "metersPerSecondSquared",
-                            "gravitationalForce",
-                            "radiansPerSecond",
-                            "degreesPerSecond",
-                            "microTeslas",
-                            "radians",
-                            "degrees",
-                            "hectoPascal",
-                            "kiloPascal",
-                            "bar",
-                            "celsius",
-                            "fahrenheit",
-                            "kelvin",
-                            "unitless"
+                            "Acceleration.gravity",
+                            "Acceleration.gal",
+                            "Acceleration.meterPerSecondSquared",
+                            "Acceleration.inchPerSecondSquared",
+                            "Acceleration.footPerSecondSquared",
+                            "Angle.radians",
+                            "Angle.turns",
+                            "Angle.gradian",
+                            "Angle.degrees",
+                            "Angle.arcminutes",
+                            "Angle.arcseconds",
+                            "AngularVelocity.radiansPerSecond",
+                            "AngularVelocity.degreesPerSecond",
+                            "AngularVelocity.degreesPerMinute",
+                            "AngularVelocity.degreesPerHour",
+                            "AngularVelocity.revolutionPerMinute",
+                            "AngularVelocity.revolutionPerHour",
+                            "MagneticFluxDensity.tesla",
+                            "MagneticFluxDensity.gauss",
+                            "MagneticFluxDensity.microTesla",
+                            "Pressure.bar",
+                            "Pressure.kiloPascal",
+                            "Pressure.hectoPascal",
+                            "Pressure.pascal",
+                            "Pressure.psi",
+                            "Pressure.atmosphere",
+                            "Pressure.torr",
+                            "Temperature.kelvin",
+                            "Temperature.celsius",
+                            "Temperature.rankine",
+                            "Temperature.fahrenheit"
                         ]
                     },
                     "maxPrecision": {
@@ -50,7 +67,7 @@
                         "minimum": 0,
                         "maximum": 9
                     },
-                    "timestampInMicroseconds": {
+                    "timestamp": {
                         "type": "integer",
                         "minimum": 0
                     }
@@ -59,7 +76,7 @@
                     "data",
                     "unit",
                     "maxPrecision",
-                    "timestampInMicroseconds"
+                    "timestamp"
                 ]
             }
         }

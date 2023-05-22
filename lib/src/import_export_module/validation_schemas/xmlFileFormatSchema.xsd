@@ -13,20 +13,37 @@
 
     <xs:simpleType name="units">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="metersPerSecondSquared" />
-            <xs:enumeration value="gravitationalForce" />
-            <xs:enumeration value="radiansPerSecond" />
-            <xs:enumeration value="degreesPerSecond" />
-            <xs:enumeration value="microTeslas" />
-            <xs:enumeration value="radians" />
-            <xs:enumeration value="degrees" />
-            <xs:enumeration value="hectoPascal" />
-            <xs:enumeration value="kiloPascal" />
-            <xs:enumeration value="bar" />
-            <xs:enumeration value="celsius" />
-            <xs:enumeration value="fahrenheit" />
-            <xs:enumeration value="kelvin" />
-            <xs:enumeration value="unitless" />
+            <xs:enumeration value="Acceleration.gravity" />
+            <xs:enumeration value="Acceleration.gal" />
+            <xs:enumeration value="Acceleration.meterPerSecondSquared" />
+            <xs:enumeration value="Acceleration.inchPerSecondSquared" />
+            <xs:enumeration value="Acceleration.footPerSecondSquared" />
+            <xs:enumeration value="Angle.radians" />
+            <xs:enumeration value="Angle.turns" />
+            <xs:enumeration value="Angle.gradian" />
+            <xs:enumeration value="Angle.degrees" />
+            <xs:enumeration value="Angle.arcminutes" />
+            <xs:enumeration value="Angle.arcseconds" />
+            <xs:enumeration value="AngularVelocity.radiansPerSecond" />
+            <xs:enumeration value="AngularVelocity.degreesPerSecond" />
+            <xs:enumeration value="AngularVelocity.degreesPerMinute" />
+            <xs:enumeration value="AngularVelocity.degreesPerHour" />
+            <xs:enumeration value="AngularVelocity.revolutionPerMinute" />
+            <xs:enumeration value="AngularVelocity.revolutionPerHour" />
+            <xs:enumeration value="MagneticFluxDensity.tesla" />
+            <xs:enumeration value="MagneticFluxDensity.gauss" />
+            <xs:enumeration value="MagneticFluxDensity.microTesla" />
+            <xs:enumeration value="Pressure.bar" />
+            <xs:enumeration value="Pressure.kiloPascal" />
+            <xs:enumeration value="Pressure.hectoPascal" />
+            <xs:enumeration value="Pressure.pascal" />
+            <xs:enumeration value="Pressure.psi" />
+            <xs:enumeration value="Pressure.atmosphere" />
+            <xs:enumeration value="Pressure.torr" />
+            <xs:enumeration value="Temperature.kelvin" />
+            <xs:enumeration value="Temperature.celsius" />
+            <xs:enumeration value="Temperature.rankine" />
+            <xs:enumeration value="Temperature.fahrenheit" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -64,7 +81,7 @@
 
                             <xs:element type="possibleMaxPrecision" name="maxPrecision" />
 
-                            <xs:element type="possibleTimestamp" name="timestampInMicroseconds" />
+                            <xs:element type="possibleTimestamp" name="timestamp" />
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

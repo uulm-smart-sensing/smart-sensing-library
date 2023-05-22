@@ -1,14 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:csv/csv.dart';
-import 'package:excel/excel.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
-import 'package:xml/xml.dart';
 
-import 'sensor_data_collection.dart';
+import 'codecs/csv_codec.dart';
+import 'codecs/json_codec.dart';
+import 'codecs/xlsx_codec.dart';
+import 'codecs/xml_codec.dart';
 import 'supported_file_format.dart';
 
 /// Formats a list of sensor data (points) into the given [format].
@@ -22,8 +21,6 @@ List<int> formatData(
   SupportedFileFormat format,
 ) {
   if (data.isEmpty) {
-    /// TODO: check for a better way to handle the case, nothing exists for the
-    /// export and give the user a visual hint
     return "".codeUnits;
   }
 
@@ -37,124 +34,6 @@ List<int> formatData(
     case SupportedFileFormat.xml:
       return formatDataIntoXML(sensorId, data);
   }
-}
-
-/// Formats a list of sensor data (points) into the corresponding json string
-/// following the format described in [SupportedFileFormat.json].
-List<int> formatDataIntoJson(SensorId sensorId, List<SensorData> data) {
-  var sensorDataCollection = SensorDataCollection(sensorId, data);
-
-  // use indentation for make it look prettier
-  var encoder = const JsonEncoder.withIndent("  ");
-
-  return encoder.convert(sensorDataCollection).codeUnits;
-}
-
-/// Formats a list of sensor data (points) into the corresponding csv string
-/// following the format described in [SupportedFileFormat.csv].
-///
-/// Therefor a [ListToCsvConverter] is used to enforce the RFC conforming
-/// format.
-List<int> formatDataIntoCSV(SensorId sensorId, List<SensorData> data) {
-  // create first row
-  var headerRow = [
-    "sensorId",
-    "unit",
-    "maxPrecision",
-    "timestamp",
-    "data",
-  ];
-
-  var csvData = <List<dynamic>>[headerRow] +
-      data
-          .map(
-            (sensorData) => [
-              sensorId.name,
-              sensorData.unit.toString(),
-              sensorData.maxPrecision,
-              sensorData.timestamp.microsecondsSinceEpoch,
-              sensorData.data.join(", "),
-            ],
-          )
-          .toList();
-
-  return const ListToCsvConverter().convert(csvData).codeUnits;
-}
-
-/// Formats a list of sensor data (points) into the corresponding xlsx string
-/// following the format described in [SupportedFileFormat.xlsx].
-List<int> formatDataIntoXLSX(SensorId sensorId, List<SensorData> data) {
-  var excel = Excel.createExcel();
-  excel.rename(excel.getDefaultSheet().toString(), "sensor_data");
-
-  var sheet = excel["sensor_data"]
-    ..appendRow([
-      "sensorId",
-      "unit",
-      "maxPrecision",
-      "timestamp",
-      "data",
-    ]);
-
-  for (var sensorData in data) {
-    var sensorDataRow = [
-      sensorId.name,
-      sensorData.unit.toString(),
-      sensorData.maxPrecision,
-      sensorData.timestamp.microsecondsSinceEpoch,
-      sensorData.data.join(", "),
-    ];
-    sheet.appendRow(sensorDataRow);
-  }
-
-  // encode excel file as string
-  return excel.save()!;
-}
-
-/// Formats a list of sensor data (points) into the corresponding xml string
-/// following the format described in [SupportedFileFormat.xml].
-List<int> formatDataIntoXML(SensorId sensorId, List<SensorData> data) {
-  // create and define builder for xml document
-  var builder = XmlBuilder();
-  builder
-    ..processing("xml", "version=\"1.0\" encoding=\"UTF-8\"")
-    ..element(
-      'root',
-      nest: () {
-        builder.element('sensorId', nest: sensorId.name);
-        for (var sensorData in data) {
-          _buildSensorData(builder, sensorData);
-        }
-      },
-    );
-
-  // build xml document
-  var xmlDocument = builder.buildDocument();
-
-  return xmlDocument.toXmlString(pretty: true, indent: "\t").codeUnits;
-}
-
-void _buildSensorData(XmlBuilder builder, SensorData data) {
-  builder.element(
-    'sensorData',
-    nest: () {
-      builder
-        ..element(
-          'data',
-          nest: () {
-            for (var datapoint in data.data) {
-              builder.element('dataPoint', nest: datapoint);
-            }
-          },
-        )
-        ..element('unit', nest: data.unit.toString())
-        ..element('maxPrecision', nest: data.maxPrecision)
-        ..element(
-          'timestamp',
-          nest: data.timestamp.microsecondsSinceEpoch,
-        );
-    },
-  );
 }
 
 /// Creates a new file at [filepath] and writes the formatted data
