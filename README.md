@@ -61,45 +61,45 @@ Additionally, it will be possible to either get live data or store and process t
 ## Getting Started
 
 1. Prerequisites:
-   - Make sure you have Flutter and Dart installed on your development machine.
-   - Check if you are using the latest version of the Flutter framework.
+- Make sure you have Flutter and Dart installed on your development machine
+- Check if you are using the latest version of the Flutter framework.
 
 2. Clone the project:
-   - Open the command line or a suitable terminal on your computer.
-   - Navigate to the desired location for the project.
-   - Clone the project repository from version control (e.g., Git) using the following command:
-     ```
-     git clone https://gitlab.uni-ulm.de/se-anwendungsprojekt-22-23/smart-sensing-library.git
-     ```
+- Open the command line or a suitable terminal on your computer.
+- Navigate to the desired location for the project.
+- Clone the project repository from version control (e.g. Git) using the following command:
+```
+git clone https://gitlab.uni-ulm.de/se-anwendungsprojekt-22-23/smart-sensing-library.git
+```
 
 3. Install dependencies:
-   - Navigate to the root directory of the Flutter project.
-   - Run the following command to install the required dependencies:
-     ```
-     flutter pub get
-     ```
-   - Execute setup script \
-        On Windows run:
+- Navigate to the root directory of the Flutter project.
+- Run the following command to install the required dependencies:
+    ```
+    flutter pub get
+    ```
+- Execute setup script \
+On Windows run:
 
-        ```powershell
-        .\setup.ps1
-        ```
-        On Linux/macOS run:
+    ```powershell
+    .\setup.ps1
+    ```
+On Linux/macOS run:
 
-        ```bash
-        bash setup.sh
-        ```
+    ```bash
+    bash setup.sh
+    ```
 
 4. Configure emulator or device:
-   - Ensure that an emulator or physical device is properly configured.
-   - If using a physical device, connect your device via USB and enable developer mode.
+- Ensure that an emulator or physical device is properly configured.
+- If using a physical device, connect your device via USB and enable developer mode
 
 5. Start the application:
-   - Open the command line or terminal and navigate to the root directory of the Flutter project.
-   - Execute the following command to start the Flutter application:
-     ```
-     flutter run
-     ```
+- Open the command line or terminal and navigate to the example directory of the Flutter project.
+- Execute the following command to start the Flutter application:
+    ```
+    flutter run
+    ```
 
 Note: Please ensure you have a stable internet connection to successfully download the dependencies during installation. Make sure all required SDKs and tools are up to date to ensure a smooth installation process.
 
