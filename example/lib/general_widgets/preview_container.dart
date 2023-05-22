@@ -65,28 +65,30 @@ class _PreviewContainerState extends State<PreviewContainer> {
     timer = Timer.periodic(
       widget.duration,
       (t) async {
-        var dataList = <SensorData>[];
-        for (var i = 0; i < widget.filterOption.axisNumber; i++) {
-          var filter = await IOManager().getFilterFrom(widget.sensorId);
-          if (filter != null) {
-            dataList.addAll(
-              _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
-            );
+        if (mounted) {
+          var dataList = <SensorData>[];
+          for (var i = 0; i < widget.filterOption.axisNumber; i++) {
+            var filter = await IOManager().getFilterFrom(widget.sensorId);
+            if (filter != null) {
+              dataList.addAll(
+                _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
+              );
+            }
           }
+          setState(() {
+            data
+              ..clear()
+              ..addAll(dataList);
+          });
         }
-        setState(() {
-          data
-            ..clear()
-            ..addAll(dataList);
-        });
       },
     );
   }
 
   @override
   void dispose() {
-    super.dispose();
     timer.cancel();
+    super.dispose();
   }
 
   Widget internalText() => Padding(
