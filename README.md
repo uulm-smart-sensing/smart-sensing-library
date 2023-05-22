@@ -68,9 +68,9 @@ Additionally, it will be possible to either get live data or store and process t
 - Open the command line or a suitable terminal on your computer.
 - Navigate to the desired location for the project.
 - Clone the project repository from version control (e.g. Git) using the following command:
-```
-git clone https://gitlab.uni-ulm.de/se-anwendungsprojekt-22-23/smart-sensing-library.git
-```
+    ```
+    git clone https://gitlab.uni-ulm.de/se-anwendungsprojekt-22-23/smart-sensing-library.git
+    ```
 
 3. Install dependencies:
 - Navigate to the root directory of the Flutter project.
@@ -84,7 +84,7 @@ On Windows run:
     ```powershell
     .\setup.ps1
     ```
-On Linux/macOS run:
+    On Linux/macOS run:
 
     ```bash
     bash setup.sh
