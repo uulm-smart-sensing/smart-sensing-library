@@ -65,22 +65,23 @@ class _PreviewContainerState extends State<PreviewContainer> {
     timer = Timer.periodic(
       widget.duration,
       (t) async {
-        if (mounted) {
-          var dataList = <SensorData>[];
-          for (var i = 0; i < widget.filterOption.axisNumber; i++) {
-            var filter = await IOManager().getFilterFrom(widget.sensorId);
-            if (filter != null) {
-              dataList.addAll(
-                _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
-              );
-            }
-          }
-          setState(() {
-            data
-              ..clear()
-              ..addAll(dataList);
-          });
+        if (!mounted) {
+          return;
         }
+        var dataList = <SensorData>[];
+        for (var i = 0; i < widget.filterOption.axisNumber; i++) {
+          var filter = await IOManager().getFilterFrom(widget.sensorId);
+          if (filter != null) {
+            dataList.addAll(
+              _getFromFilter(widget.filterOption, filter, axis: i) ?? [],
+            );
+          }
+        }
+        setState(() {
+          data
+            ..clear()
+            ..addAll(dataList);
+        });
       },
     );
   }
