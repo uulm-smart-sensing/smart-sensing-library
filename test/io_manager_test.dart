@@ -239,4 +239,14 @@ Future<void> main() async {
       expect(usableSensors.contains(SensorId.gyroscope), isTrue);
     },
   );
+
+  test(
+    'When SensorInfo is requested, then the correct SensorInfo is returned',
+    () async {
+      var sensorInfo = await ioManager.getSensorInfo(SensorId.accelerometer);
+      expect(sensorInfo.unit, equals(Acceleration.meterPerSecondSquared));
+      expect(sensorInfo.accuracy, equals(SensorAccuracy.high));
+      expect(sensorInfo.timeIntervalInMilliseconds, equals(1000));
+    },
+  );
 }

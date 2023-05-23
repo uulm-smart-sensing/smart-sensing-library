@@ -117,6 +117,15 @@ class FakeSensorManager extends Fake implements SensorManager {
   Future<bool> isSensorAvailable(SensorId id) =>
       Future(() => _sensorAvailableMap[id]!);
 
+  @override
+  Future<SensorInfo> getSensorInfo(SensorId id) => Future.value(
+        SensorInfo(
+          _getSensorUnit(id),
+          SensorAccuracy.high,
+          1000,
+        ),
+      );
+
   ///Base implementation for test data creation.
   SensorData _createTestData(int i) => SensorData(
         data: [i + 0.1, i + 0.2, i + 0.3],
@@ -166,5 +175,23 @@ class FakeSensorManager extends Fake implements SensorManager {
     );
     _streamMap[id] = controller;
     return controller.stream;
+  }
+
+  Unit _getSensorUnit(SensorId id) {
+    switch (id) {
+      case SensorId.accelerometer:
+      case SensorId.linearAcceleration:
+        return Acceleration.meterPerSecondSquared;
+      case SensorId.barometer:
+        return Pressure.pascal;
+      case SensorId.gyroscope:
+        return AngularVelocity.radiansPerSecond;
+      case SensorId.magnetometer:
+        return MagneticFluxDensity.microTesla;
+      case SensorId.orientation:
+        return Angle.degrees;
+      case SensorId.thermometer:
+        return Temperature.celsius;
+    }
   }
 }
