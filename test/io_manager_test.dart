@@ -217,4 +217,26 @@ Future<void> main() async {
       );
     },
   );
+
+  test(
+    'When three sensors are available and two of them aren\'t used, then '
+    'these two sensors are returned from getUsableSensors',
+    () async {
+      FakeSensorManager().configureAvailableSensors(
+        SensorId.values,
+        available: false,
+      );
+      FakeSensorManager().configureAvailableSensors(
+        [SensorId.accelerometer, SensorId.barometer, SensorId.gyroscope],
+        available: true,
+      );
+      FakeSensorManager().configureUsedSensors([
+        SensorId.accelerometer,
+      ]);
+      var usableSensors = await ioManager.getUsableSensors();
+      expect(usableSensors.length, 2);
+      expect(usableSensors.contains(SensorId.barometer), isTrue);
+      expect(usableSensors.contains(SensorId.gyroscope), isTrue);
+    },
+  );
 }
