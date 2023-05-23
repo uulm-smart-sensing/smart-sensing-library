@@ -11,7 +11,7 @@ import 'package:sensing_plugin/sensing_plugin.dart';
 class FakeSensorManager extends Fake implements SensorManager {
   FakeSensorManager._constructor();
   static final FakeSensorManager _instance = FakeSensorManager._constructor();
-  final Map _streamMap = HashMap<SensorId, StreamController<SensorData>>();
+  final _streamMap = HashMap<SensorId, StreamController<SensorData>>();
   var _usedSensors = <SensorId>[];
 
   ///Configurable fake inputs
@@ -56,7 +56,7 @@ class FakeSensorManager extends Fake implements SensorManager {
   Future<void> resetState() async {
     configureAvailableSensors(SensorId.values);
     for (var key in _streamMap.keys) {
-      await (_streamMap[key] as StreamController<SensorData>).close();
+      await _streamMap[key]!.close();
     }
     _platformCallResult = SensorTaskResult.success;
     _creationFunction = null;
@@ -65,7 +65,7 @@ class FakeSensorManager extends Fake implements SensorManager {
 
   @override
   Stream<SensorData>? getSensorStream(SensorId id) =>
-      _createStream(const Duration(seconds: 1), id);
+      _streamMap.containsKey(id) ? _streamMap[id]?.stream : null;
 
   @override
   Future<SensorTaskResult> startSensorTracking({
@@ -90,7 +90,7 @@ class FakeSensorManager extends Fake implements SensorManager {
       return Future(() => SensorTaskResult.notTrackingSensor);
     }
     try {
-      await (_streamMap[id] as StreamController<SensorData>).close();
+      await _streamMap[id]!.close();
       _streamMap.remove(id);
     } on Exception catch (e) {
       log(e.toString());

@@ -51,6 +51,7 @@ Future<void> main() async {
     var test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
   });
+
   test("Add sensor and get from buffer", () async {
     await ioManager.addSensor(
       id: SensorId.accelerometer,
@@ -247,6 +248,32 @@ Future<void> main() async {
       expect(sensorInfo.unit, equals(Acceleration.meterPerSecondSquared));
       expect(sensorInfo.accuracy, equals(SensorAccuracy.high));
       expect(sensorInfo.timeIntervalInMilliseconds, equals(1000));
+    },
+  );
+
+  test(
+    'When sensor is started and getSensorStream is called, then the stream of'
+    ' the started sensor is returned',
+    () async {
+      var id = SensorId.accelerometer;
+      FakeSensorManager().configureAvailableSensors([id], available: true);
+      var config = const SensorConfig(
+        targetUnit: Acceleration.meterPerSecondSquared,
+        targetPrecision: 2,
+        timeInterval: Duration(milliseconds: 1000),
+      );
+      await ioManager.addSensor(id: id, config: config);
+      var stream = ioManager.getSensorStream(id);
+      expect(stream, isNotNull);
+    },
+  );
+
+  test(
+    'When getSensorStream is called on a sensor that is not being tracked, then'
+    ' the stream of the started sensor is returned',
+    () async {
+      var stream = ioManager.getSensorStream(SensorId.accelerometer);
+      expect(stream, isNull);
     },
   );
 }
