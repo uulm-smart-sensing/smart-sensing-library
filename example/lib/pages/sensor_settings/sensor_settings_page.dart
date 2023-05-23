@@ -93,34 +93,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         style: const TextStyle(
           fontSize: 20,
         ),
-        onPressed: _checkSettings()
-            ? () {
-                IOManager()
-                    .editSensorConfig(
-                  widget.sensorId,
-                  targetUnit: selectedUnit,
-                  targetPrecision: selectedPrecision,
-                  timeInterval: Duration(
-                    milliseconds: selectedTimeIntervalInMilliseconds,
-                  ),
-                )
-                    .then((result) {
-                  if (result == SensorTaskResult.success) {
-                    Navigator.of(context).pop();
-                  } else {
-                    var snackBar = SnackBar(
-                      content: Text(formatPascalCase(result.name)),
-                      action: SnackBarAction(
-                        label: 'Dismiss',
-                        onPressed: () {},
-                      ),
-                    );
-
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                });
-              }
-            : null,
+        onPressed: _checkSettings() ? _applySettings : null,
       ),
     );
 
@@ -181,5 +154,32 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
       default:
         return false;
     }
+  }
+
+  void _applySettings() {
+    IOManager()
+        .editSensorConfig(
+      widget.sensorId,
+      targetUnit: selectedUnit,
+      targetPrecision: selectedPrecision,
+      timeInterval: Duration(
+        milliseconds: selectedTimeIntervalInMilliseconds,
+      ),
+    )
+        .then((result) {
+      if (result == SensorTaskResult.success) {
+        Navigator.of(context).pop();
+      } else {
+        var snackBar = SnackBar(
+          content: Text(formatPascalCase(result.name)),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () {},
+          ),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
   }
 }
