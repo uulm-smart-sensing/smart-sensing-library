@@ -276,4 +276,20 @@ Future<void> main() async {
       expect(stream, isNull);
     },
   );
+
+  test(
+    'When sensors are used, then getUsedSensors() returns the used sensors',
+    () async {
+      FakeSensorManager().configureUsedSensors([
+        SensorId.accelerometer,
+        SensorId.barometer,
+        SensorId.gyroscope,
+      ]);
+      var usedSensors = await ioManager.getUsedSensors();
+      expect(usedSensors.length, 3);
+      expect(usedSensors.contains(SensorId.accelerometer), isTrue);
+      expect(usedSensors.contains(SensorId.barometer), isTrue);
+      expect(usedSensors.contains(SensorId.gyroscope), isTrue);
+    },
+  );
 }
