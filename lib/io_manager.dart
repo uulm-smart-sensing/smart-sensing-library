@@ -81,6 +81,17 @@ class IOManager {
     return true;
   }
 
+  /// Closes the database.
+  ///
+  /// Throws an exception if the database connection is not established.
+  Future<void> closeDatabase() async {
+    if (_objectStore == null) {
+      throw const DatabaseConnectionNotEstablishedException();
+    }
+    _objectStore!.close();
+    _objectStore = null;
+  }
+
   /// Deletes all data from the database.
   Future<void> deleteDatabase() async {
     _objectStore!.box<SensorDataDTO>().removeAll();
