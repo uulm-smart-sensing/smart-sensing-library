@@ -68,8 +68,7 @@ class IOManager {
   ///Checks if an the basic Application path is available.
   ///If there is a database at the given location, it gets initialized.
   ///Otherwise a new database is created.
-  ///Returns true when connection is established.
-  Future<bool> openDatabase() async {
+  Future<void> openDatabase() async {
     await getApplicationDocumentsDirectory().then(
       (dir) => {
         _objectStore = Store(
@@ -78,19 +77,21 @@ class IOManager {
         )
       },
     );
-    return true;
   }
 
   /// Closes the database.
   ///
   /// Throws an exception if the database connection is not established.
-  Future<void> closeDatabase() async {
-    if (_objectStore == null) {
+  void closeDatabase() {
+    if (!isDatabaseConnectionEstablished()) {
       throw const DatabaseConnectionNotEstablishedException();
     }
     _objectStore!.close();
-    _objectStore = null;
   }
+
+  /// Checks whether the database connection is established.
+  bool isDatabaseConnectionEstablished() =>
+      _objectStore != null && !_objectStore!.isClosed();
 
   /// Deletes all data from the database.
   Future<void> deleteDatabase() async {
@@ -147,7 +148,7 @@ class IOManager {
   }) async {
     SensorTaskResult result;
     try {
-      if (_objectStore == null) {
+      if (!isDatabaseConnectionEstablished()) {
         throw const DatabaseConnectionNotEstablishedException();
       }
 
@@ -187,7 +188,7 @@ class IOManager {
   ///
   /// Throws an exception if the database connection is not established.
   Future<SensorTaskResult> removeSensor(SensorId id) async {
-    if (_objectStore == null) {
+    if (!isDatabaseConnectionEstablished()) {
       throw const DatabaseConnectionNotEstablishedException();
     }
 
@@ -208,7 +209,7 @@ class IOManager {
     DateTime to,
     SensorId id,
   ) async {
-    if (_objectStore == null) {
+    if (!isDatabaseConnectionEstablished()) {
       throw const DatabaseConnectionNotEstablishedException();
     }
     var query = (_objectStore!.box<SensorDataDTO>().query(
@@ -229,7 +230,7 @@ class IOManager {
   ///Takes the buffer with the corresponding [id] and saves the
   ///content of it to the database. Clears the buffer afterwards.
   Future<void> flushToDatabase(SensorId id) async {
-    if (_objectStore == null) {
+    if (!isDatabaseConnectionEstablished()) {
       throw const DatabaseConnectionNotEstablishedException();
     }
     var buffer = _bufferManager.getBuffer(id);
@@ -253,7 +254,7 @@ class IOManager {
     DateTime? from,
     DateTime? to,
   }) async {
-    if (_objectStore == null) {
+    if (!isDatabaseConnectionEstablished()) {
       throw const DatabaseConnectionNotEstablishedException();
     }
     from ??= DateTime.utc(-271821, 04, 20);

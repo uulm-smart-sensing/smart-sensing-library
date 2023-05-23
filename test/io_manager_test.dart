@@ -12,9 +12,7 @@ Future<void> main() async {
   ).setMockMethodCallHandler((methodCall) async => ".");
   var ioManager = IOManager.testManager();
 
-  if (!await ioManager.openDatabase()) {
-    throw Exception("Database connection failed!");
-  }
+  await ioManager.openDatabase();
 
   const exampleConfig = SensorConfig(
     targetUnit: Temperature.celsius,
