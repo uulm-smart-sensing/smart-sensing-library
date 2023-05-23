@@ -91,7 +91,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         width: 200,
         text: "Apply settings",
         style: const TextStyle(
-          fontSize: 24,
+          fontSize: 20,
         ),
         onPressed: _checkSettings()
             ? () {
