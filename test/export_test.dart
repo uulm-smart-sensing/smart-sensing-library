@@ -44,7 +44,7 @@ Future<void> main() async {
 
   setUpAll(() async {
     await ioManager.openDatabase();
-    
+
     // Create test directory
     Directory(testFilesOutputPath).createSync();
     // Delete all files in the test directory

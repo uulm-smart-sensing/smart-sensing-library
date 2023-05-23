@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/fake_sensor_manager.dart';
 import 'package:smart_sensing_library/io_manager.dart';
+import 'package:smart_sensing_library/src/database_connection_not_established_exception.dart';
 
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -288,6 +289,33 @@ Future<void> main() async {
       expect(usedSensors.contains(SensorId.accelerometer), isTrue);
       expect(usedSensors.contains(SensorId.barometer), isTrue);
       expect(usedSensors.contains(SensorId.gyroscope), isTrue);
+    },
+  );
+
+  test(
+    'When a sensor is started but the database connection is not established,'
+    ' then a DatabaseConnectionNotEstablishedException is thrown',
+    () async {
+      ioManager.closeDatabase();
+      var id = SensorId.accelerometer;
+      FakeSensorManager().configureAvailableSensors([id], available: true);
+      var config = const SensorConfig(
+        targetUnit: Acceleration.meterPerSecondSquared,
+        targetPrecision: 2,
+        timeInterval: Duration(milliseconds: 1000),
+      );
+
+      expect(
+        () async => ioManager.addSensor(id: id, config: config),
+        throwsA(
+          isA<DatabaseConnectionNotEstablishedException>(),
+        ),
+      );
+
+      // Reset ioManager to avoid errors in other tests, because implementation
+      // doesn't allow to open the database again.
+      ioManager = IOManager.testManager();
+      await ioManager.openDatabase();
     },
   );
 }
