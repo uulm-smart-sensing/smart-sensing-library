@@ -95,14 +95,30 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         ),
         onPressed: _checkSettings()
             ? () {
-                IOManager().editSensorConfig(
+                IOManager()
+                    .editSensorConfig(
                   widget.sensorId,
                   targetUnit: selectedUnit,
                   targetPrecision: selectedPrecision,
                   timeInterval: Duration(
                     milliseconds: selectedTimeIntervalInMilliseconds,
                   ),
-                );
+                )
+                    .then((result) {
+                  if (result == SensorTaskResult.success) {
+                    Navigator.of(context).pop();
+                  } else {
+                    var snackBar = SnackBar(
+                      content: Text(formatPascalCase(result.name)),
+                      action: SnackBarAction(
+                        label: 'Dismiss',
+                        onPressed: () {},
+                      ),
+                    );
+
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                });
               }
             : null,
       ),
