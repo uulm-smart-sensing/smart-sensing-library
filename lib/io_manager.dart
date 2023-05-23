@@ -12,6 +12,7 @@ import 'filter_tools.dart';
 import 'multi_filter_tools.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
+import 'src/database_connection_not_established_exception.dart';
 import 'src/import_export_module/export_result.dart';
 import 'src/import_export_module/export_tool.dart';
 import 'src/import_export_module/import_result.dart';
@@ -136,8 +137,7 @@ class IOManager {
     SensorTaskResult result;
     try {
       if (_objectStore == null) {
-        throw Exception("Database connection is not established. "
-            "Establish connection first to use the IOManager.");
+        throw const DatabaseConnectionNotEstablishedException();
       }
 
       while (_sensorThreadLock) {
@@ -177,8 +177,7 @@ class IOManager {
   /// Throws an exception if the database connection is not established.
   Future<SensorTaskResult> removeSensor(SensorId id) async {
     if (_objectStore == null) {
-      throw Exception("Database connection is not established. "
-          "Establish connection first to use the IOManager.");
+      throw const DatabaseConnectionNotEstablishedException();
     }
 
     if (_subscriptions[id] == null) {
@@ -199,7 +198,7 @@ class IOManager {
     SensorId id,
   ) async {
     if (_objectStore == null) {
-      throw Exception("Database connection is not established!");
+      throw const DatabaseConnectionNotEstablishedException();
     }
     var query = (_objectStore!.box<SensorDataDTO>().query(
               SensorDataDTO_.sensorID.equals(id.index).and(
@@ -220,8 +219,7 @@ class IOManager {
   ///content of it to the database. Clears the buffer afterwards.
   Future<void> flushToDatabase(SensorId id) async {
     if (_objectStore == null) {
-      throw Exception("Database connection is not established!"
-          "Please first established to use the IOManager!");
+      throw const DatabaseConnectionNotEstablishedException();
     }
     var buffer = _bufferManager.getBuffer(id);
     var dtoList =
@@ -245,8 +243,7 @@ class IOManager {
     DateTime? to,
   }) async {
     if (_objectStore == null) {
-      throw Exception("Database connection is not established!"
-          "Please first established to use the IOManager!");
+      throw const DatabaseConnectionNotEstablishedException();
     }
     from ??= DateTime.utc(-271821, 04, 20);
     to ??= DateTime.now().toUtc();
