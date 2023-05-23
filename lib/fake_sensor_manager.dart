@@ -12,6 +12,7 @@ class FakeSensorManager extends Fake implements SensorManager {
   FakeSensorManager._constructor();
   static final FakeSensorManager _instance = FakeSensorManager._constructor();
   final Map _streamMap = HashMap<SensorId, StreamController<SensorData>>();
+  var _usedSensors = <SensorId>[];
 
   ///Configurable fake inputs
   final Map<SensorId, bool> _sensorAvailableMap = {
@@ -48,6 +49,9 @@ class FakeSensorManager extends Fake implements SensorManager {
   ///Sets the internal maximum uptime of a stream to [time]
   void configureStreamUpTime(int time) => _streamUpTime = time;
 
+  /// Sets the internal used sensors to [ids].
+  void configureUsedSensors(List<SensorId> ids) => _usedSensors = ids;
+
   ///Resets the SensorManager to the initial state
   Future<void> resetState() async {
     configureAvailableSensors(SensorId.values);
@@ -63,7 +67,6 @@ class FakeSensorManager extends Fake implements SensorManager {
   Stream<SensorData>? getSensorStream(SensorId id) =>
       _createStream(const Duration(seconds: 1), id);
 
-  ///Starts the tracking of a sensor.
   @override
   Future<SensorTaskResult> startSensorTracking({
     required SensorId id,
@@ -81,7 +84,6 @@ class FakeSensorManager extends Fake implements SensorManager {
     return Future(() => _platformCallResult);
   }
 
-  ///Stops the tracking of a sensor.
   @override
   Future<SensorTaskResult> stopSensorTracking(SensorId id) async {
     if (!_streamMap.containsKey(id)) {
@@ -97,13 +99,19 @@ class FakeSensorManager extends Fake implements SensorManager {
     return Future(() => SensorTaskResult.success);
   }
 
-  ///Returns a list of usable sensors.
   @override
-  Future<List<SensorId>> getUsableSensors() => Future(
-        () => (Map.from(_sensorAvailableMap)
-          ..removeWhere((key, value) => value)
-          ..keys.toList()) as List<SensorId>,
-      );
+  List<SensorId> getUsedSensors() => _usedSensors;
+
+  @override
+  Future<List<SensorId>> getUsableSensors() async {
+    var usableSensors = <SensorId>[];
+    for (var id in SensorId.values) {
+      if (!_usedSensors.contains(id) && await isSensorAvailable(id)) {
+        usableSensors.add(id);
+      }
+    }
+    return usableSensors;
+  }
 
   @override
   Future<bool> isSensorAvailable(SensorId id) =>
