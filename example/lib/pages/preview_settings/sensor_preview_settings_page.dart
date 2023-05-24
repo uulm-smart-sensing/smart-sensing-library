@@ -145,7 +145,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
   }
 
   /// Creates a [GridView] with clickable [BrickContainer]s
-  /// correspoding to the saved [SensorPreviewSetting].
+  /// corresponding to the saved [SensorPreviewSetting].
   ///
   /// If no data is available, creates an empty [SensorPreviewSetting].
   Widget _getFilterfromData(SensorPreviewSetting previewSettings) {

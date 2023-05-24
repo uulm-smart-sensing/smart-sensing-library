@@ -44,12 +44,12 @@ class PreviewSettingsPage extends StatelessWidget {
   /// Creates [ListView] from the passed [sensorIds].
   ///
   /// If [sensorIds] is empty, [noSensorsText] is shown.
-  /// Uses [seperator] to seperate each Item.
+  /// Uses [separator] to separate each Item.
   Widget _getSensorsListFromIds({
     required List<SensorId> sensorIds,
     String noSensorsText = "No sensors are tracked right now.",
     required BuildContext context,
-    Widget seperator = const SizedBox(
+    Widget separator = const SizedBox(
       height: 15,
     ),
   }) =>
@@ -73,7 +73,7 @@ class PreviewSettingsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-          separatorBuilder: (context, index) => seperator,
+          separatorBuilder: (context, index) => separator,
         ),
       );
 
