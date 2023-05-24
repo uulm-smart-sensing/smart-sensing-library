@@ -4,8 +4,10 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import 'pages/preview_settings/sensor_preview_settings.dart';
 
 /// Handles the Preview settings management.
+///
 /// The class uses the preference shared by the database. With shared preference
 /// it is possible to store the data globally and to modify it.
+/// Saves the settings as the [SensorPreviewSetting]s for each [SensorId].
 class PreviewSettings {
   /// List of all preview settings
   final Map<SensorId, SensorPreviewSetting> _sensorPreviewSetting = {};
@@ -16,7 +18,7 @@ class PreviewSettings {
   static PreviewSettings? _instance;
 
   /// Private singleton constructor to initialize [SharedPreferences]
-  /// and init. [SensorPreviewSetting].
+  /// and init [SensorPreviewSetting].
   PreviewSettings._create() {
     loadPreviewSettings();
   }

@@ -2,7 +2,11 @@ import 'dart:convert';
 
 import '../../filter_options.dart';
 
-/// Class to save preview settings.
+/// Class to save preview widget settings.
+///
+/// * [timeInterval] is the interval the widget takes to update
+/// and the interval of the data itself.
+/// * [active] shows which filters are shown on the home page.
 class SensorPreviewSetting {
   late Duration timeInterval;
   late final Map<FilterOption, bool> active;

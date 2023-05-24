@@ -19,7 +19,7 @@ final List<SettingsWidget> settings = [
   ),
   const SettingsWidget(
     title: 'Previews',
-    subtitle: 'preview control of home page',
+    subtitle: 'filter settings for sensor data preview',
     icon: Icons.preview,
     direction: PreviewSettingsPage(),
   ),
