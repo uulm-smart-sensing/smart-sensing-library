@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,6 +12,8 @@ import 'filter_tools.dart';
 import 'multi_filter_tools.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
+import 'src/import_export_module/export_tool.dart';
+import 'src/import_export_module/supported_file_format.dart';
 
 /// This class is the core component of the smart sensing library.
 ///
@@ -28,10 +31,24 @@ class IOManager {
   late final Store? _objectStore;
   late final SensorManager _sensorManager;
 
-  final int _maxBufferSize = 10000;
+  int _maxBufferSize = 1000;
   final HashMap _subscriptions = HashMap<SensorId, StreamSubscription?>();
 
   var _sensorThreadLock = false;
+
+  ///The max buffer size, that the IOManager saves per sensor.
+  int get maxBufferSize => _maxBufferSize;
+
+  ///Changes max buffer size of IOManager.
+  ///
+  ///If [size] is set <= 0, value 1 will be given.
+  set maxBufferSize(int size) {
+    if (size <= 0) {
+      _maxBufferSize = 1;
+      return;
+    }
+    _maxBufferSize = size;
+  }
 
   ///Returns instance of IOManager
   factory IOManager() => _instance;
@@ -58,6 +75,11 @@ class IOManager {
       },
     );
     return true;
+  }
+
+  /// Deletes all data from the database.
+  Future<void> deleteDatabase() async {
+    _objectStore!.box<SensorDataDTO>().removeAll();
   }
 
   ///Returns a list of usable sensors
@@ -124,7 +146,6 @@ class IOManager {
       }
 
       _sensorThreadLock = true;
-      _bufferManager.addBuffer(id);
 
       result = await _sensorManager.startSensorTracking(
         id: id,
@@ -132,6 +153,7 @@ class IOManager {
       );
 
       if (result == SensorTaskResult.success) {
+        _bufferManager.addBuffer(id);
         _subscriptions[id] = _sensorManager.getSensorStream(id)!.listen(
               (sensorData) => _processSensorData(sensorData, id),
               onDone: () async => _onDataDone(id),
@@ -156,15 +178,10 @@ class IOManager {
           "Establish connection first to use the IOManager.");
     }
 
-    while (_sensorThreadLock) {
-      await Future.delayed(Duration.zero);
-    }
-
     if (_subscriptions[id] == null) {
       return SensorTaskResult.notTrackingSensor;
     }
 
-    _sensorThreadLock = true;
     return _sensorManager.stopSensorTracking(id);
   }
 
@@ -184,13 +201,13 @@ class IOManager {
     var query = (_objectStore!.box<SensorDataDTO>().query(
               SensorDataDTO_.sensorID.equals(id.index).and(
                     SensorDataDTO_.dateTime.between(
-                      from.millisecondsSinceEpoch,
-                      to.millisecondsSinceEpoch,
+                      from.microsecondsSinceEpoch * 1000,
+                      to.microsecondsSinceEpoch * 1000,
                     ),
                   ),
             )..order(SensorDataDTO_.dateTime, flags: Order.descending))
         .build();
-    var list = query.find();
+    var list = await query.findAsync();
     return list.map((e) => e.toSensorData()).toList();
   }
 
@@ -243,26 +260,18 @@ class IOManager {
       //Check if first entry is older then given from.
       //If so, then the whole buffer contains all needed data.
       if (buffer.isNotEmpty) {
-        if (DateTime.fromMicrosecondsSinceEpoch(
-          buffer.first.timestampInMicroseconds,
-          isUtc: true,
-        ).isBefore(from)) {
+        if (buffer.first.timestamp.isBefore(from)) {
           return FilterTools(_splitWithDateTime(from, to, buffer));
         }
         //Check if first entry is older then given to.
         //If so, then the buffer contains partial data.
-        if (DateTime.fromMicrosecondsSinceEpoch(
-          buffer.first.timestampInMicroseconds,
-          isUtc: true,
-        ).isBefore(to)) {
+        if (buffer.first.timestamp.isBefore(to)) {
           buffer = _splitWithDateTime(from, to, buffer);
         }
       }
       var dbBuffer = await _getFromDatabase(
         from,
-        DateTime.fromMicrosecondsSinceEpoch(
-          buffer.first.timestampInMicroseconds,
-        ),
+        buffer.first.timestamp,
         id,
       );
       dbBuffer.addAll(buffer);
@@ -309,15 +318,13 @@ class IOManager {
   ) {
     var start = buffer.length, stop = 0;
     for (var i = 0; i < buffer.length; i++) {
-      if (DateTime.fromMicrosecondsSinceEpoch(buffer[i].timestampInMicroseconds)
-          .isAfter(from)) {
+      if (buffer[i].timestamp.isAfter(from)) {
         start = i;
         break;
       }
     }
     for (var i = buffer.length - 1; i >= 0; i--) {
-      if (DateTime.fromMicrosecondsSinceEpoch(buffer[i].timestampInMicroseconds)
-          .isBefore(to)) {
+      if (buffer[i].timestamp.isBefore(to)) {
         stop = i;
         break;
       }
@@ -336,6 +343,10 @@ class IOManager {
 
   ///Closes all connections to the stream and buffer.
   Future<void> _onDataDone(SensorId id) async {
+    while (_sensorThreadLock) {
+      await Future.delayed(Duration.zero);
+    }
+    _sensorThreadLock = true;
     await (_subscriptions[id] as StreamSubscription).cancel();
     _subscriptions[id] = null;
     await flushToDatabase(id);
@@ -353,10 +364,70 @@ class IOManager {
     await (_objectStore!.box<SensorDataDTO>().query(
           SensorDataDTO_.sensorID.equals(id.index).and(
                 SensorDataDTO_.dateTime.between(
-                  from.millisecondsSinceEpoch,
-                  to.millisecondsSinceEpoch,
+                  from.microsecondsSinceEpoch * 1000,
+                  to.microsecondsSinceEpoch * 1000,
                 ),
               ),
         )).build().removeAsync();
+  }
+
+  /// Exports the sensor data of a sensor or different sensors, considering a
+  /// certain [format] and optional a certain time interval.
+  ///
+  /// The time interval ranges from [startTime] to [endTime], where the
+  /// following default values are used, if the user do not specify either or
+  /// both of them:
+  /// * startTime = DateTime.fromMicrosecondsSinceEpoch(0), so the furthest back
+  /// in time
+  /// * endTime = DateTime.now(), so the latest moment in time, where sensor
+  /// data could exist.
+  ///
+  /// The sensor data will be exported into a file with the following naming
+  /// pattern:
+  /// _<sensorId>\_<startTime>\_<endTime>_
+  /// and be saved in the directory with the given [directoryName].
+  ///
+  /// Returns false, if
+  /// * there exist no directory with the [directoryName]
+  /// * the list of [sensorIds] is empty, so actually no export is requested.
+  /// * there exist no data (for one of the sensors, eventually in the
+  /// time interval from [startTime] to [endTime]), otherwise it will return
+  /// true.
+  /// TODO: add parameter to turn the spacing and line breaks of (= don't
+  /// "beautify")
+  Future<bool> exportSensorDataToFile(
+    String directoryName,
+    SupportedFileFormat format,
+    List<SensorId> sensorIds, [
+    DateTime? startTime,
+    DateTime? endTime,
+  ]) async {
+    if (!await Directory(directoryName).exists()) return false;
+
+    // Set the start and end time, if not specified by the user to
+    // furthest back in time and latest time.
+    startTime ??= DateTime.fromMicrosecondsSinceEpoch(0);
+    endTime ??= DateTime.now();
+
+    if (sensorIds.isEmpty) return false;
+
+    // Fetch the data for all sensors, format them and save the result in a new
+    // file.
+    for (var sensor in sensorIds) {
+      var fileName =
+          "$directoryName/${createFileName(sensor, startTime, endTime)}";
+
+      var formattedData = "".codeUnits;
+      await _getFromDatabase(startTime, endTime, sensor).then(
+        (sensorData) =>
+            {formattedData = formatData(sensor, sensorData, format)},
+      );
+
+      if (formattedData.isEmpty) return false;
+
+      await writeFormattedData(fileName, format, formattedData);
+    }
+
+    return true;
   }
 }

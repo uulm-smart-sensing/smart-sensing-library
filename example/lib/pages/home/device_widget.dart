@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../general_widgets/device_name_title.dart';
 
@@ -102,8 +103,9 @@ class _DeviceWidgetState extends State<DeviceWidget> {
 Widget _getAvailableSensorsText() => FutureBuilder(
       // ignore: prefer_expression_function_bodies
       future: Future.sync(() async {
-        // TODO: Replace with call to smart sensing library
-        return "14";
+        return IOManager()
+            .getAvailableSensors()
+            .then((list) => list.length.toString());
       }),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -118,11 +120,11 @@ Widget _getAvailableSensorsText() => FutureBuilder(
 
         if (snapshot.hasError) {
           return const Text(
-            "Error occured while fetching number of available sensors",
+            "Error occurred while fetching number of available sensors",
           );
         }
 
-        return const Text("Number of available sensors is being fetched ...");
+        return const Text("0");
       },
     );
 
@@ -130,8 +132,9 @@ Widget _getAvailableSensorsText() => FutureBuilder(
 Widget _getRunningSensorsText() => FutureBuilder(
       // ignore: prefer_expression_function_bodies
       future: Future.sync(() async {
-        // TODO: Replace with call to smart sensing library
-        return "10";
+        return IOManager()
+            .getUsedSensors()
+            .then((list) => list.length.toString());
       }),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -146,10 +149,10 @@ Widget _getRunningSensorsText() => FutureBuilder(
 
         if (snapshot.hasError) {
           return const Text(
-            "Error occured while fetching number of running sensors",
+            "Error occurred while fetching number of running sensors",
           );
         }
 
-        return const Text("Number of running sensors is being fetched ...");
+        return const Text("0");
       },
     );

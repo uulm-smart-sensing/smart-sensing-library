@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../formatter/date_formatter.dart';
 import '../live_view/live_view_page.dart';
 import '../live_view/live_view_sensor_widget.dart';
@@ -33,7 +33,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var todayFormatted = formatDate(dateTime: DateTime.now());
-
     var title = Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
@@ -82,7 +81,7 @@ class _HomePageState extends State<HomePage> {
         noChildrenText: "No sensors are currently being tracked.",
         children: snapshot.data != null
             ? snapshot.data!
-                .take(3)
+                .where((id) => SensorId.values.contains(id))
                 .map(
                   (id) => LiveViewSensorWidget(
                     sensorId: id,
@@ -116,7 +115,7 @@ class _HomePageState extends State<HomePage> {
     var devicesSectionBody = Container(
       alignment: Alignment.topLeft,
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: const DeviceWidget(),
+      child: DeviceWidget(key: UniqueKey()),
     );
 
     return Scaffold(

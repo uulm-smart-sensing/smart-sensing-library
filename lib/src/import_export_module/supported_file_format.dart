@@ -18,16 +18,16 @@ enum SupportedFileFormat {
   ///   "sensorId": "<sensorId in camelCase>, e. g. 'accelerometer'",
   ///   "sensorData": [{
   ///      "data": [0, 0.1, 1.3],
-  ///      "unit": "<unit in camelCase>, e. g. 'metersPerSecondSquared'",
+  ///      "unit": "<unitcategory.unit>, e. g. 'Acceleration.gravity'",
   ///      "maxPrecision": 2,
-  ///      "timestampInMicroseconds": 1681560654,
+  ///      "timestamp": 1681560654,
   ///   }]
   /// }
   /// ```
   ///
   /// The `data` array can contain as many double values as the sensor provide,
   /// so the size is not fixed to three.
-  /// Furthermore, the `timestampInMicroseconds` is represented as the "unix
+  /// Furthermore, the `timestamp` is represented as the "unix
   /// epoch".
   json,
 
@@ -35,28 +35,28 @@ enum SupportedFileFormat {
   /// encoded in the following way:
   ///
   /// ```csv
-  /// sensorId,unit,maxPrecision,timestampInMicroseconds,data,
-  /// linearAcceleration,metersPerSquareSecond,5,1681561948,"1.4,0,9.81"
-  /// linearAcceleration,gravitationalForce,5,1681562008,"0.2,0,1"
+  /// sensorId,unit,maxPrecision,timestamp,data,
+  /// accelerometer,Acceleration.meterPerSecondSquared,5,1681561948,"1.4,0,9.81"
+  /// accelerometer,Acceleration.gravity,5,1681562008,"0.2,0,1"
   /// ```
   ///
   /// So opening the sensor data encoded in `csv` in a spreadsheet program,
   /// would like this (example values!):
-  /// |SensorId     |Unit     |maxPrecision|timestamp...|Data           |
-  /// |-------------|---------|------------|------------|---------------|
-  /// |accelerometer|meters...|2           |1681561948  |0.1, 0.15, 0.6 |
-  /// |accelerometer|meters...|2           |1681561949  |0.1, 0.15      |
+  /// |SensorId     |Unit     |maxPrecision|timestamp  |Data           |
+  /// |-------------|---------|------------|-----------|---------------|
+  /// |accelerometer|Accele...|2           |1681561948 |0.1, 0.15, 0.6 |
+  /// |accelerometer|Accele...|2           |1681561949 |0.1, 0.15      |
   csv,
 
   /// Using the `xlsx` file format (so using a Excel spreadsheet) means, the
   /// sensor data need to be / are encoded in the following way in the table:
   ///
-  /// |SensorId     |Unit     |maxPrecision|timestamp...|Data           |
-  /// |-------------|---------|------------|------------|---------------|
-  /// |accelerometer|meters...|2           |1681561948  |0.1, 0.15, 0.6 |
-  /// |accelerometer|meters...|2           |1681561949  |0.1, 0.15 |
+  /// |SensorId     |Unit     |maxPrecision|timestamp  |Data           |
+  /// |-------------|---------|------------|-----------|---------------|
+  /// |accelerometer|Accele...|2           |1681561948 |0.1, 0.15, 0.6 |
+  /// |accelerometer|Accele...|2           |1681561949 |0.1, 0.15 |
   ///
-  /// The array of datapoints is encoded as ', ' (whitespace!) seperated list
+  /// The array of datapoints is encoded as ', ' (whitespace!) separated list
   /// in one cell.
   ///
   /// The data will be stored in only one sheet named 'sensor_data' and so
@@ -75,9 +75,9 @@ enum SupportedFileFormat {
   ///    <dataPoint>0.0</dataPoint>
   ///    <dataPoint>9.81</dataPoint>
   ///  </data>
-  ///  <unit>unit (in camelCase, e. g. metersPerSecondSquared</unit>
+  ///  <unit>unitcategory.unit (e. g. Acceleration.gravity</unit>
   ///  <maxPrecision>5</maxPrecision>
-  ///  <timestampInMicroseconds>1681561948</timestampInMicroseconds>
+  ///  <timestamp>1681561948</timestamp>
   /// </sensorData>
   /// </root>
   /// ```

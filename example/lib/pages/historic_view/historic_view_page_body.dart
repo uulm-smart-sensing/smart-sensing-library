@@ -2,13 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_sensing_library/filter_tools.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../formatter/date_formatter.dart';
 import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';
+import 'graph_view.dart';
 import 'historic_view_page.dart';
+import 'sensor_view_data.dart';
 import 'time_selection_button.dart';
 import 'visualization_selection_button.dart';
 
@@ -41,21 +44,31 @@ class HistoricViewPageBody extends StatefulWidget {
 
 class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   _Filter? selectedFilter;
-  var selectedDuration = const Duration(minutes: 5);
+  var selectedDuration = const Duration(seconds: 30);
   var selectedVisualization = _Visualization.table;
   late Map<int, TableColumnWidth> columnWidths;
+  late int numberOfDataPoints;
+
+  var historicSensorData = <SensorViewData>[];
+  var areSensorDataExisting = false;
 
   @override
   void initState() {
     columnWidths = _getColumnWidthsFromSensorId(widget.sensorId);
     super.initState();
+    if (widget.sensorId == SensorId.thermometer ||
+        widget.sensorId == SensorId.barometer) {
+      numberOfDataPoints = 1;
+    } else {
+      numberOfDataPoints = 3;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var divider = const VerticalDivider(
-      thickness: 1,
-    );
+    _getDataFromDatabase();
+
+    var divider = const VerticalDivider(thickness: 1);
 
     // Selection between different time intervals
     // When time interval is selected, new interval will be applied to table/graph
@@ -70,8 +83,33 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
             TimeSelectionButton(
               onPressed: () {
                 setState(() {
+                  selectedDuration = const Duration(seconds: 30);
+                });
+                _getDataFromDatabase();
+              },
+              title: "30 s",
+              isSelected:
+                  selectedDuration.compareTo(const Duration(seconds: 30)) == 0,
+            ),
+            divider,
+            TimeSelectionButton(
+              onPressed: () {
+                setState(() {
+                  selectedDuration = const Duration(minutes: 1);
+                });
+                _getDataFromDatabase();
+              },
+              title: "1 min",
+              isSelected:
+                  selectedDuration.compareTo(const Duration(minutes: 1)) == 0,
+            ),
+            divider,
+            TimeSelectionButton(
+              onPressed: () {
+                setState(() {
                   selectedDuration = const Duration(minutes: 5);
                 });
+                _getDataFromDatabase();
               },
               title: "5 min",
               isSelected:
@@ -81,45 +119,25 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
             TimeSelectionButton(
               onPressed: () {
                 setState(() {
+                  selectedDuration = const Duration(minutes: 30);
+                });
+                _getDataFromDatabase();
+              },
+              title: "30 min",
+              isSelected:
+                  selectedDuration.compareTo(const Duration(minutes: 30)) == 0,
+            ),
+            divider,
+            TimeSelectionButton(
+              onPressed: () {
+                setState(() {
                   selectedDuration = const Duration(hours: 1);
                 });
+                _getDataFromDatabase();
               },
               title: "1 h",
               isSelected:
                   selectedDuration.compareTo(const Duration(hours: 1)) == 0,
-            ),
-            divider,
-            TimeSelectionButton(
-              onPressed: () {
-                setState(() {
-                  selectedDuration = const Duration(hours: 12);
-                });
-              },
-              title: "12 h",
-              isSelected:
-                  selectedDuration.compareTo(const Duration(hours: 12)) == 0,
-            ),
-            divider,
-            TimeSelectionButton(
-              onPressed: () {
-                setState(() {
-                  selectedDuration = const Duration(days: 2);
-                });
-              },
-              title: "2 d",
-              isSelected:
-                  selectedDuration.compareTo(const Duration(days: 2)) == 0,
-            ),
-            divider,
-            TimeSelectionButton(
-              onPressed: () {
-                setState(() {
-                  selectedDuration = const Duration(days: 7);
-                });
-              },
-              title: "1 w",
-              isSelected:
-                  selectedDuration.compareTo(const Duration(days: 7)) == 0,
             ),
           ],
         ),
@@ -148,6 +166,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         setState(() {
           selectedFilter = newFilter;
         });
+        _getDataFromDatabase();
       },
     );
 
@@ -158,11 +177,13 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           VisualizationSelectionButton(
-            onPressed: () {
-              setState(() {
-                selectedVisualization = _Visualization.graph;
-              });
-            },
+            onPressed: historicSensorData.isNotEmpty
+                ? () {
+                    setState(() {
+                      selectedVisualization = _Visualization.graph;
+                    });
+                  }
+                : () => {},
             title: "Graph",
             isSelected: selectedVisualization == _Visualization.graph,
           ),
@@ -184,47 +205,71 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
     // between to serve as padding.
     var paddingRow = _getPaddingRow(widget.sensorId);
 
-    // TODO: Remove when using real values
-    int numberOfDataPoints;
-    if (widget.sensorId == SensorId.thermometer ||
-        widget.sensorId == SensorId.barometer) {
-      numberOfDataPoints = 1;
-    } else {
-      numberOfDataPoints = 3;
-    }
+    // Graph that visualize sensor data
+    var visualizationGraph = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      width: MediaQuery.of(context).size.height,
+      child: AspectRatio(
+        aspectRatio: 1.7,
+        child: Center(
+          child: GraphView(
+            lineData: historicSensorData,
+            lineDataCount: numberOfDataPoints,
+          ),
+        ),
+      ),
+    );
 
     // Table that visualizes sensor data
+    var tableRows = [
+      TableRow(
+        children: [
+          visualizationSelection,
+          ..._getTableElementsFromSensorId(
+            widget.sensorId,
+            selectedVisualization,
+          ),
+        ],
+      ),
+      paddingRow,
+      paddingRow,
+    ];
+    if (selectedVisualization == _Visualization.table) {
+      tableRows.addAll(
+        historicSensorData
+            .map(
+              (sensorData) => [
+                _getTableRowFromSensorData(sensorData, numberOfDataPoints),
+                paddingRow
+              ],
+            )
+            .expand((row) => row)
+            .toList(),
+      );
+    }
     var visualizationTable = Table(
       columnWidths: columnWidths,
-      children: [
-        TableRow(
+      children: tableRows,
+    );
+
+    var visualizationSection = Expanded(
+      child: SingleChildScrollView(
+        child: Column(
           children: [
-            visualizationSelection,
-            ..._getTableElementsFromSensorId(
-              widget.sensorId,
-              selectedVisualization,
-            ),
+            areSensorDataExisting
+                ? visualizationTable
+                : Center(
+                    child: Text(
+                      "No sensor data exist yet.",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+            selectedVisualization == _Visualization.graph
+                ? visualizationGraph
+                : const SizedBox.shrink()
           ],
         ),
-        paddingRow,
-        // TODO: Add data row using call to smart sensing library
-        // and _getTableRowFromSensorData add padding with paddingRow
-        _getTableRowFromSensorData(
-          DateTime.fromMillisecondsSinceEpoch(1234567890123),
-          [1.0, 2.0, 3.0].take(numberOfDataPoints).toList(),
-        ),
-        paddingRow,
-        _getTableRowFromSensorData(
-          DateTime.fromMillisecondsSinceEpoch(9876543210987),
-          [3.0, 2.0, 1.0].take(numberOfDataPoints).toList(),
-        ),
-        paddingRow,
-        _getTableRowFromSensorData(
-          DateTime.fromMillisecondsSinceEpoch(5555555555555),
-          [69.0, 42.0, 666.0].take(numberOfDataPoints).toList(),
-        ),
-        paddingRow,
-      ],
+      ),
     );
 
     return Column(
@@ -233,9 +278,38 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
         const SizedBox(height: 15),
         filterSelectionDropdown,
         const SizedBox(height: 20),
-        visualizationTable,
+        visualizationSection,
       ],
     );
+  }
+
+  /// Requests the sensor data depending on the [selectedFilter] and the
+  /// [selectedDuration] from the database using the library.
+  Future<void> _getDataFromDatabase() async {
+    FilterTools? requestedFiltertool;
+    try {
+      requestedFiltertool = await IOManager().getFilterFrom(widget.sensorId);
+      areSensorDataExisting = true;
+    } on Exception {
+      areSensorDataExisting = false;
+    }
+    if (requestedFiltertool != null) {
+      var sensorData = requestedFiltertool.result(interval: selectedDuration);
+      var formattedSensorData = sensorData
+          .map(
+            (dataEntry) => SensorViewData(
+              timestamp: dataEntry.timestamp.microsecondsSinceEpoch / 1000.0,
+              x: dataEntry.data[0],
+              y: dataEntry.data[1],
+              z: dataEntry.data[2],
+            ),
+          )
+          .toList();
+      if (!mounted) return;
+      setState(() {
+        historicSensorData = formattedSensorData;
+      });
+    }
   }
 }
 
@@ -256,7 +330,7 @@ Map<int, TableColumnWidth> _getColumnWidthsFromSensorId(SensorId sensorId) {
     case SensorId.orientation:
     case SensorId.linearAcceleration:
       columnWidths = {
-        0: const FlexColumnWidth(3),
+        0: const FlexColumnWidth(2.5),
         1: const FlexColumnWidth(),
         2: const FlexColumnWidth(),
         3: const FlexColumnWidth(),
@@ -354,8 +428,12 @@ TableRow _getPaddingRow(SensorId sensorId) {
   );
 }
 
-// ignore: unused_element
-TableRow _getTableRowFromSensorData(DateTime dateTime, List<double> data) {
+TableRow _getTableRowFromSensorData(
+  SensorViewData sensorData,
+  int numberOfDataPoints,
+) {
+  var dateTime =
+      DateTime.fromMillisecondsSinceEpoch(sensorData.timestamp.toInt());
   var formattedDate = formatDate(
     dateTime: dateTime,
     shortenYear: true,
@@ -373,7 +451,9 @@ TableRow _getTableRowFromSensorData(DateTime dateTime, List<double> data) {
           ],
         ),
       ),
-      ...data.map((value) => Center(child: Text(value.toString()))),
+      ...[sensorData.x, sensorData.y, sensorData.z]
+          .take(numberOfDataPoints)
+          .map((value) => Center(child: Text(value?.toStringAsFixed(2) ?? ""))),
     ],
   );
 }

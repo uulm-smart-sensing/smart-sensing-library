@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../favorite_provider.dart';
 import '../../general_widgets/app_bar_with_header.dart';
 import '../../general_widgets/device_name_title.dart';
 import '../../general_widgets/stylized_container.dart';
@@ -26,12 +28,14 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<FavoriteProvider>(context);
+
     var header = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const DeviceNameTitle(
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 16,
           ),
         ),
         CheckBoxWithText(
@@ -88,12 +92,13 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         fontSize: 24,
       ),
     );
-    // TODO: Replace with favorite sensors
-    var favorites = sensorIdsToDisplay.take(3).toList();
+
+    /// show all Favorites
     var favoritesBody = _getSensorsListFromIds(
-      sensorIds: favorites,
-      containerFlex: favorites.length,
+      sensorIds: provider.sensorList,
+      containerFlex: provider.sensorList.length,
       sensorNameFilter: sensorNameFilter,
+      provider: provider,
       noSensorsText: sensorNameFilter.isEmpty
           ? "No sensors marked as favorite."
           : "No sensor marked as favorite matches the search string.",
@@ -106,17 +111,18 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
       ),
     );
     // Show all sensors that are not favorites
-    var allSensors =
-        sensorIdsToDisplay.where((id) => !favorites.contains(id)).toList();
+    var allSensors = sensorIdsToDisplay
+        .where((id) => !provider.sensorList.contains(id))
+        .toList();
     var allSensorsBody = _getSensorsListFromIds(
       sensorIds: allSensors,
       containerFlex: allSensors.length,
       sensorNameFilter: sensorNameFilter,
+      provider: provider,
       noSensorsText: sensorNameFilter.isEmpty
           ? "No sensors available."
           : "No sensor matches the search string.",
     );
-
     return GestureDetector(
       onTap: () {
         var currentFocus = FocusScope.of(context);
@@ -151,9 +157,10 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
   /// [sensorNameFilter] (for that [sensorNameFilter] must be not empty).
   Widget _getSensorsListFromIds({
     required List<SensorId> sensorIds,
-    int containerFlex = 1,
     required String sensorNameFilter,
     String noSensorsText = "No sensors.",
+    required FavoriteProvider provider,
+    required int containerFlex,
   }) {
     var sensorWidgets = sensorIds
         .where(
@@ -163,7 +170,7 @@ class _SensorSearchPageState extends State<SensorSearchPage> {
         )
         .map(
           (id) => [
-            SensorSearchPageSensorListElement(sensorId: id),
+            SensorSearchPageSensorListElement(sensorId: id, provider: provider),
             const SizedBox(height: 10)
           ],
         )

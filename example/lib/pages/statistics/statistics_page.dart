@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
+import '../../favorite_provider.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/text_formatter.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
@@ -22,29 +24,47 @@ class StatisticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<FavoriteProvider>(context);
+
     // The list containing the buttons for all implemented sensors
     // for navigation to the [HistoricViewPage]s.
     var sensorList = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      child: Column(
-        children: [
-          // TODO: add some items like below with "Favorites"
-          // and filter only favorites in the ListView
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text("All"),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Expanded(
-            child: ListView(
-              children: SensorId.values
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text("Favorites", style: TextStyle(fontSize: 24)),
+            ),
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: provider.sensorList
                   .map((id) => _getSensorListItem(id, context))
                   .toList(),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 30,
+            ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text("All", style: TextStyle(fontSize: 24)),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: SensorId.values
+                  .where((sensorId) => !provider.sensorList.contains(sensorId))
+                  .map((id) => _getSensorListItem(id, context))
+                  .toList(),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
 

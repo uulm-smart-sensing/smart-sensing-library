@@ -41,6 +41,8 @@ class _ImportExportPageState extends State<ImportExportPage> {
   SensorId? _selectedSensorIdForExport;
   bool _exportForAllSensorIds = false;
 
+  SupportedFileFormat? _selectedFileFormat;
+
   /// Setter methods for defining the state of this page by the
   /// 'Import' and 'Export' widgets.
 
@@ -68,6 +70,12 @@ class _ImportExportPageState extends State<ImportExportPage> {
     });
   }
 
+  void _setSelectedFileFormatForExport(SupportedFileFormat selectedFileFormat) {
+    setState(() {
+      _selectedFileFormat = selectedFileFormat;
+    });
+  }
+
   /// Imports sensor data from a single file.
   ///
   /// Therefor a file picker is opened, where the user can select a file
@@ -76,11 +84,9 @@ class _ImportExportPageState extends State<ImportExportPage> {
   /// > Warning: Currently only one single .json file is
   /// > allowed to be imported.
   Future<void> _importData() async {
-    // TODO: do not used hardcoded 'json' but instead request supported formats
-    // from smart sensing library
     var result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['json'],
+      allowedExtensions: SupportedFileFormat.values.map((e) => e.name).toList(),
       allowMultiple: _importEntireDirectory,
     );
 
@@ -111,11 +117,18 @@ class _ImportExportPageState extends State<ImportExportPage> {
     if (selectedDirectory == null) return;
 
     if (_exportForAllSensorIds) {
-      // TODO: call smart sensing library with 'selectedDirectory'
-      // and 'SensorId.values'
-    } else if (_selectedSensorIdForExport != null) {
-      // TODO: call smart sensing library with 'selectedDirectory'
-      // and 'selectedSensorIdForExport!'
+      await IOManager().exportSensorDataToFile(
+        selectedDirectory,
+        _selectedFileFormat!,
+        SensorId.values,
+      );
+    } else if (_selectedSensorIdForExport != null &&
+        _selectedFileFormat != null) {
+      await IOManager().exportSensorDataToFile(
+        selectedDirectory,
+        _selectedFileFormat!,
+        [_selectedSensorIdForExport!],
+      );
     } else {
       // TODO: provide hint, that user need to select sensorId
     }
@@ -130,6 +143,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
         builder: (context) => ManualExportPage(
           selectedSensorIdForExport: _selectedSensorIdForExport!,
           exportForAllSensorIds: _exportForAllSensorIds,
+          selectedFileFormat: _selectedFileFormat!,
         ),
       ),
     );
@@ -164,11 +178,14 @@ class _ImportExportPageState extends State<ImportExportPage> {
         SizedBox(
           width: 120,
           child: CustomTextButton(
-            onPressed:
-                _selectedSensorIdForExport != null || _exportForAllSensorIds
-                    ? _exportData
-                    : null,
+            onPressed: _allNeededValuesForExportSet() ? _exportData : null,
             text: "All",
+            style: TextStyle(
+              color: (_selectedSensorIdForExport != null &&
+                      _selectedFileFormat != null)
+                  ? Colors.white
+                  : Colors.grey,
+            ),
           ),
         ),
         const SizedBox(
@@ -177,11 +194,16 @@ class _ImportExportPageState extends State<ImportExportPage> {
         SizedBox(
           width: 120,
           child: CustomTextButton(
-            onPressed:
-                _selectedSensorIdForExport != null || _exportForAllSensorIds
-                    ? selectTimeIntervalForExport
-                    : null,
+            onPressed: _allNeededValuesForExportSet()
+                ? selectTimeIntervalForExport
+                : null,
             text: "Manual",
+            style: TextStyle(
+              color: (_selectedSensorIdForExport != null &&
+                      _selectedFileFormat != null)
+                  ? Colors.white
+                  : Colors.grey,
+            ),
           ),
         ),
       ],
@@ -195,8 +217,6 @@ class _ImportExportPageState extends State<ImportExportPage> {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            // TODO: delete or restructure as soon as call to smart sensing
-            // library is realized and datetimes are used
             child: Text(
               "time interval:",
               style: Theme.of(context).textTheme.bodySmall,
@@ -209,6 +229,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
         ],
       ),
       setSensorId: _setSelectedSensorIdForExport,
+      setFileFormatForExport: _setSelectedFileFormatForExport,
       setUseAllPossibleSensorIds: _setExportForAllSensorIds,
     );
 
@@ -225,4 +246,8 @@ class _ImportExportPageState extends State<ImportExportPage> {
       ),
     );
   }
+
+  bool _allNeededValuesForExportSet() =>
+      (_selectedSensorIdForExport != null && _selectedFileFormat != null) ||
+      _exportForAllSensorIds;
 }
