@@ -21,7 +21,7 @@ class PreviewSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) => FutureBuilder(
         future: IOManager().getUsedSensors(),
         builder: (context, snapshot) => SmartSensingAppBar(
-          title: "Previews",
+          title: "Preview settings",
           body: Scaffold(
             body: Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
