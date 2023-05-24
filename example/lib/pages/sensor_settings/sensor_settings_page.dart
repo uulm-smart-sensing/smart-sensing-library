@@ -167,18 +167,17 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
       ),
     )
         .then((result) {
+      var snackBar = SnackBar(
+        content: Text(formatPascalCase(result.name)),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          onPressed: () {},
+        ),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       if (result == SensorTaskResult.success) {
         Navigator.of(context).pop();
-      } else {
-        var snackBar = SnackBar(
-          content: Text(formatPascalCase(result.name)),
-          action: SnackBarAction(
-            label: 'Dismiss',
-            onPressed: () {},
-          ),
-        );
-
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     });
   }
