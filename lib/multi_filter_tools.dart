@@ -4,7 +4,7 @@ import 'package:sensing_plugin/sensing_plugin.dart';
 
 import 'filter_tools.dart';
 
-/// Extended class of [FilterTools].
+/// Extends the class [FilterTools] to accommodate multiple [SensorId]s.
 ///
 /// This class is used for multi filtering requests.
 /// Uses [FilterTools] as its base and querys the request on all given
