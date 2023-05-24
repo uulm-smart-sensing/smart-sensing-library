@@ -70,14 +70,14 @@ class MultiFilterTools {
     }
   }
 
-   /// Applies [FilterTools.getRange] on every [SensorId].
+  /// Applies [FilterTools.getRange] on every [SensorId].
   void getRange({Duration interval = Duration.zero}) {
     for (var filter in _queryMap.values) {
       filter?.getRange(interval: interval);
     }
   }
 
-   /// Applies [FilterTools.getSD] on every [SensorId].
+  /// Applies [FilterTools.getSD] on every [SensorId].
   void getSD({Duration interval = Duration.zero}) {
     for (var filter in _queryMap.values) {
       filter?.getSD(interval: interval);

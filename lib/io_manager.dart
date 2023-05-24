@@ -316,8 +316,7 @@ class IOManager {
       } on Exception catch (_) {
         if (!skipFaulty) {
           rethrow;
-        }
-        else{
+        } else {
           filterMap.remove(id);
         }
       }
