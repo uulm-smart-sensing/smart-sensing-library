@@ -70,7 +70,10 @@ class _PreviewContainerState extends State<PreviewContainer> {
         }
         var dataList = <SensorData>[];
         for (var i = 0; i < widget.filterOption.axisNumber; i++) {
-          var filter = await IOManager().getFilterFrom(widget.sensorId);
+          var filter = await IOManager().getFilterFrom(
+            widget.sensorId,
+            from: DateTime.now().toUtc().subtract(widget.duration),
+          );
           if (filter != null) {
             dataList.addAll(
               _getFromFilter(widget.filterOption, filter, axis: i) ?? [],

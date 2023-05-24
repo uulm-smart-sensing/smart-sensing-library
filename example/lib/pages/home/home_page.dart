@@ -173,6 +173,7 @@ class _HomePageState extends State<HomePage> {
             .map(
               (e) => PreviewContainer(
                 key: UniqueKey(),
+                duration: settings.value.timeInterval,
                 sensorId: settings.key,
                 filterOption: e.key,
               ),
