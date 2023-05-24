@@ -19,7 +19,7 @@ final List<SettingsWidget> settings = [
   ),
   const SettingsWidget(
     title: 'Previews',
-    subtitle: 'preview controll of home page',
+    subtitle: 'preview control of home page',
     icon: Icons.preview,
     direction: PreviewSettingsPage(),
   ),
