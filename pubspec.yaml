@@ -39,6 +39,7 @@ dev_dependencies:
   junitreport: ^2.0.2
   cobertura: ^1.0.3
   build_runner: ^2.3.3
+  logging: 1.1.1
   objectbox_generator: any
 
 flutter:
