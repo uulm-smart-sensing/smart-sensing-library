@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -137,52 +139,32 @@ Future<void> main() async {
     expect(test?.result()[SensorId.gyroscope]!.isNotEmpty, true);
   });
 
-  test("Test multi query functionality", () async {
+  test("Test multi query functionality when skip faulty is false.", () async {
     await ioManager.addSensor(
       id: SensorId.accelerometer,
       config: exampleConfig,
     );
-    await ioManager.addSensor(
-      id: SensorId.gyroscope,
-      config: exampleConfig,
-    );
     await Future.delayed(const Duration(seconds: 15));
-    var test = await ioManager
-        .getMultiFilterFrom([SensorId.accelerometer, SensorId.gyroscope]);
-    expect(test?.result()[SensorId.accelerometer]!.isNotEmpty, true);
-    expect(test?.result()[SensorId.gyroscope]!.isNotEmpty, true);
+    expect(
+      () async => ioManager.getMultiFilterFrom(
+        [SensorId.accelerometer, SensorId.gyroscope],
+        skipFaulty: false,
+      ),
+      throwsException,
+    );
   });
 
-  test("Test multi query functionality", () async {
+  test("Test multi query functionality when skip faulty is true.", () async {
     await ioManager.addSensor(
       id: SensorId.accelerometer,
       config: exampleConfig,
     );
-    await ioManager.addSensor(
-      id: SensorId.gyroscope,
-      config: exampleConfig,
-    );
     await Future.delayed(const Duration(seconds: 15));
-    var test = await ioManager
-        .getMultiFilterFrom([SensorId.accelerometer, SensorId.gyroscope]);
-    expect(test?.result()[SensorId.accelerometer]!.isNotEmpty, true);
-    expect(test?.result()[SensorId.gyroscope]!.isNotEmpty, true);
-  });
-
-  test("Test multi query functionality", () async {
-    await ioManager.addSensor(
-      id: SensorId.accelerometer,
-      config: exampleConfig,
+    var test = await ioManager.getMultiFilterFrom(
+      [SensorId.accelerometer, SensorId.gyroscope],
+      skipFaulty: true,
     );
-    await ioManager.addSensor(
-      id: SensorId.gyroscope,
-      config: exampleConfig,
-    );
-    await Future.delayed(const Duration(seconds: 15));
-    var test = await ioManager
-        .getMultiFilterFrom([SensorId.accelerometer, SensorId.gyroscope]);
     expect(test?.result()[SensorId.accelerometer]!.isNotEmpty, true);
-    expect(test?.result()[SensorId.gyroscope]!.isNotEmpty, true);
   });
 
   test(
