@@ -295,20 +295,32 @@ class IOManager {
     return FilterTools(buffer);
   }
 
-  ///Returns instance of MultiFilterTools with corresponding data.
+  /// Returns instance of MultiFilterTools with corresponding data.
   ///
-  ///Gets the data [from] until [to] from all sensors in [idList].
-  ///If not all of the data is in a buffer a get request
-  ///will be sent to the database.
-  ///Throws an exception if the buffer is empty.
+  /// Gets the data [from] until [to] from all sensors in [idList].
+  /// If not all of the data is in a buffer a get request
+  /// will be sent to the database.
+  /// If [skipFaulty] is set, skips faulty requests and removes the [SensorId]
+  /// from [idList]
+  /// Otherwise throws the corresponding [Exception].
   Future<MultiFilterTools?> getMultiFilterFrom(
     List<SensorId> idList, {
     DateTime? from,
     DateTime? to,
+    bool skipFaulty = false,
   }) async {
     var filterMap = <SensorId, FilterTools?>{};
     for (var id in idList) {
-      filterMap[id] = await getFilterFrom(id, from: from, to: to);
+      try {
+        filterMap[id] = await getFilterFrom(id, from: from, to: to);
+      } on Exception catch (_) {
+        if (!skipFaulty) {
+          rethrow;
+        }
+        else{
+          filterMap.remove(id);
+        }
+      }
     }
     return MultiFilterTools(filterMap);
   }
