@@ -31,7 +31,7 @@ void main() {
   });
 
   test(
-    'When sensor is added to favorits, then favorite list contains sensor',
+    'When sensor is added to favorites, then favorite list contains sensor',
     () async {
       SharedPreferences.setMockInitialValues({});
       var favoriteProvider = FavoriteProvider();
