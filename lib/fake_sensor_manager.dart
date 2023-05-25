@@ -42,13 +42,6 @@ class FakeSensorManager extends Fake implements SensorManager {
     }
   }
 
-  ///Sets the internal platformResult to [result].
-  void configurePlatformResult(SensorTaskResult result) =>
-      _platformCallResult = result;
-
-  ///Sets the internal maximum uptime of a stream to [time]
-  void configureStreamUpTime(int time) => _streamUpTime = time;
-
   /// Sets the internal used sensors to [ids].
   void configureUsedSensors(List<SensorId> ids) => _usedSensors = ids;
 
