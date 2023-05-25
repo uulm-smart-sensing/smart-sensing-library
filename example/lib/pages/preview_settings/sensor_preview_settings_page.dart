@@ -107,7 +107,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
           await (await provider).updateSensorPreviewSettings(
             widget.sensorId,
             settings,
-          );
+          ).then((_) => Navigator.pop(context));
         },
       ),
     );
