@@ -243,10 +243,36 @@ Future<void> main() async {
   test(
     'When SensorInfo is requested, then the correct SensorInfo is returned',
     () async {
-      var sensorInfo = await ioManager.getSensorInfo(SensorId.accelerometer);
-      expect(sensorInfo.unit, equals(Acceleration.meterPerSecondSquared));
-      expect(sensorInfo.accuracy, equals(SensorAccuracy.high));
-      expect(sensorInfo.timeIntervalInMilliseconds, equals(1000));
+      for (var sensorId in SensorId.values) {
+        var sensorInfo = await ioManager.getSensorInfo(sensorId);
+
+        Unit expectedUnit;
+        switch (sensorId) {
+          case SensorId.accelerometer:
+          case SensorId.linearAcceleration:
+            expectedUnit = Acceleration.meterPerSecondSquared;
+            break;
+          case SensorId.barometer:
+            expectedUnit = Pressure.pascal;
+            break;
+          case SensorId.gyroscope:
+            expectedUnit = AngularVelocity.radiansPerSecond;
+            break;
+          case SensorId.magnetometer:
+            expectedUnit = MagneticFluxDensity.microTesla;
+            break;
+          case SensorId.orientation:
+            expectedUnit = Angle.degrees;
+            break;
+          case SensorId.thermometer:
+            expectedUnit = Temperature.celsius;
+            break;
+        }
+
+        expect(sensorInfo.unit, equals(expectedUnit));
+        expect(sensorInfo.accuracy, equals(SensorAccuracy.high));
+        expect(sensorInfo.timeIntervalInMilliseconds, equals(1000));
+      }
     },
   );
 
