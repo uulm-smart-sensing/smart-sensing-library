@@ -35,10 +35,17 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
 
   @override
   void initState() {
-    // TODO: Make call to smart sensing library to initialize values
-    selectedPrecision = 2;
-    selectedTimeIntervalInMilliseconds = 100;
-    selectedUnit = sensorIdToDefaultTargetUnit[widget.sensorId]!;
+    // request sensor config for this sensor
+    var config = IOManager().getSensorConfig(widget.sensorId);
+    if (config != null) {
+      selectedPrecision = config.targetPrecision;
+      selectedTimeIntervalInMilliseconds = config.timeInterval.inMilliseconds;
+      selectedUnit = config.targetUnit;
+    } else {
+      selectedPrecision = 1;
+      selectedTimeIntervalInMilliseconds = 500;
+      selectedUnit = sensorIdToDefaultTargetUnit[widget.sensorId]!;
+    }
     super.initState();
   }
 
@@ -47,9 +54,12 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     var unitHeader = SectionHeader("Unit");
 
     var units = sensorIdToUnitCategory[widget.sensorId]!;
-    var unitSelection = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: units.map(_getUnitSelectionButtonFromUnit).toList(),
+    var unitSelection = SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: units.map(_getUnitSelectionButtonFromUnit).toList(),
+      ),
     );
 
     var precisionHeader = SectionHeader("Precision");
@@ -81,12 +91,9 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         width: 200,
         text: "Apply settings",
         style: const TextStyle(
-          fontSize: 24,
+          fontSize: 20,
         ),
-        onPressed: () {
-          // TODO: Validate settings
-          // TODO: Apply settings
-        },
+        onPressed: _checkSettings() ? _applySettings : null,
       ),
     );
 
@@ -126,4 +133,55 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         unit: unit,
         isSelected: selectedUnit == unit,
       );
+
+  bool _checkSettings() {
+    var newConfig = SensorConfig(
+      targetUnit: selectedUnit,
+      targetPrecision: selectedPrecision,
+      timeInterval: Duration(milliseconds: selectedTimeIntervalInMilliseconds),
+    );
+
+    var validationResult =
+        IOManager().validateSettings(widget.sensorId, newConfig);
+
+    switch (validationResult) {
+      case SensorTaskResult.success:
+        return true;
+      case SensorTaskResult.invalidTimeInterval:
+      case SensorTaskResult.invalidPrecision:
+      case SensorTaskResult.invalidUnit:
+        return false;
+      default:
+        return false;
+    }
+  }
+
+  void _applySettings() {
+    IOManager()
+        .editSensorConfig(
+      widget.sensorId,
+      targetUnit: selectedUnit,
+      targetPrecision: selectedPrecision,
+      timeInterval: Duration(
+        milliseconds: selectedTimeIntervalInMilliseconds,
+      ),
+    )
+        .then((result) {
+      var snackBar = SnackBar(
+        content: Text(formatPascalCase(result.name)),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+        duration: const Duration(seconds: 1),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      if (result == SensorTaskResult.success) {
+        Navigator.of(context).pop();
+      }
+    });
+  }
 }

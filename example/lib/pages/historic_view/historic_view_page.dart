@@ -5,6 +5,7 @@ import '../../formatter/text_formatter.dart';
 import '../../general_widgets/app_bar_with_header.dart';
 import 'historic_view_page_body.dart';
 import 'sensor_info_tooltip.dart';
+import 'sensor_tooltip_data.dart';
 
 class HistoricViewPage extends StatefulWidget {
   final SensorId sensorId;
@@ -205,7 +206,10 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
               .getUsedSensors()
               .then((list) => list.contains(sensorId));
           if (isSensorRunning) {
-            return IOManager().getSensorInfo(sensorId);
+            return SensorTooltipData(
+              await IOManager().getSensorInfo(sensorId),
+              IOManager().getSensorConfig(sensorId)!,
+            );
           }
           return null;
         }),
@@ -213,13 +217,13 @@ class _HistoricViewPageState extends State<HistoricViewPage> {
           // Check, if sensor info could be requested or if the sensor
           // with the given id is not running.
           if (!snapshot.hasData) {
-            // return const SizedBox.shrink();
-            /// TODO (for the reviewer): check, which method is best
             return SensorInfoTooltip(sensorId: sensorId);
           }
 
-          var sensorInfo = snapshot.data!;
-          return SensorInfoTooltip(sensorId: sensorId, sensorInfo: sensorInfo);
+          return SensorInfoTooltip(
+            sensorId: sensorId,
+            sensorInfoAndConfig: snapshot.data,
+          );
         },
       );
 }
