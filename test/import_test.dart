@@ -29,10 +29,6 @@ Future<void> main() async {
   ).setMockMethodCallHandler((methodCall) async => ".");
   var ioManager = IOManager.testManager();
 
-  if (!await ioManager.openDatabase()) {
-    throw Exception("Database connection failed!");
-  }
-
   // create dummy sensorData
   var exampleData = [
     SensorData(
@@ -50,6 +46,8 @@ Future<void> main() async {
   ];
 
   setUpAll(() async {
+    await ioManager.openDatabase();
+
     // Create test directory
     Directory(testFilesOutputPath).createSync();
     // Delete all files in the test directory

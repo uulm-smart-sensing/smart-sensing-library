@@ -11,7 +11,8 @@ import 'package:sensing_plugin/sensing_plugin.dart';
 class FakeSensorManager extends Fake implements SensorManager {
   FakeSensorManager._constructor();
   static final FakeSensorManager _instance = FakeSensorManager._constructor();
-  final Map _streamMap = HashMap<SensorId, StreamController<SensorData>>();
+  final _streamMap = HashMap<SensorId, StreamController<SensorData>>();
+  var _usedSensors = <SensorId>[];
 
   ///Configurable fake inputs
   final Map<SensorId, bool> _sensorAvailableMap = {
@@ -41,18 +42,14 @@ class FakeSensorManager extends Fake implements SensorManager {
     }
   }
 
-  ///Sets the internal platformResult to [result].
-  void configurePlatformResult(SensorTaskResult result) =>
-      _platformCallResult = result;
-
-  ///Sets the internal maximum uptime of a stream to [time]
-  void configureStreamUpTime(int time) => _streamUpTime = time;
+  /// Sets the internal used sensors to [ids].
+  void configureUsedSensors(List<SensorId> ids) => _usedSensors = ids;
 
   ///Resets the SensorManager to the initial state
   Future<void> resetState() async {
     configureAvailableSensors(SensorId.values);
     for (var key in _streamMap.keys) {
-      await (_streamMap[key] as StreamController<SensorData>).close();
+      await _streamMap[key]!.close();
     }
     _platformCallResult = SensorTaskResult.success;
     _creationFunction = null;
@@ -61,9 +58,8 @@ class FakeSensorManager extends Fake implements SensorManager {
 
   @override
   Stream<SensorData>? getSensorStream(SensorId id) =>
-      _createStream(const Duration(seconds: 1), id);
+      _streamMap.containsKey(id) ? _streamMap[id]?.stream : null;
 
-  ///Starts the tracking of a sensor.
   @override
   Future<SensorTaskResult> startSensorTracking({
     required SensorId id,
@@ -81,14 +77,13 @@ class FakeSensorManager extends Fake implements SensorManager {
     return Future(() => _platformCallResult);
   }
 
-  ///Stops the tracking of a sensor.
   @override
   Future<SensorTaskResult> stopSensorTracking(SensorId id) async {
     if (!_streamMap.containsKey(id)) {
       return Future(() => SensorTaskResult.notTrackingSensor);
     }
     try {
-      await (_streamMap[id] as StreamController<SensorData>).close();
+      await _streamMap[id]!.close();
       _streamMap.remove(id);
     } on Exception catch (e) {
       log(e.toString());
@@ -97,17 +92,32 @@ class FakeSensorManager extends Fake implements SensorManager {
     return Future(() => SensorTaskResult.success);
   }
 
-  ///Returns a list of usable sensors.
   @override
-  Future<List<SensorId>> getUsableSensors() => Future(
-        () => (Map.from(_sensorAvailableMap)
-          ..removeWhere((key, value) => value)
-          ..keys.toList()) as List<SensorId>,
-      );
+  List<SensorId> getUsedSensors() => _usedSensors;
+
+  @override
+  Future<List<SensorId>> getUsableSensors() async {
+    var usableSensors = <SensorId>[];
+    for (var id in SensorId.values) {
+      if (!_usedSensors.contains(id) && await isSensorAvailable(id)) {
+        usableSensors.add(id);
+      }
+    }
+    return usableSensors;
+  }
 
   @override
   Future<bool> isSensorAvailable(SensorId id) =>
       Future(() => _sensorAvailableMap[id]!);
+
+  @override
+  Future<SensorInfo> getSensorInfo(SensorId id) => Future.value(
+        SensorInfo(
+          _getSensorUnit(id),
+          SensorAccuracy.high,
+          1000,
+        ),
+      );
 
   ///Base implementation for test data creation.
   SensorData _createTestData(int i) => SensorData(
@@ -158,5 +168,23 @@ class FakeSensorManager extends Fake implements SensorManager {
     );
     _streamMap[id] = controller;
     return controller.stream;
+  }
+
+  Unit _getSensorUnit(SensorId id) {
+    switch (id) {
+      case SensorId.accelerometer:
+      case SensorId.linearAcceleration:
+        return Acceleration.meterPerSecondSquared;
+      case SensorId.barometer:
+        return Pressure.pascal;
+      case SensorId.gyroscope:
+        return AngularVelocity.radiansPerSecond;
+      case SensorId.magnetometer:
+        return MagneticFluxDensity.microTesla;
+      case SensorId.orientation:
+        return Angle.degrees;
+      case SensorId.thermometer:
+        return Temperature.celsius;
+    }
   }
 }
