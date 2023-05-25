@@ -28,6 +28,8 @@ Future<void> main() async {
         ),
   );
 
+  tearDown(() => ioManager.deleteDatabase());
+
   test("Get and set max Buffer", () async {
     IOManager().maxBufferSize = 10;
     expect(IOManager().maxBufferSize, 10);
