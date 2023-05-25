@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
@@ -86,6 +89,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
       alignment: Alignment.topCenter,
       child: TimeIntervalSelectionButton(
         timeIntervalInMilliseconds: settings.timeInterval.inMilliseconds,
+        minTimeIntervalInMilliseconds: 1000,
         onChanged: (newValue) {
           setState(() {
             settings.timeInterval = Duration(milliseconds: newValue);
@@ -104,10 +108,12 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
           fontSize: 24,
         ),
         onPressed: () async {
-          await (await provider).updateSensorPreviewSettings(
-            widget.sensorId,
-            settings,
-          ).then((_) => Navigator.pop(context));
+          await (await provider)
+              .updateSensorPreviewSettings(
+                widget.sensorId,
+                settings,
+              )
+              .then((_) => Navigator.pop(context));
         },
       ),
     );
