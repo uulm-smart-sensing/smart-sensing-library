@@ -18,7 +18,7 @@ final List<SettingsWidget> settings = [
     direction: SensorSearchPage(),
   ),
   const SettingsWidget(
-    title: 'Previews',
+    title: 'Preview settings',
     subtitle: 'filter settings for sensor data preview',
     icon: Icons.preview,
     direction: PreviewSettingsPage(),
