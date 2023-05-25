@@ -28,6 +28,8 @@ Future<void> main() async {
         ),
   );
 
+  tearDown(() => ioManager.deleteDatabase());
+
   test("Get and set max Buffer", () async {
     IOManager().maxBufferSize = 10;
     expect(IOManager().maxBufferSize, 10);
@@ -119,6 +121,50 @@ Future<void> main() async {
     await ioManager.removeSensor(SensorId.accelerometer);
     test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
+  });
+
+  test("Test multi query functionality", () async {
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
+    await ioManager.addSensor(
+      id: SensorId.gyroscope,
+      config: exampleConfig,
+    );
+    await Future.delayed(const Duration(seconds: 15));
+    var test = await ioManager
+        .getMultiFilterFrom([SensorId.accelerometer, SensorId.gyroscope]);
+    expect(test?.result()[SensorId.accelerometer]!.isNotEmpty, true);
+    expect(test?.result()[SensorId.gyroscope]!.isNotEmpty, true);
+  });
+
+  test("Test multi query functionality when skip faulty is false.", () async {
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
+    await Future.delayed(const Duration(seconds: 15));
+    expect(
+      () async => ioManager.getMultiFilterFrom(
+        [SensorId.accelerometer, SensorId.gyroscope],
+        skipFaulty: false,
+      ),
+      throwsException,
+    );
+  });
+
+  test("Test multi query functionality when skip faulty is true.", () async {
+    await ioManager.addSensor(
+      id: SensorId.accelerometer,
+      config: exampleConfig,
+    );
+    await Future.delayed(const Duration(seconds: 15));
+    var test = await ioManager.getMultiFilterFrom(
+      [SensorId.accelerometer, SensorId.gyroscope],
+      skipFaulty: true,
+    );
+    expect(test?.result()[SensorId.accelerometer]!.isNotEmpty, true);
   });
 
   test(

@@ -9,6 +9,7 @@ import 'package:sensing_plugin/sensing_plugin.dart';
 import 'buffer_manager.dart';
 import 'fake_sensor_manager.dart';
 import 'filter_tools.dart';
+import 'multi_filter_tools.dart';
 import 'objectbox.g.dart';
 import 'sensor_data_dto.dart';
 import 'src/import_export_module/export_result.dart';
@@ -292,6 +293,35 @@ class IOManager {
       throw Exception("Not a valid buffer!");
     }
     return FilterTools(buffer);
+  }
+
+  /// Returns instance of MultiFilterTools with corresponding data.
+  ///
+  /// Gets the data [from] until [to] from all sensors in [idList].
+  /// If not all of the data is in a buffer a get request
+  /// will be sent to the database.
+  /// If [skipFaulty] is set, skips faulty requests and removes the [SensorId]
+  /// from [idList]
+  /// Otherwise throws the corresponding [Exception].
+  Future<MultiFilterTools?> getMultiFilterFrom(
+    List<SensorId> idList, {
+    DateTime? from,
+    DateTime? to,
+    bool skipFaulty = false,
+  }) async {
+    var filterMap = <SensorId, FilterTools?>{};
+    for (var id in idList) {
+      try {
+        filterMap[id] = await getFilterFrom(id, from: from, to: to);
+      } on Exception catch (_) {
+        if (!skipFaulty) {
+          rethrow;
+        } else {
+          filterMap.remove(id);
+        }
+      }
+    }
+    return MultiFilterTools(filterMap);
   }
 
   ///Splits a partial list from [buffer] between [from] and [to].
