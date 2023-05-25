@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sensing_plugin/sensing_plugin.dart';
 import 'package:smart_sensing_library/fake_sensor_manager.dart';
 import 'package:smart_sensing_library/io_manager.dart';
+import 'package:smart_sensing_library/src/database_connection_not_established_exception.dart';
 
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -12,9 +13,7 @@ Future<void> main() async {
   ).setMockMethodCallHandler((methodCall) async => ".");
   var ioManager = IOManager.testManager();
 
-  if (!await ioManager.openDatabase()) {
-    throw Exception("Database connection failed!");
-  }
+  await ioManager.openDatabase();
 
   const exampleConfig = SensorConfig(
     targetUnit: Temperature.celsius,
@@ -51,6 +50,7 @@ Future<void> main() async {
     var test = await ioManager.getFilterFrom(SensorId.accelerometer);
     expect(test?.result().isNotEmpty, true);
   });
+
   test("Add sensor and get from buffer", () async {
     await ioManager.addSensor(
       id: SensorId.accelerometer,
@@ -215,6 +215,149 @@ Future<void> main() async {
         isFalse,
         reason: "getAvailableSensors doesn't contain all available sensors",
       );
+    },
+  );
+
+  test(
+    'When three sensors are available and two of them aren\'t used, then '
+    'these two sensors are returned from getUsableSensors',
+    () async {
+      FakeSensorManager().configureAvailableSensors(
+        SensorId.values,
+        available: false,
+      );
+      FakeSensorManager().configureAvailableSensors(
+        [SensorId.accelerometer, SensorId.barometer, SensorId.gyroscope],
+        available: true,
+      );
+      FakeSensorManager().configureUsedSensors([
+        SensorId.accelerometer,
+      ]);
+      var usableSensors = await ioManager.getUsableSensors();
+      expect(usableSensors.length, 2);
+      expect(usableSensors.contains(SensorId.barometer), isTrue);
+      expect(usableSensors.contains(SensorId.gyroscope), isTrue);
+    },
+  );
+
+  test(
+    'When SensorInfo is requested, then the correct SensorInfo is returned',
+    () async {
+      for (var sensorId in SensorId.values) {
+        var sensorInfo = await ioManager.getSensorInfo(sensorId);
+
+        Unit expectedUnit;
+        switch (sensorId) {
+          case SensorId.accelerometer:
+          case SensorId.linearAcceleration:
+            expectedUnit = Acceleration.meterPerSecondSquared;
+            break;
+          case SensorId.barometer:
+            expectedUnit = Pressure.pascal;
+            break;
+          case SensorId.gyroscope:
+            expectedUnit = AngularVelocity.radiansPerSecond;
+            break;
+          case SensorId.magnetometer:
+            expectedUnit = MagneticFluxDensity.microTesla;
+            break;
+          case SensorId.orientation:
+            expectedUnit = Angle.degrees;
+            break;
+          case SensorId.thermometer:
+            expectedUnit = Temperature.celsius;
+            break;
+        }
+
+        expect(sensorInfo.unit, equals(expectedUnit));
+        expect(sensorInfo.accuracy, equals(SensorAccuracy.high));
+        expect(sensorInfo.timeIntervalInMilliseconds, equals(1000));
+      }
+    },
+  );
+
+  test(
+    'When sensor is started and getSensorStream is called, then the stream of'
+    ' the started sensor is returned',
+    () async {
+      var id = SensorId.accelerometer;
+      FakeSensorManager().configureAvailableSensors([id], available: true);
+      var config = const SensorConfig(
+        targetUnit: Acceleration.meterPerSecondSquared,
+        targetPrecision: 2,
+        timeInterval: Duration(milliseconds: 1000),
+      );
+      await ioManager.addSensor(id: id, config: config);
+      var stream = ioManager.getSensorStream(id);
+      expect(stream, isNotNull);
+    },
+  );
+
+  test(
+    'When getSensorStream is called on a sensor that is not being tracked, then'
+    ' the stream of the started sensor is returned',
+    () async {
+      var stream = ioManager.getSensorStream(SensorId.accelerometer);
+      expect(stream, isNull);
+    },
+  );
+
+  test(
+    'When sensors are used, then getUsedSensors() returns the used sensors',
+    () async {
+      FakeSensorManager().configureUsedSensors([
+        SensorId.accelerometer,
+        SensorId.barometer,
+        SensorId.gyroscope,
+      ]);
+      var usedSensors = await ioManager.getUsedSensors();
+      expect(usedSensors.length, 3);
+      expect(usedSensors.contains(SensorId.accelerometer), isTrue);
+      expect(usedSensors.contains(SensorId.barometer), isTrue);
+      expect(usedSensors.contains(SensorId.gyroscope), isTrue);
+    },
+  );
+
+  test(
+    'When a sensor is started but the database connection is not established,'
+    ' then a DatabaseConnectionNotEstablishedException is thrown',
+    () async {
+      ioManager.closeDatabase();
+      var id = SensorId.accelerometer;
+      FakeSensorManager().configureAvailableSensors([id], available: true);
+      var config = const SensorConfig(
+        targetUnit: Acceleration.meterPerSecondSquared,
+        targetPrecision: 2,
+        timeInterval: Duration(milliseconds: 1000),
+      );
+
+      expect(
+        () async => ioManager.addSensor(id: id, config: config),
+        throwsA(
+          isA<DatabaseConnectionNotEstablishedException>(),
+        ),
+      );
+
+      // Reset ioManager to avoid errors in other tests, because implementation
+      // doesn't allow to open the database again.
+      ioManager = IOManager.testManager();
+      await ioManager.openDatabase();
+    },
+  );
+
+  test(
+    'When sensor is not available and addSensor is called, then '
+    'SensorTaskResult.sensorNotAvailable is returned',
+    () async {
+      var id = SensorId.accelerometer;
+      FakeSensorManager().configureAvailableSensors([id], available: false);
+      var config = const SensorConfig(
+        targetUnit: Acceleration.meterPerSecondSquared,
+        targetPrecision: 2,
+        timeInterval: Duration(milliseconds: 1000),
+      );
+      var result = await ioManager.addSensor(id: id, config: config);
+      expect(result, SensorTaskResult.sensorNotAvailable);
     },
   );
 }

@@ -68,4 +68,10 @@ void main() {
       equals(DateTime.fromMillisecondsSinceEpoch(timestamp.toInt())),
     );
   });
+
+  test('When toString() is called, then the x, y, z values are returned', () {
+    var sensorViewData = const SensorViewData(timestamp: 1, x: 2, y: 3, z: 4);
+
+    expect(sensorViewData.toString(), equals('2.0\n3.0\n4.0'));
+  });
 }

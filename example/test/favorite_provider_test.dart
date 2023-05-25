@@ -29,4 +29,17 @@ void main() {
 
     expect(favoriteProvider.isExist(sensorId), isFalse);
   });
+
+  test(
+    'When sensor is added to favorites, then favorite list contains sensor',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      var favoriteProvider = FavoriteProvider();
+      await favoriteProvider.loadFavorites();
+      var sensorId = SensorId.accelerometer;
+      await favoriteProvider.toggleFavorite(sensorId);
+
+      expect(favoriteProvider.sensorList.contains(sensorId), isTrue);
+    },
+  );
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:smart_sensing_library_example/formatter/date_formatter.dart';
@@ -62,4 +64,18 @@ void main() {
       expect(result, equals("Mi. 06.12.2023"));
     },
   );
+
+  test('When locale is not passed, then the platform locale is used', () {
+    var platformLocale = Platform.localeName;
+
+    var result = formatDate(dateTime: DateTime(2023, 12, 1));
+
+    if (platformLocale.startsWith("en")) {
+      expect(result, equals("12/01/2023"));
+    } else if (platformLocale.startsWith("de")) {
+      expect(result, equals("01.12.2023"));
+    } else {
+      fail("unexpected Platform locale");
+    }
+  });
 }
