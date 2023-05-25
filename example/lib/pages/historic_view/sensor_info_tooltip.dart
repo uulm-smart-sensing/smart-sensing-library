@@ -4,50 +4,56 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 import '../../formatter/text_formatter.dart';
 import '../../general_widgets/stylized_container.dart';
 import 'historic_view_page.dart';
+import 'sensor_tooltip_data.dart';
 
-/// This widget is used to display the [SensorInfo] of the according sensor with
-/// the passed [sensorId] on top of the [HistoricViewPage].
+/// This widget is used to display the [SensorInfo] and the current [Unit]
+/// (using the [SensorConfig]) of the according sensor with the passed
+/// [sensorId] on top of the [HistoricViewPage].
 ///
 /// The following information is arranged in a table and displayed:
 /// * [SensorId]
-/// * [SensorInfo.unit]
+/// * [SensorInfo.unit] and [SensorConfig.targetUnit]
 /// * [SensorInfo.accuracy]
 /// * [SensorInfo.timeIntervalInMilliseconds]
 class SensorInfoTooltip extends StatelessWidget {
   final SensorId sensorId;
-  final SensorInfo? sensorInfo;
+  final SensorTooltipData? sensorInfoAndConfig;
 
   const SensorInfoTooltip({
     super.key,
     required this.sensorId,
-    this.sensorInfo,
+    this.sensorInfoAndConfig,
   });
 
   @override
   Widget build(BuildContext context) {
-    var tableRows = [
-      _getSensorInfoRow("Sensor ID", formatPascalCase(sensorId.name)),
-      _getSensorInfoRow(
-        "Unit",
-        formatPascalCase(
-          sensorInfo == null
-              ? "no data"
-              : sensorInfo!.unit.toTextDisplay(isShort: true),
+    List<TableRow> tableRows;
+    if (sensorInfoAndConfig == null) {
+      tableRows = [
+        _getSensorInfoRow("Sensor ID", formatPascalCase(sensorId.name)),
+        _getSensorInfoRow("Unit", "No data"),
+        _getSensorInfoRow("Accuracy", "No data"),
+        _getSensorInfoRow("Time Interval (ms)", "No data"),
+      ];
+    } else {
+      var defaultUnit =
+          sensorInfoAndConfig!.sensorInfo.unit.toTextDisplay(isShort: true);
+      var currentUnit = sensorInfoAndConfig!.sensorConfig.targetUnit
+          .toTextDisplay(isShort: true);
+
+      tableRows = [
+        _getSensorInfoRow("Sensor ID", formatPascalCase(sensorId.name)),
+        _getSensorInfoRow("Unit", "$currentUnit (default: $defaultUnit)"),
+        _getSensorInfoRow(
+          "Accuracy",
+          sensorInfoAndConfig!.sensorInfo.accuracy.name,
         ),
-      ),
-      _getSensorInfoRow(
-        "Accuracy",
-        formatPascalCase(
-          sensorInfo == null ? "no data" : sensorInfo!.accuracy.name,
+        _getSensorInfoRow(
+          "Time Interval (ms)",
+          sensorInfoAndConfig!.sensorInfo.timeIntervalInMilliseconds.toString(),
         ),
-      ),
-      _getSensorInfoRow(
-        "Time Interval (ms)",
-        sensorInfo == null
-            ? "No Data"
-            : sensorInfo!.timeIntervalInMilliseconds.toString(),
-      ),
-    ];
+      ];
+    }
 
     return StylizedContainer(
       child: Padding(

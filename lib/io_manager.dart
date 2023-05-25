@@ -118,6 +118,42 @@ class IOManager {
   Future<bool> isSensorAvailable(SensorId id) =>
       _sensorManager.isSensorAvailable(id);
 
+  /// Return the [SensorConfig] for a sensor with the given [id], if it already
+  /// exists, otherwise null.
+  SensorConfig? getSensorConfig(SensorId id) =>
+      _sensorManager.getSensorConfig(id);
+
+  /// Edits the configuration of a sensor with a given [id] to the (optional)
+  /// set new values for the
+  /// * [targetUnit], so the unit in which the sensor data should be converted
+  /// * [targetPrecision], so the precision the sensor data should be rounded to
+  /// * [timeInterval], so the interval at which the sensor data should be
+  ///   collected.
+  ///
+  /// The result of the edit will be wrapped in the [SensorTaskResult], so
+  /// whether the editing was successful or an error occurred (and if so, which
+  /// error).
+  Future<SensorTaskResult> editSensorConfig(
+    SensorId id, {
+    Unit? targetUnit,
+    int? targetPrecision,
+    Duration? timeInterval,
+  }) async =>
+      _sensorManager.editSensorConfig(
+        id,
+        targetUnit: targetUnit,
+        targetPrecision: targetPrecision,
+        timeInterval: timeInterval,
+      );
+
+  /// Validates an updated [SensorConfig] for a given sensor (with the given
+  /// [id]).
+  ///
+  /// It returns the result wrapped in the [SensorTaskResult] class, which
+  /// contains the reason for an invalid config, if something went wrong.
+  SensorTaskResult validateSettings(SensorId id, SensorConfig config) =>
+      _sensorManager.validateSensorConfig(id, config);
+
   /// Returns all available sensors.
   ///
   /// This is equivalent to call [isSensorAvailable] on each element of

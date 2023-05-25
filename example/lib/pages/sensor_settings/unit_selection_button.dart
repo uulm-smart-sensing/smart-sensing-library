@@ -6,7 +6,7 @@ import '../../general_widgets/selection_button.dart';
 /// [SelectionButton] to select the target unit of a sensors output data.
 ///
 /// If the button is selected the color will change and the text is underlined.
-class UnitSelectionButton extends Expanded {
+class UnitSelectionButton extends Container {
   final void Function() onPressed;
   final Unit unit;
   final bool isSelected;
@@ -17,23 +17,20 @@ class UnitSelectionButton extends Expanded {
     required this.unit,
     required this.isSelected,
   }) : super(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Container(
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? const Color.fromARGB(255, 218, 188, 255)
-                    : const Color.fromARGB(255, 23, 27, 137),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: SelectionButton(
-                height: 50,
-                onPressed: onPressed,
-                title: unit.toTextDisplay(isShort: true),
-                isSelected: isSelected,
-                underlineTitleWhenSelected: false,
-              ),
-            ),
+          margin: const EdgeInsets.symmetric(horizontal: 5),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? const Color.fromARGB(255, 218, 188, 255)
+                : const Color.fromARGB(255, 23, 27, 137),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: SelectionButton(
+            height: 50,
+            width: 100,
+            onPressed: onPressed,
+            title: unit.toTextDisplay(isShort: true),
+            isSelected: isSelected,
+            underlineTitleWhenSelected: false,
           ),
         );
 }
