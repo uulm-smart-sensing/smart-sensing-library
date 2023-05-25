@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../general_widgets/custom_text_button.dart';
@@ -9,11 +12,13 @@ import 'time_interval_picker.dart';
 class TimeIntervalSelectionButton extends StatefulWidget {
   final int timeIntervalInMilliseconds;
   final void Function(int newValue) onChanged;
+  final int minTimeIntervalInMilliseconds;
 
   const TimeIntervalSelectionButton({
     super.key,
     required this.timeIntervalInMilliseconds,
     required this.onChanged,
+    this.minTimeIntervalInMilliseconds = 0,
   });
 
   @override
@@ -66,7 +71,21 @@ class _TimeIntervalSelectionButtonState
           if (newDate == null) {
             return;
           }
-
+          // Needs to be tested when using [context] in an async gap.
+          if(!mounted){
+            return;
+          }
+          // Shows alert dialog when time is to low and doesn't change value.
+          if (newDate.microsecondsSinceEpoch <
+              widget.minTimeIntervalInMilliseconds) {
+            await showDialog(
+              context: context,
+              builder: (_) => _createDialog(
+                text: const Text("Interval can't be lower than 1 Second."),
+              ),
+            );
+            return;
+          }
           setState(() {
             timeIntervalInMilliseconds = newDate.millisecondsSinceEpoch;
           });
@@ -75,4 +94,15 @@ class _TimeIntervalSelectionButtonState
       ),
     );
   }
+}
+
+Widget _createDialog({required Text text}) {
+  if (Platform.isAndroid) {
+    return AlertDialog(
+      title: text,
+    );
+  }
+  return CupertinoAlertDialog(
+    title: text,
+  );
 }
