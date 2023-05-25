@@ -1,6 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
+import 'package:smart_sensing_library/src/import_export_module/export_result.dart';
+import 'package:smart_sensing_library_example/pages/import_export/user_feedback_snackbar.dart';
 
 import '../../general_widgets/custom_datetime_picker_widget.dart';
 import '../../general_widgets/custom_text_button.dart';
@@ -159,8 +161,10 @@ class _ManualExportPageState extends State<ManualExportPage> {
 
     if (selectedDirectory == null) return;
 
+    ExportResult result;
+
     if (widget.exportForAllSensorIds) {
-      await IOManager().exportSensorDataToFile(
+      result = await IOManager().exportSensorDataToFile(
         selectedDirectory,
         widget.selectedFileFormat,
         SensorId.values,
@@ -168,7 +172,7 @@ class _ManualExportPageState extends State<ManualExportPage> {
         endDatetime,
       );
     } else {
-      await IOManager().exportSensorDataToFile(
+      result = await IOManager().exportSensorDataToFile(
         selectedDirectory,
         widget.selectedFileFormat,
         [widget.selectedSensorIdForExport],
@@ -177,8 +181,11 @@ class _ManualExportPageState extends State<ManualExportPage> {
       );
     }
 
-    // Return to "Import / Export" page
+    // Return to "Import / Export" page and show result
     if (!mounted) return;
+
+    displayResultInSnackBar(result.showErrorMessage(), context);
+
     Navigator.pop(context);
   }
 
