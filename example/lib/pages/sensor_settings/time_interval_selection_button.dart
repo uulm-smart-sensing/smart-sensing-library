@@ -72,7 +72,7 @@ class _TimeIntervalSelectionButtonState
             return;
           }
           // Needs to be tested when using [context] in an async gap.
-          if(!mounted){
+          if (!mounted) {
             return;
           }
           // Shows alert dialog when time is to low and doesn't change value.
