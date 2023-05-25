@@ -344,4 +344,20 @@ Future<void> main() async {
       await ioManager.openDatabase();
     },
   );
+
+  test(
+    'When sensor is not available and addSensor is called, then '
+    'SensorTaskResult.sensorNotAvailable is returned',
+    () async {
+      var id = SensorId.accelerometer;
+      FakeSensorManager().configureAvailableSensors([id], available: false);
+      var config = const SensorConfig(
+        targetUnit: Acceleration.meterPerSecondSquared,
+        targetPrecision: 2,
+        timeInterval: Duration(milliseconds: 1000),
+      );
+      var result = await ioManager.addSensor(id: id, config: config);
+      expect(result, SensorTaskResult.sensorNotAvailable);
+    },
+  );
 }
