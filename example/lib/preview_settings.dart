@@ -3,7 +3,7 @@ import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import 'pages/preview_settings/sensor_preview_settings.dart';
 
-/// Handles the Preview settings management.
+/// Manages the preview settings saved on the phone.
 ///
 /// The class uses the preference shared by the database. With shared preference
 /// it is possible to store the data globally and to modify it.
