@@ -171,8 +171,11 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
         content: Text(formatPascalCase(result.name)),
         action: SnackBarAction(
           label: 'Dismiss',
-          onPressed: () {},
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
         ),
+        duration: const Duration(seconds: 1),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
