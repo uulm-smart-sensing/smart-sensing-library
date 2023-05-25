@@ -7,7 +7,7 @@ import 'filter_tools.dart';
 /// Extends the class [FilterTools] to accommodate multiple [SensorId]s.
 ///
 /// This class is used for multi filtering requests.
-/// Uses [FilterTools] as its base and querys the request on all given
+/// Uses [FilterTools] as its base and queries the request on all given
 /// [SensorId]s. Returns a [Map] with [SensorId] as the key and the queried
 /// data as the values.
 class MultiFilterTools {
