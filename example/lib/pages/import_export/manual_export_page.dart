@@ -1,13 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
-import 'package:smart_sensing_library/src/import_export_module/export_result.dart';
-import 'package:smart_sensing_library_example/pages/import_export/user_feedback_snackbar.dart';
 
 import '../../general_widgets/custom_datetime_picker_widget.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import 'import_export_page.dart';
+import 'user_feedback_snackbar.dart';
 
 /// Page for manually set the timeinterval for exporting sensor data the smart
 /// sensing library.
