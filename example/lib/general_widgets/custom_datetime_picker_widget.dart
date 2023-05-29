@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import '../formatter/time_formatter.dart';
 
 import '../formatter/locale_converter.dart';
+import '../formatter/time_formatter.dart';
 import 'stylized_container.dart';
 
 /// A custom date and time picker based on [DatePicker].
