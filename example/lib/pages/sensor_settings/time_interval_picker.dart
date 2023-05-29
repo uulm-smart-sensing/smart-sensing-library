@@ -11,9 +11,17 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 /// [SENSOR_DELAY_FASTEST](https://developer.android.com/reference/kotlin/android/hardware/SensorManager#sensor_delay_fastest). It is highly unlikely that a sensor can
 /// deliver sensor data in an interval less than 10 ms.
 class TimeIntervalPicker extends CommonPickerModel {
+  final int minimumMillisecondsSelection;
+
   String digits(int value, int length) => '$value'.padLeft(length, "0");
 
-  TimeIntervalPicker({required DateTime startTime, super.locale}) {
+  TimeIntervalPicker({
+    required DateTime startTime,
+    int minimumTimeIntervalInMilliseconds = 0,
+    super.locale,
+  }) : minimumMillisecondsSelection = minimumTimeIntervalInMilliseconds < 1000
+            ? minimumTimeIntervalInMilliseconds
+            : 0 {
     currentTime = startTime;
     setLeftIndex(currentTime.minute);
     setMiddleIndex(currentTime.second);
@@ -24,7 +32,7 @@ class TimeIntervalPicker extends CommonPickerModel {
   @override
   String? leftStringAtIndex(int index) {
     if (index >= 0 && index < 60) {
-      return digits(index, 2);
+      return "${digits(index, 2)} min";
     } else {
       return null;
     }
@@ -34,7 +42,7 @@ class TimeIntervalPicker extends CommonPickerModel {
   @override
   String? middleStringAtIndex(int index) {
     if (index >= 0 && index < 60) {
-      return digits(index, 2);
+      return "${digits(index, 2)} s";
     } else {
       return null;
     }
@@ -45,8 +53,8 @@ class TimeIntervalPicker extends CommonPickerModel {
   String? rightStringAtIndex(int index) {
     // Configuring the available options is weird
     // Step sizes don't seem to be supported
-    if (index >= 10 && index < 1000) {
-      return digits(index, 3);
+    if (index >= minimumMillisecondsSelection && index < 1000) {
+      return "${digits(index, 3)} ms";
     } else {
       return null;
     }

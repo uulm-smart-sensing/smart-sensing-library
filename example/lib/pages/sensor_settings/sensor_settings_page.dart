@@ -74,6 +74,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
     var timeIntervalSelection = Center(
       child: TimeIntervalSelectionButton(
         timeIntervalInMilliseconds: selectedTimeIntervalInMilliseconds,
+        minTimeIntervalInMilliseconds: 10,
         onChanged: (newValue) {
           setState(() {
             selectedTimeIntervalInMilliseconds = newValue;
