@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:smart_sensing_library_example/formatter/date_formatter.dart';
+import 'package:smart_sensing_library_example/formatter/time_formatter.dart';
 
 void main() {
   setUpAll(() async {

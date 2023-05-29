@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:smart_sensing_library/smart_sensing_library.dart';
-import '../../formatter/date_formatter.dart';
+import '../../formatter/time_formatter.dart';
 import '../../general_widgets/preview_container.dart';
 import '../../preview_settings.dart';
 import '../live_view/live_view_page.dart';

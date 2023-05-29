@@ -68,20 +68,19 @@ class _TimeIntervalSelectionButtonState
             ),
           );
 
-          if (newDate == null) {
-            return;
-          }
-          // Needs to be tested when using [context] in an async gap.
-          if (!mounted) {
+          if (newDate == null || !mounted) {
             return;
           }
           // Shows alert dialog when time is to low and doesn't change value.
           if (newDate.microsecondsSinceEpoch <
               widget.minTimeIntervalInMilliseconds) {
+            var minimumDuration = formatDuration(
+              Duration(milliseconds: widget.minTimeIntervalInMilliseconds),
+            );
             await showDialog(
               context: context,
               builder: (_) => _createDialog(
-                text: const Text("Interval can't be lower than 1 Second."),
+                text: Text("Interval can't be lower than $minimumDuration."),
               ),
             );
             return;

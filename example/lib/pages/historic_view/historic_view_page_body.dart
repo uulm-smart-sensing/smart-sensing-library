@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_sensing_library/filter_tools.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
-import '../../formatter/date_formatter.dart';
+import '../../formatter/time_formatter.dart';
 import '../../formatter/text_formatter.dart';
 import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';

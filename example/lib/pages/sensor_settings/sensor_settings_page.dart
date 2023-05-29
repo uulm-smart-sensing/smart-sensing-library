@@ -70,9 +70,7 @@ class _SensorSettingsPageState extends State<SensorSettingsPage> {
       },
     );
 
-    var timeIntervalHeader = SectionHeader(
-      "Time Interval (m : s : ms)",
-    );
+    var timeIntervalHeader = SectionHeader("Time Interval");
     var timeIntervalSelection = Center(
       child: TimeIntervalSelectionButton(
         timeIntervalInMilliseconds: selectedTimeIntervalInMilliseconds,
