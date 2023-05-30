@@ -9,7 +9,6 @@ import 'package:smart_sensing_library/src/import_export_module/codecs/csv_codec.
 import 'package:smart_sensing_library/src/import_export_module/codecs/json_codec.dart';
 import 'package:smart_sensing_library/src/import_export_module/codecs/xlsx_codec.dart';
 import 'package:smart_sensing_library/src/import_export_module/codecs/xml_codec.dart';
-import 'package:smart_sensing_library/src/import_export_module/export_result.dart';
 import 'package:smart_sensing_library/src/import_export_module/export_tool.dart';
 import 'package:smart_sensing_library/src/import_export_module/sensor_data_collection.dart';
 

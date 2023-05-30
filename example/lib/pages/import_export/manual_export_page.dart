@@ -6,6 +6,7 @@ import '../../general_widgets/custom_datetime_picker_widget.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import 'import_export_page.dart';
+import 'user_feedback_snackbar.dart';
 
 /// Page for manually set the timeinterval for exporting sensor data the smart
 /// sensing library.
@@ -159,26 +160,23 @@ class _ManualExportPageState extends State<ManualExportPage> {
 
     if (selectedDirectory == null) return;
 
-    if (widget.exportForAllSensorIds) {
-      await IOManager().exportSensorDataToFile(
-        selectedDirectory,
-        widget.selectedFileFormat,
-        SensorId.values,
-        startDatetime,
-        endDatetime,
-      );
-    } else {
-      await IOManager().exportSensorDataToFile(
-        selectedDirectory,
-        widget.selectedFileFormat,
-        [widget.selectedSensorIdForExport],
-        startDatetime,
-        endDatetime,
-      );
-    }
+    var sensorIds = widget.exportForAllSensorIds
+        ? SensorId.values
+        : [widget.selectedSensorIdForExport];
 
-    // Return to "Import / Export" page
+    var result = await IOManager().exportSensorDataToFile(
+      selectedDirectory,
+      widget.selectedFileFormat,
+      sensorIds,
+      startDatetime,
+      endDatetime,
+    );
+
+    // Return to "Import / Export" page and show result
     if (!mounted) return;
+
+    displayResultInSnackBar(result.showErrorMessage(), context);
+
     Navigator.pop(context);
   }
 
