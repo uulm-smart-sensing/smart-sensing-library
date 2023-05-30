@@ -120,21 +120,15 @@ class _ImportExportPageState extends State<ImportExportPage> {
 
     if (selectedDirectory == null) return;
 
-    ExportResult result;
+    var sensorIds = _exportForAllSensorIds
+        ? SensorId.values
+        : [_selectedSensorIdForExport!];
 
-    if (_exportForAllSensorIds) {
-      result = await IOManager().exportSensorDataToFile(
-        selectedDirectory,
-        _selectedFileFormat!,
-        SensorId.values,
-      );
-    } else {
-      result = await IOManager().exportSensorDataToFile(
-        selectedDirectory,
-        _selectedFileFormat!,
-        [_selectedSensorIdForExport!],
-      );
-    }
+    var result = await IOManager().exportSensorDataToFile(
+      selectedDirectory,
+      _selectedFileFormat!,
+      sensorIds,
+    );
 
     if (!mounted) return;
     displayResultInSnackBar(result.showErrorMessage(), context);

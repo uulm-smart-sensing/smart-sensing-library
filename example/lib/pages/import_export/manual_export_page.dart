@@ -160,25 +160,17 @@ class _ManualExportPageState extends State<ManualExportPage> {
 
     if (selectedDirectory == null) return;
 
-    ExportResult result;
+    var sensorIds = widget.exportForAllSensorIds
+        ? SensorId.values
+        : [widget.selectedSensorIdForExport];
 
-    if (widget.exportForAllSensorIds) {
-      result = await IOManager().exportSensorDataToFile(
-        selectedDirectory,
-        widget.selectedFileFormat,
-        SensorId.values,
-        startDatetime,
-        endDatetime,
-      );
-    } else {
-      result = await IOManager().exportSensorDataToFile(
-        selectedDirectory,
-        widget.selectedFileFormat,
-        [widget.selectedSensorIdForExport],
-        startDatetime,
-        endDatetime,
-      );
-    }
+    var result = await IOManager().exportSensorDataToFile(
+      selectedDirectory,
+      widget.selectedFileFormat,
+      sensorIds,
+      startDatetime,
+      endDatetime,
+    );
 
     // Return to "Import / Export" page and show result
     if (!mounted) return;
