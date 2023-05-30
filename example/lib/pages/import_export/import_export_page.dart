@@ -9,6 +9,7 @@ import '../../general_widgets/smart_sensing_appbar.dart';
 import '../settings/settings_page.dart';
 import 'import_export_section_widget.dart';
 import 'manual_export_page.dart';
+import 'user_feedback_snackbar.dart';
 
 /// Page for importing and exporting sensor data into / from the smart
 /// sensing library.
@@ -83,8 +84,6 @@ class _ImportExportPageState extends State<ImportExportPage> {
   /// Therefor a file picker is opened, where the user can select a file
   /// containing the sensor data, which should be imported. The selected file
   /// is delegated to the 'Import / Export' module in the smart sensing library.
-  /// > Warning: Currently only one single .json file is
-  /// > allowed to be imported.
   Future<void> _importData() async {
     var result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -97,14 +96,15 @@ class _ImportExportPageState extends State<ImportExportPage> {
     var files = <File>[];
     if (_importEntireDirectory) {
       files = result.paths.map((path) => File(path!)).toList();
-    } else if (_selectedSensorIdForImport != null) {
-      files.add(File(result.files.single.path!));
     } else {
-      // TODO: provide hint, that user need to select sensorId
+      files.add(File(result.files.single.path!));
     }
 
     for (var file in files) {
-      await IOManager().importSensorDataFromFile(file.path);
+      var result = await IOManager().importSensorDataFromFile(file.path);
+
+      if (!mounted) return;
+      displayResultInSnackBar(result.showErrorMessage(), context);
     }
   }
 
@@ -120,22 +120,18 @@ class _ImportExportPageState extends State<ImportExportPage> {
 
     if (selectedDirectory == null) return;
 
-    if (_exportForAllSensorIds) {
-      await IOManager().exportSensorDataToFile(
-        selectedDirectory,
-        _selectedFileFormat!,
-        SensorId.values,
-      );
-    } else if (_selectedSensorIdForExport != null &&
-        _selectedFileFormat != null) {
-      await IOManager().exportSensorDataToFile(
-        selectedDirectory,
-        _selectedFileFormat!,
-        [_selectedSensorIdForExport!],
-      );
-    } else {
-      // TODO: provide hint, that user need to select sensorId
-    }
+    var sensorIds = _exportForAllSensorIds
+        ? SensorId.values
+        : [_selectedSensorIdForExport!];
+
+    var result = await IOManager().exportSensorDataToFile(
+      selectedDirectory,
+      _selectedFileFormat!,
+      sensorIds,
+    );
+
+    if (!mounted) return;
+    displayResultInSnackBar(result.showErrorMessage(), context);
   }
 
   /// Opens the [ManualExportPage] so the user can manually select the time
@@ -167,6 +163,12 @@ class _ImportExportPageState extends State<ImportExportPage> {
                   ? _importData
                   : null,
           text: "Import",
+          style: TextStyle(
+            color:
+                (_selectedSensorIdForImport != null || _importEntireDirectory)
+                    ? Colors.white
+                    : Colors.grey,
+          ),
         ),
       ),
       setSensorId: _setSelectedSensorIdForImport,
