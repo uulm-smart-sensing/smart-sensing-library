@@ -73,3 +73,38 @@ String formatDate({
 
   return finalDatetime;
 }
+
+/// Formats the passed [Duration] to a human readable string representation.
+///
+/// Example:
+/// ```dart
+/// var duration = Duration(minutes: 1, seconds: 30, milliseconds: 500);
+/// print(formatDuration(duration));
+/// ```
+/// prints: "1 Minute 30 Seconds 500 Milliseconds"
+String formatDuration(Duration duration) {
+  var milliseconds = duration.inMilliseconds % 1000;
+  var seconds = duration.inSeconds % 60;
+  var minutes = duration.inMinutes % 60;
+  var hours = duration.inHours % 24;
+  var days = duration.inDays % 365;
+  var years = duration.inDays ~/ 365;
+
+  var formattedDuration = "";
+  formattedDuration = _addTimeUnit(formattedDuration, years, "Year");
+  formattedDuration = _addTimeUnit(formattedDuration, days, "Day");
+  formattedDuration = _addTimeUnit(formattedDuration, hours, "Hour");
+  formattedDuration = _addTimeUnit(formattedDuration, minutes, "Minute");
+  formattedDuration = _addTimeUnit(formattedDuration, seconds, "Second");
+  formattedDuration =
+      _addTimeUnit(formattedDuration, milliseconds, "Millisecond");
+  return formattedDuration.trim();
+}
+
+String _addTimeUnit(String text, int value, String unit) {
+  if (value == 0) {
+    return text;
+  }
+  var unitString = value == 1 ? unit : "${unit}s";
+  return "$text $value $unitString";
+}

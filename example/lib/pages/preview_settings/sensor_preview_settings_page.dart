@@ -80,9 +80,7 @@ class _SensorPreviewSettingsPageState extends State<SensorPreviewSettingsPage> {
       child: _getFilterfromData(settings),
     );
 
-    var timeIntervalHeader = SectionHeader(
-      "Time Interval (m : s : ms)",
-    );
+    var timeIntervalHeader = SectionHeader("Time Interval");
     var timeIntervalSelection = Align(
       alignment: Alignment.topCenter,
       child: TimeIntervalSelectionButton(

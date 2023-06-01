@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import '../../formatter/time_formatter.dart';
 import '../../general_widgets/custom_text_button.dart';
 import '../../general_widgets/custom_text_button_template.dart';
 import 'time_interval_picker.dart';
@@ -48,11 +49,11 @@ class _TimeIntervalSelectionButtonState
         textButtonChild: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("${duration.minute}"),
+            Text("${duration.minute} min"),
             const Text(":"),
-            Text("${duration.second}"),
+            Text("${duration.second} s"),
             const Text(":"),
-            Text("${duration.millisecond}"),
+            Text("${duration.millisecond} ms"),
           ],
         ),
         onPressed: () async {
@@ -65,23 +66,24 @@ class _TimeIntervalSelectionButtonState
             context,
             pickerModel: TimeIntervalPicker(
               startTime: currentDateTime,
+              minimumTimeIntervalInMilliseconds:
+                  widget.minTimeIntervalInMilliseconds,
             ),
           );
 
-          if (newDate == null) {
-            return;
-          }
-          // Needs to be tested when using [context] in an async gap.
-          if (!mounted) {
+          if (newDate == null || !mounted) {
             return;
           }
           // Shows alert dialog when time is to low and doesn't change value.
           if (newDate.microsecondsSinceEpoch <
               widget.minTimeIntervalInMilliseconds) {
+            var minimumDuration = formatDuration(
+              Duration(milliseconds: widget.minTimeIntervalInMilliseconds),
+            );
             await showDialog(
               context: context,
               builder: (_) => _createDialog(
-                text: const Text("Interval can't be lower than 1 Second."),
+                text: Text("Interval can't be lower than $minimumDuration."),
               ),
             );
             return;
