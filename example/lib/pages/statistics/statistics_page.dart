@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_sensing_library/smart_sensing_library.dart';
 
 import '../../favorite_provider.dart';
-import '../../formatter/date_formatter.dart';
+import '../../formatter/time_formatter.dart';
 import '../../general_widgets/smart_sensing_appbar.dart';
 import '../historic_view/historic_view_page.dart';
 import '../home/home_page.dart';
