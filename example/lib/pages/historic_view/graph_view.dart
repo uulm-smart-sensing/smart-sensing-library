@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'sensor_view_data.dart';
 
-/// Widget for displaying Graph in Historic View
+/// A widget that displays a line chart based on provided line data.
+/// It takes a list of SensorViewData objects and renders a line chart with
+/// X,Y, and Z values based on the provided data.
 class GraphView extends StatefulWidget {
+  /// [lineDataCount] is the number of line data to display.
   final int lineDataCount;
+
+  /// [lineData] is the list of sensor view data to be plotted on the chart.
   final List<SensorViewData> lineData;
+
   const GraphView({
     super.key,
     required this.lineData,
@@ -21,20 +27,28 @@ class _GraphView extends State<GraphView> {
   @override
   Widget build(BuildContext context) => LineChart(
         LineChartData(
+          // Configuration for touch events on the chart
           lineTouchData: lineTouchData,
+          // Configuration for the chart grid
           gridData: gridData,
+          // Configuration for the chart titles (axes labels)
           titlesData: titleData,
+          // Configuration for the chart border
           borderData: borderData,
+          // Configuration for the line chart data
           lineBarsData: chartData(widget.lineDataCount),
+          // Minimum value on the X-axis
           minX: getMinX(widget.lineData),
+          // Maximum value on the X-axis
           maxX: getMaxX(widget.lineData),
+          // Minimum value on the Y-axis
           minY: getMinY(widget.lineData) - 1,
+          // Maximum value on the Y-axis
           maxY: getMaxY(widget.lineData) + 1,
         ),
       );
 
-  /// Determines whether there will be 3 or 1 linechart depending on the
-  /// parameter
+  /// Constructs a list of line chart bar data based on the quantity specified.
   List<LineChartBarData> chartData(int quantity) => [
         lineChartBarDataX,
         lineChartBarDataY,
@@ -61,7 +75,7 @@ class _GraphView extends State<GraphView> {
       );
   FlGridData get gridData => FlGridData(show: false);
 
-  /// Changes border attribute for the graph
+  /// Configuration for the chart border.
   FlBorderData get borderData => FlBorderData(
         border: Border.all(
           color: Colors.white,
@@ -69,7 +83,7 @@ class _GraphView extends State<GraphView> {
         ),
       );
 
-  /// Handles the touch event from the graph
+  /// Configuration for touch events on the chart.
   LineTouchData get lineTouchData => LineTouchData(
         handleBuiltInTouches: true,
         getTouchLineStart: (data, index) => 0,
@@ -95,7 +109,7 @@ class _GraphView extends State<GraphView> {
         ),
       );
 
-  /// Handles the data from Graph
+  /// Constructs line chart bar data based on the provided color and spots.
   LineChartBarData _getLineChartBarData(Color color, List<FlSpot> spots) =>
       LineChartBarData(
         color: color,
@@ -105,7 +119,7 @@ class _GraphView extends State<GraphView> {
         spots: spots,
       );
 
-  /// Handles the titles
+  /// Configuration for the chart titles (axes labels)
   FlTitlesData get titleData => FlTitlesData(
         bottomTitles: AxisTitles(sideTitles: bottomTitles),
         leftTitles: AxisTitles(sideTitles: leftTitles),
