@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smart_sensing_library_example/pages/historic_view/sensor_view_data.dart';
+import 'package:smart_sensing_library_example/pages/historic_view/sensor_graph_view_data.dart';
 
 void main() {
   var sensorDataList = [
-    const SensorViewData(timestamp: 1, x: 1, y: 2, z: 3),
-    const SensorViewData(timestamp: 2, x: 4, y: 1, z: 7),
-    const SensorViewData(timestamp: 3, x: 7, y: 8, z: 1),
+    const SensorGraphViewData(timestamp: 1, x: 1, y: 2, z: 3),
+    const SensorGraphViewData(timestamp: 2, x: 4, y: 1, z: 7),
+    const SensorGraphViewData(timestamp: 3, x: 7, y: 8, z: 1),
   ];
 
   group('Checks the maximum X in the SensorViewData list', () {
@@ -70,7 +70,8 @@ void main() {
   });
 
   test('When toString() is called, then the x, y, z values are returned', () {
-    var sensorViewData = const SensorViewData(timestamp: 1, x: 2, y: 3, z: 4);
+    var sensorViewData =
+        const SensorGraphViewData(timestamp: 1, x: 2, y: 3, z: 4);
 
     expect(sensorViewData.toString(), equals('2.0\n3.0\n4.0'));
   });
