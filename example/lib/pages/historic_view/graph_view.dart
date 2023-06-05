@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'sensor_view_data.dart';
+import 'sensor_graph_view_data.dart';
 
 /// A widget that displays a line chart based on provided line data.
 /// It takes a list of SensorViewData objects and renders a line chart with
@@ -11,7 +11,7 @@ class GraphView extends StatefulWidget {
   final int lineDataCount;
 
   /// [lineData] is the list of sensor view data to be plotted on the chart.
-  final List<SensorViewData> lineData;
+  final List<SensorGraphViewData> lineData;
 
   const GraphView({
     super.key,
