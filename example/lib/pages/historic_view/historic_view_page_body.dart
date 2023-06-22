@@ -11,7 +11,7 @@ import '../../general_widgets/custom_dropdown_button.dart';
 import '../../general_widgets/stylized_container.dart';
 import 'graph_view.dart';
 import 'historic_view_page.dart';
-import 'sensor_view_data.dart';
+import 'sensor_graph_view_data.dart';
 import 'time_selection_button.dart';
 import 'visualization_selection_button.dart';
 
@@ -55,7 +55,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   late Map<int, TableColumnWidth> columnWidths;
   late int numberOfDataPoints;
 
-  var historicSensorData = <SensorViewData>[];
+  var historicSensorData = <SensorGraphViewData>[];
   var areSensorDataExisting = false;
 
   @override
@@ -308,7 +308,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
       var sensorData = _getDataWithAppliedFilter(requestedFiltertool);
       var formattedSensorData = sensorData
           .map(
-            (dataEntry) => SensorViewData(
+            (dataEntry) => SensorGraphViewData(
               timestamp: dataEntry.timestamp.microsecondsSinceEpoch / 1000.0,
               x: dataEntry.data[0],
               y: dataEntry.data.length > 1 ? dataEntry.data[1] : null,
@@ -516,7 +516,7 @@ class _HistoricViewPageBodyState extends State<HistoricViewPageBody> {
   }
 
   TableRow _getTableRowFromSensorData(
-    SensorViewData sensorData,
+    SensorGraphViewData sensorData,
     int numberOfDataPoints,
   ) {
     var dateTime =

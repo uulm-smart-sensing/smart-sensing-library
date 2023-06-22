@@ -8,7 +8,7 @@ class AppLicensePage extends StatelessWidget {
         data: Theme.of(context),
         child: LicensePage(
           applicationName: "Smart Sensing Library App",
-          applicationVersion: "0.0.0",
+          applicationVersion: "0.2.0",
           applicationIcon: const Padding(
             padding: EdgeInsets.all(8.0),
             child: FlutterLogo(),
